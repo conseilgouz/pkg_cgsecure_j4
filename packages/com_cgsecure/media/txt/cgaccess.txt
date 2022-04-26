@@ -1,0 +1,225 @@
+#------------------------CG SECURE HTACCESS BEGIN-2.1.5--------------------
+# CG Secure blocks and reports hacking attempts
+# from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
+#
+# redirect errors/warnings to cgsecure/htaccess.php
+# e = error number
+# t = e => error (block), w = warning (don't block)
+# m = message causing reject in REQUEST_URI, QUERY_STRING, ...
+# CG Secure shortcodes : 
+# ??sec?? = security code created in admin when building htaccess file
+# ??site?? = website name (no http(s), no www)
+# ??dir?? = subdirectory ou current directory 
+#
+ServerSignature Off
+##
+# READ THIS COMPLETELY IF YOU CHOOSE TO USE THIS FILE!
+#
+# The line 'Options +FollowSymLinks' may cause problems with some server configurations.
+# It is required for the use of Apache mod_rewrite, but it may have already been set by 
+# your server administrator in a way that disallows changing it in this .htaccess file.
+# If using it causes your site to produce an error, comment it out (add # to the
+# beginning of the line), reload your site in your browser and test your sef urls. If
+# they work, then it has been set by your server administrator and you do not need to
+# set it here.
+
+## Can be commented out if causes errors
+
+<IfModule mod_autoindex.c>
+ IndexIgnore *
+ Options +FollowSymlinks
+ Options -Indexes
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Remove the X-Powered-By which reveal the PHP version number running on the server
+  Header unset X-Powered-By
+  # Disable ETags (French explanations : http://www.takeitweb.fr/blog/configurer-etags.html)
+  Header unset ETag
+  FileEtag None
+</IfModule>
+# Apache 2.0 : use mod_deflate; more recent than mod_gzip (Apache 1.3+)
+<IfModule mod_deflate.c>
+ SetOutputFilter DEFLATE
+ <IfModule mod_filter.c>
+   AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript
+ </IfModule>
+</IfModule>
+<IfModule mod_setenvif.c>
+# Block bad user agents 
+ SetEnvIfNoCase ^User-Agent$ .*(aesop_com_spiderman|ahrefsbot|alexibot|backweb|bandit|batchftp|bigfoot).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(black.?hole|blackwidow|blowfish|botalot|bot.?mailto:craftbot@yahoo.com|buddy|builtbottough|bullseye).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(cheesebot|cherrypicker|chinaclaw|collector|copier|copyrightcheck).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(cosmos|crescent|curl|custo|da|diibot|disco|dittospyder|download.?demon|dragonfly).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(drip|easydl|ebingbong|ecatch|eirgrabber|emailcollector|emailsiphon).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(emailwolf|erocrawler|exabot|express.?webpictures|extractorpro|eyenetie|filehound|flashget|flunky).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(frontpage|getright|getweb|go.?zilla|go-ahead-got-it|gotit|grabnet).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(grafula|harvest|hloader|hmview|httplib|httrack|humanlinks|ilsebot|image.?stripper).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(image.?sucker|infonavirobot|infotekies|intelliseek|interget|iria|jennybot|jetcar).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(joc|justview|jyxobot|kenjin|keyword|larbin|leechftp|lexibot|lftp|libweb).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(likse|linkscan|linkwalker|lnspiderguy|lwp|magnet|mag-net|markwatch).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(mata.?hari|memo|microsoft.?url|midown.?tool|miixpc|mirror|missigua).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(mister.?pix|mj12bot|moget|mozilla.?newt|nameprotect|navroad|backdoorbot|nearsite).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(net.?vampire|netants|netcraft|netmechanic|netspider|nextgensearchbot).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(attach|nicerspro|nimblecrawler|npbot|octopus|offline.?explorer).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(offline.?navigator|openfind|outfoxbot|pagegrabber|papa|pavuk).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(pcbrowser|php.?version.?tracker|pockey|propowerbot|prowebwalker).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(psbot|pump|queryn|recorder|realdownload|reaper|reget|rogerbot|true_robot).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(repomonkey|rma|internetseer|sitesnagger|siphon|slysearch|smartdownload).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(snake|snapbot|snoopy|sogou|spacebison|spankbot|spanner|sqworm|superbot).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(superhttp|surfbot|asterias|suzuran|szukacz|takeout|teleport).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(telesoft|the.?intraformant|thenomad|tighttwatbot|titan|urldispatcher).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(turingos|turnitinbot|urly.?warning|vacuum|vci|voideye|webauto|webcopier|webfetch|whacker).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(webgo.?is|webleacher|webreaper|websauger|webstripper|webwhacker|webzip|widow|wisenutbot|wwwoffle|xaldon|zeus|zyborg|anonymouse).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(zip|emaile|enhancer|fetch|go.?is|auto|bandit|clip|copier|master|reaper|sauger|site.?quester|whack).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spidermano).* HTTP_STAYOUT
+ Order Deny,Allow
+ Allow from All
+ Deny from env=HTTP_STAYOUT
+</IfModule>
+#####
+##### Common attacks #############
+#####
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Protect administrator
+## Allow secret word access
+RewriteRule ^administrator/?$ - [L]
+## Allow the index.php file
+RewriteRule ^administrator/index\.(php|html?)$ - [L]
+## Allow specific static media types in vetted folders
+RewriteRule ^administrator/(components|modules|templates)/.*\.(jpe|jpg|jpeg|jp2|jpe2|png|gif|bmp|css|js|swf|html|mpg|mp3|mpeg|mp4|avi|wav|ogg|ogv|xls|xlsx|doc|docx|ppt|pptx|zip|rar|pdf|xps|txt|7z|svg|odt|ods|odp|flv|mov|htm|ttf|woff|woff2|eot|JPG|JPEG|PNG|GIF|CSS|JS|TTF|WOFF|WOFF2|EOT|ico|ICO)$ - [L]
+RewriteRule administrator\/components\/(com_joomlaupdate|com_akeeba|com_admintools)\/(restore|extract)\.php$ - [L]
+## Joomla! Update (core feature) — Joomla version 4.0.4 et ulterieures
+RewriteRule administrator\/components\/com_joomlaupdate\/extract\.php$ - [L]
+##  allow Acy Mailing component calls
+RewriteRule administrator\/components\/com_acym\/acym\.php$ - [L]
+## Disallow everything else
+RewriteRule  ^administrator/ plugins/system/cgsecure/htaccess.php?e=1&t=e&sec=??security?? [L]
+
+# common REMOTE_HOST/HTTP_REFERER # 7G FIREWALL v1.2 20190727 + site.ru
+RewriteCond %{REMOTE_HOST} (163data|amazonaws|colocrossing|crimea|g00g1e|justhost|kanagawa|loopia|masterhost|onlinehome|poneytel|sprintdatacenter|reverse.softlayer|safenet|ttnet|woodpecker|wowrack) [NC]
+RewriteCond %{HTTP_REFERER} (semalt.com|todaperfeita|site.ru) [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=5&t=e&m=%1___%2&sec=??security?? [L]
+
+# Block direct access to system files
+RewriteCond %{REQUEST_FILENAME} (boot.ini|changelog.php|changelog.txt|configuration.php|contributing.md|copyright.php|credits.php|htaccess.txt|httpd.conf|install.mysql)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} (install.pgsql|install.txt|joomla.xml|license.php|license.txt|maintainers.php|maintainers.txt|php.ini|phpinfo.php|readme.htm)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} (readme.html|readme.txt|upgrade.php|upgrade.txt|web.config.txt|web.config|wp-config.php)$ [NC,OR]
+RewriteCond %{QUERY_STRING} (boot.ini|changelog.php|changelog.txt|configuration.php|contributing.md|copyright.php|credits.php|htaccess.txt|httpd.conf|install.mysql).*$ [NC,OR]
+RewriteCond %{QUERY_STRING} (install.pgsql|install.txt|joomla.xml|license.php|license.txt|maintainers.php|maintainers.txt|php.ini|phpinfo.php|readme.htm).*$ [NC,OR]
+RewriteCond %{QUERY_STRING} (readme.html|readme.txt|upgrade.php|upgrade.txt|web.config.txt|web.config|wp-config.php).*$ [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=6&t=e&m=%1___%2&sec=??security?? [L]
+
+# Block access to WP directories (we are Joomla, aren't we ?)
+RewriteRule ^(wp-admin|wp|wordpress|wp-content|wp-includes)($|/) plugins/system/cgsecure/htaccess.php?e=7&t=e&sec=??security?? [L]
+
+# Block temp files and other files extensions
+RewriteCond %{REQUEST_FILENAME} .*\.(phtm?l?|ash?x|aspx?|cfml?|cgi|pl|jsp|sql)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} .*\.(bak|config|dll|exe|sql|ini|log|sh|inc|dist)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} .*\.(htaccess|htaccess_old|htpasswd)$ [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=7&t=e&m=%1&sec=??security?? [L]
+
+# Block out any script trying to modify a _REQUEST / PHP GLOBAL / PHPSSESSID variables via URL
+RewriteCond %{QUERY_STRING} ((\?|&)GLOBALS(=|\[|\%[0-9A-Z]{0,2})?) [NC,OR]
+RewriteCond %{QUERY_STRING} ((\?|&)_REQUEST(=|\[|\%[0-9A-Z]{0,2})?) [NC,OR]
+RewriteCond %{QUERY_STRING} ^.*PHPSESSID.*$ [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=8&t=e&m=%1&sec=??security?? [L]
+
+# Block out use of illegal or unsafe characters in the HTTP Request
+# Block urls having a carriage return or linefeed in it
+# Block also urls having "wwwroot" or "public_html" in it.  Can be an hacker trying to access to a localfile
+# Block urls having "alert(", "char(", "eval(", "function(" ... 
+RewriteCond %{QUERY_STRING} .*((alert|char|eval|function|load_file)\().* [NC,OR]
+RewriteCond %{QUERY_STRING} .*(\_vti\_|crossdomain|wwwroot|public_html).* [NC,OR]
+RewriteCond %{QUERY_STRING} .*(\\r|\\n|%0A|%0D).* [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=11&t=e&m=%1___%2&sec=??security?? [L]
+
+# No carriage return, line feed, escape (%27), ... in the query string
+RewriteCond %{QUERY_STRING} ^.*(<|>|'|%0A|%0D|%25|%27|%3C|%3E|%00).* [NC,OR]
+RewriteCond %{QUERY_STRING} ^.*((\/\*)?\*\/).* [NC,OR]
+RewriteCond %{QUERY_STRING} ^.*\|\|.* [NC]
+RewriteCond %{QUERY_STRING} !option=com_akeeba(.*)$ [NC]   # exception for Akeeba backup
+## CG Secure 2.1.5 : 12 - allow Acy Mailing component calls
+RewriteCond %{QUERY_STRING} !option=com_acym(.*)$ [NC]   # exception for acymailing
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=12&t=e&m=%1___%2&sec=??security?? [L]
+
+# Block SQL injection tentatives
+RewriteCond %{QUERY_STRING} ^.*(;|<|>|'|"|\)|%0A|%0D|%22|%25|%27|%3C|%3E|%00).*(/\*|union|select|insert|cast|declare|drop|update|md5|benchmark).* [NC,OR]
+RewriteCond %{QUERY_STRING} ^.*(%20)?([(])?(union|select|insert|cast|declare|group_concat|drop|update|md5|benchmark)%20.* [NC,OR] 
+RewriteCond %{QUERY_STRING} ^.*(%20|\+)(AND|OR)(%20|\+).* [NC,OR] 
+RewriteCond %{QUERY_STRING} ^.*(%20|\+)ORDER(%20|\+).* [NC,OR] 
+RewriteCond %{QUERY_STRING} ^.*%201\=1.* [NC] 
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=13&t=e&m=%1___%2&sec=??security?? [L]
+
+# Block urls trying to get access to the jos_ defaut prefix of Joomla 1.5
+RewriteCond %{QUERY_STRING} .*jos_.*  [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=14&t=e&m=%1___%2&sec=??security?? [L]
+
+#Block functions in the querystring (f.i. String.fromCharCode)
+RewriteCond %{QUERY_STRING} ^.*string\.fromcharcode.* [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=15&t=e&m=%1___%2&sec=??security?? [L]
+
+# Filter against shell attacks
+RewriteCond %{REQUEST_URI} .*((php|my)?shell|remview.*|phpremoteview.*|sshphp.*|pcom|nstview.*|c99|r57|webadmin.*|phpget.*|phpwriter.*|fileditor.*|locus7.*|storm7.*)\.(p?s?x?htm?l?|txt|aspx?|cfml?|cgi|pl|php[3-9]{0,1}|jsp?|sql|xml) [NC,OR]
+RewriteCond %{REQUEST_METHOD} (GET|POST) [NC]
+RewriteCond %{QUERY_STRING} ^(.*)([-_a-z]{1,15})=(chmod|chdir|mkdir|rmdir|whoami|uname|unzip|gunzip|grep|umask|telnet|ssh|ftp|mkmode|logname|edit_file|search_text|find_text|php_eval|download_file|ftp_file_down|ftp_file_up|ftp_brute|mail_file|mysql_dump|db_query)([^a-zA-Z0-9].+)*$ [OR]
+RewriteCond %{QUERY_STRING} ^work_dir=.*$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^command=.*&output.*$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^nts_[a-z0-9_]{0,10}=.*$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^c=(t|setup|codes)$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^act=((about|cmd|selfremove|chbd|trojan|backc|massbrowsersploit|exploits|grablogins|upload.*)|((chmod|f)&f=.*))$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^act=(ls|search|fsbuff|encoder|tools|processes|ftpquickbrute|security|sql|eval|update|feedback|cmd|gofile|mkfile)&d=.*$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^&?c=(l?v?i?&d=|v&fnot=|setup&ref=|l&r=|d&d=|tree&d|t&d=|e&d=|i&d=|codes|md5crack).*$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)*etc(/|%2F)passwd* [NC,OR]
+RewriteCond %{QUERY_STRING} .*(((\\|%5C)\.\.\\)+).* [NC,OR]
+RewriteCond %{QUERY_STRING} .*(((\/|%2F)\.\.)+).* [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)*proc\/self\/environ* [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=16&t=e&m=%1___%2&sec=??security?? [L]
+
+# Block access to hidden files and directories.
+RewriteCond %{REQUEST_URI} "(^|/)\."
+RewriteRule "/\.|^\.(?!well-known/)" plugins/system/cgsecure/htaccess.php?e=17&t=e&m=%1___%2&sec=??security?? [L]
+
+# PHP Easter Eggs
+RewriteCond %{REMOTE_ADDR} !127.0.0.1
+RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)???site?? [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=18&t=w&m=%1___%2&sec=??security?? [L]
+
+#xss blocage  For instance, a parameter on the querystring is an url (http://...)
+RewriteCond %{REQUEST_METHOD} (GET|POST) [NC]
+RewriteCond %{REMOTE_ADDR} !127.0.0.1
+RewriteCond %{QUERY_STRING} !option=com_akeeba&view=backup(.*)$ [NC]
+RewriteCond %{QUERY_STRING} !(.*)https?(://|%3A%2F%2F)(www\.)???site??(.*)$ [NC]   
+RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)(p|%70|%50)(s|%73|%53)(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)(p|%70|%50)(s|%73|%53)%3a(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)(p|%70|%50)(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)(p|%70|%50)%3a(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(f|%66|%46)(t|%74|%54)(p|%70|%50)(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)%20(t|%74|%54)(p|%70|%50)(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)%20(p|%70|%50)(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)(p|%70|%50)%20(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
+RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)%20(t|%74|%54)(t|%74|%54)(p|%70|%50)(%3A|:)(/|%2F){2}(.*)$ [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=19&t=e&m=%1___%2&sec=??security?? [L]
+
+# Prevent use of specified methods in HTTP Request,  but allow opensiteexplorer.org to do so
+RewriteCond %{REQUEST_METHOD} ^(TRACE|DELETE|TRACK) [NC]
+RewriteCond %{HTTP_REFERER} !(www\.)?opensiteexplorer\.org/ [NC]
+RewriteCond %{HTTP_REFERER} !(www\.)?uptimerobot\.com/ [NC]
+RewriteCond %{HTTP_REFERER} !https://validator\.w3\.org/ [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=10&t=e&m=%1___%2&sec=??security?? [L]
+
+# block direct access to robots.txt file
+#######RewriteRule robots.txt$ plugins/system/cgsecure/htaccess.php?e=15&t=w&sec=??security?? [L]
+
+# block bad words
+RewriteCond %{QUERY_STRING} \b(ambien|blue\spill|cialis|cocaine|ejaculation|erectile)\b [NC,OR]
+RewriteCond %{QUERY_STRING} \b(erections|hoodia|huronriveracres|impotence|levitra|libido)\b [NC,OR]
+RewriteCond %{QUERY_STRING} \b(lipitor|phentermin|pro[sz]ac|sandyauer|tramadol|troyhamby)\b [NC,OR]
+RewriteCond %{QUERY_STRING} \b(ultram|unicauca|valium|viagra|vicodin|vuiton|xanax|ypxaieo)\b [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=20&t=w&m=%1___%2&sec=??security?? [L]
+</IfModule>
+#------------------------CG SECURE HTACCESS END--------------------

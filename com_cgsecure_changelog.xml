@@ -1,0 +1,161 @@
+<changelogs>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.1.5</version>
+        <note>
+            <item>Update : 18/01/2022</item>
+        </note>
+        <addition>
+            <item>Block/Report WP access attemps</item>
+        </addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.1.4</version>
+        <note>
+            <item>Update : 30/12/2021</item>
+        </note>
+        <fix>
+            <item>Force Jquery loading in admin</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.1.3</version>
+        <note>
+            <item>Update : 30/12/2021</item>
+        </note>
+        <fix>
+            <item>Ignore CG Secure version when storing hackers in htaccess file</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.1.2</version>
+        <note>
+            <item>Update : 29/12/2021</item>
+        </note>
+        <fix>
+            <item>Ignore CG Secure version when recreating htaccess file</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.1.1</version>
+        <note>
+            <item>Update : 16/12/2021</item>
+        </note>
+        <fix>
+            <item>replace boostrap tab by uitab</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.1.0</version>
+        <note>
+            <item>Update : 07/12/2021</item>
+        </note>
+        <addition>
+            <item>Force HTACCESS update on install (if required)</item>
+        </addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.0.8</version>
+        <note>
+            <item>Update : 07/12/2021</item>
+        </note>
+        <addition>
+            <item>Update htaccess for acymailing component</item>
+            <item>create cg_secure cookie to avoid false errors</item>
+        </addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.0.7</version>
+        <note>
+            <item>Update : 16/11/2021</item>
+        </note>
+        <fix>
+            <item>uninstall component => uninstall package</item>
+            <item>check if library is installed or not</item>
+            <item>admin params : * = all countries alloawed</item>
+            <item>admin params : country check in local array</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.0.6</version>
+        <note>
+            <item>Update : 02/11/2021</item>
+        </note>
+        <addition>
+            <item>Ignore AbuseIPDB whitelisted ip</item>
+        </addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.0.5</version>
+        <note>
+            <item>Update : 24/10/2021</item>
+        </note>
+        <fix>
+            <item>latest_ips file in wrong directory</item>
+			<item>htaccess log not working</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.0.4</version>
+        <note>
+            <item>Update : 19/10/2021</item>
+        </note>
+        <change>
+            <item>Joomla 4.0.4 : add extract line in htaccess file</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.0.3</version>
+        <note>
+            <item>Update : 29/08/2021</item>
+        </note>
+        <change>
+            <item>suppress php 8 notice on library/cg-secure/ipcheck.php</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.0.2</version>
+        <note>
+            <item>Update : 22/08/2021</item>
+        </note>
+        <change>
+            <item>Default value in #_cgsecure_config table</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>2.0.1</version>
+        <note>
+            <item>Update : 21/08/2021</item>
+        </note>
+        <addition>
+            <item>Joomla 4.0 compatibility</item>
+        </addition>
+	</changelog>
+</changelogs>

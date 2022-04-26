@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="4.0" method="upgrade">
+	<name>COM_CGSECURE</name>
+	<creationDate>October 2021</creationDate>
+	<author>ConseilGouz</author>
+	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
+	<authorUrl>www.conseilgouz.com</authorUrl>
+	<copyright>Copyright (C) 2022 ConseilGouz.com. All Rights Reserved</copyright>
+	<license>GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html</license>
+	<version>2.1.5</version>
+	<namespace path="src">ConseilGouz\Component\CGSecure</namespace>
+	<description>COM_CGSECURE_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
+    <install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql
+			</file>
+		</sql>
+	</install>
+    <uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql
+			</file>
+		</sql>
+	</uninstall>
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+	<administration>
+		<menu>COM_CGSECURE_MENU</menu>
+        <submenu>
+            <menu link="option=com_cgsecure&amp;view=config" view="config">COM_CGSECURE_CONFIG</menu>
+            <menu link="option=com_cgsecure&amp;view=logs" view="logs">COM_CGSECURE_LOGS</menu>
+        </submenu>
+		<files folder="admin">
+			<filename>cgsecure.xml</filename>
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+			<filename>script.php</filename>
+			<folder>sql</folder>
+			<folder>forms</folder>
+			<folder>services</folder>
+			<folder>src</folder>
+			<folder>tmpl</folder>
+		</files>
+		<languages folder="admin">
+			<language tag="fr-FR">language/fr-FR/com_cgsecure.ini</language>
+			<language tag="fr-FR">language/fr-FR/com_cgsecure.sys.ini</language>
+			<language tag="en-GB">language/en-GB/com_cgsecure.ini</language>
+			<language tag="en-GB">language/en-GB/com_cgsecure.sys.ini</language>
+		</languages>
+	</administration>
+	<media destination="com_cgsecure" folder="media">
+			<folder>js</folder>
+			<folder>txt</folder>
+			<folder>backup</folder>
+			<folder>cg_no_robot</folder>
+			<filename>index.html</filename>
+	</media>
+	<changelogurl>https://www.conseilgouz.com/updates/com_cgsecure_changelog.xml</changelogurl>
+	<updateservers>
+	<server type="extension" name="CG Secure" priority="1">https://www.conseilgouz.com/updates/com_cgsecure_update.xml</server>
+	</updateservers>
+	
+</extension>

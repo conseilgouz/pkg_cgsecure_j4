@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="4.0" type="library" method="upgrade">
+	<name>CGSecure Library</name>
+	<libraryname>cgsecure</libraryname>
+	<author>ConseilGouz</author>
+	<version>2.1.5</version>
+	<creationDate>2021 August</creationDate>
+	<copyright>(C)2021 ConseilGouz. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
+	<authorUrl>www.conseilgouz.com</authorUrl>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<files>
+		<file>ipcheck.php</file>
+		<file>index.html</file>
+	</files>
+	<updateservers>
+	<server type="extension" name="CG Secure" priority="1">https://www.conseilgouz.com/updates/com_cgsecure_update.xml</server>
+	</updateservers>
+
+</extension>

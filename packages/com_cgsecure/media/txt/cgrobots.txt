@@ -1,0 +1,4 @@
+#------------------------CG SECURE BAD ROBOTS BEGIN---------------------
+User-agent: *
+Disallow: /cg_no_robot/
+#------------------------CG SECURE BAD ROBOTS END---------------------

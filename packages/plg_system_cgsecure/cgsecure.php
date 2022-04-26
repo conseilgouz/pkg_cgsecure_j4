@@ -1,0 +1,106 @@
+<?php
+/**
+ * @package 	CGSecure
+ * from karebu secure (kSesure)
+ * Version			: 2.1.5
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+ * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * @author ConseilGouz 
+ */
+defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+
+class plgSystemCGSecure extends CMSPlugin
+{
+	public $myname='SystemCGSecure';
+	public $mymessage='Joomla Admin : try to force the door...';
+	public $cgsecure_params;
+	public $errtype = 'e'; // error : hacking
+	
+	public function __construct(&$subject, $config)
+	{
+		parent::__construct($subject, $config);
+
+		$helperFile = JPATH_SITE . '/libraries/cgsecure/ipcheck.php';
+
+		if (!class_exists('CGIpCheckHelper') && is_file($helperFile))
+		{
+			include_once $helperFile;
+		}
+		if (!class_exists('CGIpCheckHelper')) { // library not found
+			return  true;
+		}
+		$this->cgsecure_params = \CGIpCheckHelper::getParams();
+
+	}
+    function onAfterDispatch()
+    {
+        $mainframe 	= Factory::getApplication();
+        $user 		= Factory::getUser();
+        $session	= Factory::getSession();
+        if ($session->get('cgsecure')) return; // already checked
+		if (!$mainframe->isClient('administrator') || !$user->get('guest') ) {
+			return;
+		}
+		if (!$this->cgsecure_params->password) {// no check 
+			self::createCookie();
+			return;
+		}
+		if (!class_exists('CGIpCheckHelper')) { // library not found
+			$lang = Factory::getLanguage();
+			$lang->load('com_cgsecure',JPATH_ADMINISTRATOR);		
+			Factory::getApplication()->enqueueMessage(Text::_('CGSECURE_LIB_NOTFOUND'),'error');
+			return  true;
+		}
+		$prefixe = $_SERVER['SERVER_NAME'];
+		$prefixe = substr(str_replace('www.','',$prefixe),0,2);
+		$this->mymessage = $prefixe.$this->errtype.'-'.$this->mymessage;
+		
+		\CGIpCheckHelper::check_ip($this,$this->myname);
+
+        if ($this->cgsecure_params->mode)
+        {
+            if (substr(php_sapi_name(), 0, 3) == 'cgi')
+            {
+                Factory::getApplication()->enqueueMessage(JText::_('CG_SECURE_NOT_APACHE_HANDLER'),'error');
+                return true;
+            }
+            
+            $logged = @$_SERVER['PHP_AUTH_PW'] == $this->cgsecure_params->password;
+            if (!$logged)
+            {
+                header('WWW-Authenticate: Basic realm="'.$mainframe->getCfg('sitename').'"');
+                header('HTTP/1.0 401 Unauthorized');
+                die();
+            }
+        } else { // Compatibility : looking for ?<password>
+            $logged = isset($_GET[$this->cgsecure_params->password]);
+            if (!$logged) {
+                if (($this->cgsecure_params->selredir == 'LOCAL') || (\CGIpCheckHelper::whiteList())) {	
+						$mainframe->redirect(URI::root()); 
+				} else { 
+					$mainframe->redirect($this->cgsecure_params->redir_ext);
+				}
+			}
+        }
+        if ($logged) {
+			$session->set('cgsecure', true);
+			self::createCookie();
+		}
+    }
+	private function createCookie() {
+		$secure = $_SERVER["HTTPS"] ? true : false;
+		return setcookie('cg_secure', date("Y-m-d"), [
+						'expires' => 'Session',
+						'path' => '/',
+						'domain' => '',
+						'samesite' => 'Lax',
+						'secure' => $secure,
+						'httponly' => false
+			]);
+	}
+}
