@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 2.1.5
+ * Version			: 2.1.6
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -16,11 +16,12 @@ use Joomla\CMS\Language\Text as JText;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Version;
 
 class PlgSystemCgsecureInstallerInstallerScript
 {
 	private $min_joomla_version      = '4.0.0';
-	private $min_php_version         = '7.0';
+	private $min_php_version         = '7.4';
 	private $name                    = 'CG Secure';
 	private $extname                 = '';
 	private $previous_version        = '';
@@ -333,7 +334,9 @@ class PlgSystemCgsecureInstallerInstallerScript
 	// Check if Joomla version passes minimum requirement
 	private function passMinimumJoomlaVersion()
 	{
-		if (version_compare(JVERSION, $this->min_joomla_version, '<'))
+		$j = new Version();
+		$version=$j->getShortVersion(); 
+		if (version_compare($version, $this->min_joomla_version, '<'))
 		{
 			Factory::getApplication()->enqueueMessage(
 				JText::sprintf(
@@ -354,7 +357,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 	private function passMinimumPHPVersion()
 	{
 
-		if (version_compare(PHP_VERSION, $this->min_php_version, 'l'))
+		if (version_compare(PHP_VERSION, $this->min_php_version, '<'))
 		{
 			Factory::getApplication()->enqueueMessage(
 				JText::sprintf(
