@@ -3,9 +3,9 @@
 	<name>CGSecure Library</name>
 	<libraryname>cgsecure</libraryname>
 	<author>ConseilGouz</author>
-	<version>2.1.5</version>
-	<creationDate>2021 August</creationDate>
-	<copyright>(C)2021 ConseilGouz. All rights reserved.</copyright>
+	<version>2.1.7</version>
+	<creationDate>2022 August</creationDate>
+	<copyright>(C)2022 ConseilGouz. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
