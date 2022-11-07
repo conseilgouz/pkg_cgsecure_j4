@@ -134,6 +134,20 @@ class PlgSystemCgsecureInstallerInstallerScript
 		if (!$version || ($version && ($version < $this->cgsecure_force_update_version))) {
 			$this->forceHTAccess(); // update htaccess
 		}
+		// remove obsolete update sites
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->delete('#__update_sites')
+			->where($db->quoteName('location') . ' like "%432473037d.url-de-test.ws/%"');
+		$db->setQuery($query);
+		$db->execute();
+		// CG Secure is now on Github
+		$query = $db->getQuery(true)
+			->delete('#__update_sites')
+			->where($db->quoteName('location') . ' like "%conseilgouz.com/updates/com_cgsecure%"');
+		$db->setQuery($query);
+		$db->execute();
+
 
 	}
 	// Begin update HTACCESS -----------------------------------------------
