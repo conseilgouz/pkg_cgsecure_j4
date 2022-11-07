@@ -2,7 +2,7 @@
 /**
  * @package 	CGSecure
  * from karebu secure (kSesure)
- * Version			: 2.1.5
+ * Version			: 2.1.8
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -93,7 +93,7 @@ class plgSystemCGSecure extends CMSPlugin
 		}
     }
 	private function createCookie() {
-		$secure = $_SERVER["HTTPS"] ? true : false;
+		$secure = array_key_exists("HTTPS",$_SERVER); 
 		return setcookie('cg_secure', date("Y-m-d"), [
 						'expires' => 'Session',
 						'path' => '/',

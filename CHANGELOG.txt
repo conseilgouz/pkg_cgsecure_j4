@@ -13,6 +13,10 @@ v**
  * # Fix
  */
 
+7-Nov-2022 : v2.1.8
+ # plg_system_cgsecure : suppress notice if http
+ ^ Update/changelog files on github
+
 5-Aug-2022 : v2.1.7
  # Update htaccess.txt : remove gzip
 

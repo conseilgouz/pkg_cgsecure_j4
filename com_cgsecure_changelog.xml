@@ -2,6 +2,20 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>2.1.8</version>
+        <note>
+            <item>Update : 07/11/2022</item>
+        </note>
+        <fix>
+            <item>plg_system_cgsecure : suppress notice if http</item>
+        </fix>
+		<change>
+			<item>Update/changelog files on github</item>
+		</change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>2.1.7</version>
         <note>
             <item>Update : 05/08/2022</item>
