@@ -3,8 +3,8 @@
 	<name>CGSecure Library</name>
 	<libraryname>cgsecure</libraryname>
 	<author>ConseilGouz</author>
-	<version>2.1.7</version>
-	<creationDate>2022 August</creationDate>
+	<version>2.1.12</version>
+	<creationDate>2022 November</creationDate>
 	<copyright>(C)2022 ConseilGouz. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
@@ -15,7 +15,8 @@
 		<file>index.html</file>
 	</files>
 	<updateservers>
-	<server type="extension" name="CG Secure" priority="1">https://www.conseilgouz.com/updates/com_cgsecure_update.xml</server>
+	<server type="extension" name="CG Secure" priority="1">https://raw.githubusercontent.com/conseilgouz/updates_github/master/com_cgsecure_update.xml</server>
+	</updateservers>
 	</updateservers>
 
 </extension>
