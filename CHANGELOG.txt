@@ -13,6 +13,9 @@ v**
  * # Fix
  */
 
+7-Nov-2022 : v2.1.10
+ # Clean up update servers list
+
 7-Nov-2022 : v2.1.8
  # plg_system_cgsecure : suppress notice if http
  ^ Update/changelog files on github

@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 2.1.8
+ * Version			: 2.1.10
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -111,8 +111,21 @@ class PlgSystemCgsecureInstallerInstallerScript
 
 		return true;
 	}
-	// Check if HTACCESS file has to be updated
     private function postInstall() {
+		// remove obsolete update sites
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->delete('#__update_sites')
+			->where($db->quoteName('location') . ' like "%432473037d.url-de-test.ws/%"');
+		$db->setQuery($query);
+		$db->execute();
+		// CG Secure is now on Github
+		$query = $db->getQuery(true)
+			->delete('#__update_sites')
+			->where($db->quoteName('location') . ' like "%conseilgouz.com/updates/com_cgsecure%"');
+		$db->setQuery($query);
+		$db->execute();
+		// Check if HTACCESS file has to be updated
 		$serverConfigFile = $this->getServerConfigFile('.htaccess');
 		if (!$serverConfigFile) { // no .htaccess file
 			return;
@@ -134,21 +147,6 @@ class PlgSystemCgsecureInstallerInstallerScript
 		if (!$version || ($version && ($version < $this->cgsecure_force_update_version))) {
 			$this->forceHTAccess(); // update htaccess
 		}
-		// remove obsolete update sites
-		$db = Factory::getDbo();
-		$query = $db->getQuery(true)
-			->delete('#__update_sites')
-			->where($db->quoteName('location') . ' like "%432473037d.url-de-test.ws/%"');
-		$db->setQuery($query);
-		$db->execute();
-		// CG Secure is now on Github
-		$query = $db->getQuery(true)
-			->delete('#__update_sites')
-			->where($db->quoteName('location') . ' like "%conseilgouz.com/updates/com_cgsecure%"');
-		$db->setQuery($query);
-		$db->execute();
-
-
 	}
 	// Begin update HTACCESS -----------------------------------------------
 	private function forceHTAccess() {
