@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>2.2.4</version>
+        <note>
+            <item>Update : 27/03/2023</item>
+        </note>
+		<fix>
+			<item>version number</item>
+		</fix>
+	</changelog>
+
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>2.2.3</version>
         <note>
             <item>Update : 27/03/2023</item>
