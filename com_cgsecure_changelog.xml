@@ -11,7 +11,7 @@
 			<item>add cancel button</item>
 		</addition>
 		<fix>
-			<item>add index.html file in all folders
+			<item>add index.html file in all folders</item>
 		</fix>
 		<delete>
 			<item>Remove system config button</item>
