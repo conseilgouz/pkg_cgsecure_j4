@@ -2,6 +2,21 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>2.2.1</version>
+        <note>
+            <item>Update : 27/03/2023</item>
+        </note>
+        <delete>
+            <item>delete changelog file</item>
+        </delete>
+		<addition>
+			<item>Dynamic version number from manifest</item>
+			<item>add wp-login.php in WP files to block</item>
+		</addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>2.2.0</version>
         <note>
             <item>Update : 27/03/2023</item>
