@@ -48,9 +48,5 @@ class HtmlView extends BaseHtmlView
 		if ($this->canDo->get('core.delete')) {
 			ToolBarHelper::deleteList('COM_CGSECURE_DELETE', 'logs.delete');
 		}
-		 // Options button.
-		if (Factory::getUser()->authorise('core.admin', 'com_cgsecure')) {
-			ToolBarHelper::preferences('com_cgsecure');
-		}
 	}
 }

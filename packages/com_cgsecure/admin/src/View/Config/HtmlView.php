@@ -1,9 +1,9 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 2.1.5
+ * Version			: 2.2.3
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
 **/
 namespace ConseilGouz\Component\CGSecure\Administrator\View\Config;
@@ -59,14 +59,9 @@ class HtmlView extends BaseHtmlView
     {
         $canDo = ContentHelper::getActions('com_cgsecure');
 
-        ToolBarHelper::title(Text::_('CGSECURE_CONFIG'));
-
-        if ($canDo->get('core.admin'))
-        {
-            ToolbarHelper::preferences('com_cgsecure');
-        }
-
         ToolbarHelper::apply('config.apply');
-
+		ToolBarHelper::cancel('config.cancel');
+		ToolbarHelper::inlinehelp();			
+        ToolBarHelper::title(Text::_('CGSECURE_CONFIG'));
     }
 }

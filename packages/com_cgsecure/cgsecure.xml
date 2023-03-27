@@ -10,7 +10,6 @@
 	<version>2.2.2</version>
 	<namespace path="src">ConseilGouz\Component\CGSecure</namespace>
 	<description>COM_CGSECURE_XML_DESCRIPTION</description>
-	<scriptfile>script.php</scriptfile>
     <install>
 		<sql>
 			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql
@@ -38,7 +37,6 @@
 			<filename>cgsecure.xml</filename>
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
-			<filename>script.php</filename>
 			<folder>sql</folder>
 			<folder>forms</folder>
 			<folder>services</folder>

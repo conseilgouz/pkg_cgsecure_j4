@@ -2,6 +2,24 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>2.2.3</version>
+        <note>
+            <item>Update : 27/03/2023</item>
+        </note>
+		<addition>
+			<item>add inline help</item>
+			<item>add cancel button</item>
+		</addition>
+		<fix>
+			<item>add index.html file in all folders
+		</fix>
+		<delete>
+			<item>Remove system config button</item>
+		</delete>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>2.2.2</version>
         <note>
             <item>Update : 27/03/2023</item>

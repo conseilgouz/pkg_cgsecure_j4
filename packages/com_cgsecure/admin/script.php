@@ -1,9 +1,9 @@
 <?php
 /**
 * CG Secure Component For Joomla 4
-* Version			: 2.1.5
+* Version			: 2.2.3
 * Package			: CG Secure Component
-* copyright 		: Copyright (C) 2022 ConseilGouz. All rights reserved.
+* copyright 		: Copyright (C) 2023 ConseilGouz. All rights reserved.
 * license    		: http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 */
 // No direct access to this file
@@ -44,7 +44,7 @@ class com_cgsecureInstallerScript
 		    ->where($db->quoteName('element') . ' like "%cgsecure%"');
 		$db->setQuery($query);
 		$result = $db->execute();
-		$obsloteFolders = ['/plugins/system/cgsecure', '/plugins/authentication/cgsecure','/plugins/user/cgsecure','/libraries/cgsecure'];
+		$obsloteFolders = ['/plugins/system/cgsecure', '/plugins/authentication/cgsecure','/plugins/user/cgsecure','/libraries/cgsecure','/media/com_cgsecure'];
 		// Remove plugins' files.
 		foreach ($obsloteFolders as $folder)
 		{

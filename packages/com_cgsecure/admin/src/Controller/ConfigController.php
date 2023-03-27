@@ -12,29 +12,19 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 /**
  * Config controller class
  */
 class ConfigController extends FormController
 {
 	protected $text_prefix = 'CGSECURE';
-    public function ssave($key = null, $urlVar = null)
-    {       
-        // Check for request forgeries.
-        Session::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-        // Initialise variables.
-        $app = Factory::getApplication();
-        $model= $this->getModel('config'); 
-        $data = $app->input->getVar('jform', array(), 'post', 'array');
-        $task = $this->getTask();
-        $context = 'com_cgsecure.edit.config';
-        $form = $model->getForm($data, false);
-        $validData = $model->validate($form, $data);
-        
-        if ($model->save($data)) {
-			$this->setMessage(Text::_('Save sucess!'));		
-		}
+	public function cancel($key = null)
+	{
+		$app = Factory::getApplication();
+		$return = Uri::base().'index.php?option=com_cgsecure&view=config';
+		$app->redirect($return);
+		return true;
 	}
 
 }
