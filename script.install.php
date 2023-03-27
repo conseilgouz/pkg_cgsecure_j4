@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 2.2.1
+ * Version			: 2.2.2
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -27,7 +27,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 	private $previous_version        = '';
 	private $dir           = null;
 	private $installerName = 'cgsecureinstaller';
-	private $cgsecure_force_update_version = "2.2.0";
+	private $cgsecure_force_update_version = "2.2.2";
 	const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
 	const SERVER_CONFIG_FILE_NONE = '';
     const CGPATH = '/media/com_cgsecure';
