@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset name="basic" label="CGSECURE_GLOBAL_DATA" description="CGSECURE_GLOBAL_DATA_DESC" 
-		addruleprefix="ConseilGouz\Component\CGSecure\Administrator\Rule">
-
+		addruleprefix="ConseilGouz\Component\CGSecure\Administrator\Rule"
+		addfieldprefix="ConseilGouz\Component\CGSecure\Administrator\Field">
+		<field name="version" type="version"  margintop="-3em" extension="com_cgsecure"/>
 		<field name="id" type="hidden" default="0"
 			readonly="true" class="readonly"
 			label="JGLOBAL_FIELD_ID_LABEL" 	description ="JGLOBAL_FIELD_ID_DESC" />

@@ -1,9 +1,9 @@
 <?php
 /**
  * @component     Plugin User CG Secure
- * Version			: 2.1.5
+ * Version			: 2.2.0
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
 **/
 

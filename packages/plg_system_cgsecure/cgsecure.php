@@ -2,9 +2,9 @@
 /**
  * @package 	CGSecure
  * from karebu secure (kSesure)
- * Version			: 2.1.8
+ * Version			: 2.2.0
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  */
 defined('_JEXEC') or die('Restricted access');
@@ -94,7 +94,7 @@ class plgSystemCGSecure extends CMSPlugin
     }
 	private function createCookie() {
 		$secure = array_key_exists("HTTPS",$_SERVER); 
-		return setcookie('cg_secure', date("Y-m-d"), [
+		return setcookie('cg_secure', $this->cgsecure_params->security, [
 						'expires' => 'Session',
 						'path' => '/',
 						'domain' => '',

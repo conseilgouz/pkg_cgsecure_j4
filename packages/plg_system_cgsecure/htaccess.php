@@ -1,17 +1,15 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   2.1.5
+ * Version		   2.2.0
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  *
 **/
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-
-if(isset($_COOKIE['cg_secure'])) { return ; } // CG Secure OK : on ignore les erreurs htaccess
 
 const _JEXEC = 1;
 
@@ -70,6 +68,9 @@ if (!class_exists('CGIpCheckHelper')) { // library not found
 if (CGIpCheckHelper::getLatest_ips($ip)) die('Restricted access'); // already blocked : die
 $cgsecure_params = CGIpCheckHelper::getParams();
 $security = $cgsecure_params->security;
+
+if(isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $security)) { return ; } // CG Secure OK : on ignore les erreurs htaccess
+
 $tmp = '<html lang="fr-fr" dir="ltr"><head><meta charset="utf-8" />
       <title>Erreur: CG Secure HtAccess Blocked</title></head>';
 $tmp = '<style>.text-center {text-align: center !important;}.align-self-center{align-self: center !important;}</style>';
@@ -101,11 +102,6 @@ if (isset($_SERVER['REDIRECT_STATUS'])) {
 }
 $tmp .= $err.$block.'</ul></div></div></body></html>';
 echo $tmp;
-	
-																			
-	
-  
-		  
 $err = $prefixe.$errtype.'-'.$err;
 if (($cgsecure_params->logging_ht == 1) || (($cgsecure_params->logging_ht == 2) && ($errtype == "e")))  {
 	Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG,Array('CGHTAccess'));

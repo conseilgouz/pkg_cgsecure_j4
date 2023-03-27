@@ -2,6 +2,22 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>2.2.0</version>
+        <note>
+            <item>Update : 27/03/2023</item>
+        </note>
+        <fix>
+            <item>Default htaccess Joomla 4.29 update</item>
+			<item>add security code in cg-secure cookie</item>
+        </fix>
+		<addition>
+			<item>Dynamic version number from manifest</item>
+			<item>add wp-login.php in WP files to block</item>
+		</addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>2.1.13</version>
         <note>
             <item>Update : 07/11/2022</item>
