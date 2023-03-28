@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>2.2.8</version>
+        <note>
+            <item>Update : 28/03/2023</item>
+        </note>
+		<fix>
+			<item>Hide cgsecure/htaccess.php line in abuseip message </item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>2.2.7</version>
         <note>
             <item>Update : 28/03/2023</item>

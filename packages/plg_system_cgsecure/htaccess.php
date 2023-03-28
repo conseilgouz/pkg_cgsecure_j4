@@ -1,7 +1,7 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   2.2.6
+ * Version		   2.2.8
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -86,8 +86,8 @@ $err = "Wrong message";
 $block = "";
 if (isset($_SERVER['REDIRECT_STATUS'])) {
    $req = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES); // sanitize command
-   if (strpos('cgsecure/htaccess',$req) !== false) $req = "..."; // lost URI in redirect
-   $line = substr($req,0,100);
+   if (strpos($req,'cgsecure/htaccess') !== false) $req = "..."; // lost URI in redirect
+   $line = substr($req,0,100); // else show entered line
    $compl = (strlen($req) < 101) ? '' : '...';
    foreach ($_GET as $key => $value) {
 	  if (($key == "sec") && ($value == $security)) $ctl = true;
