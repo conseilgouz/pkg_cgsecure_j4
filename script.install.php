@@ -27,7 +27,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 	private $previous_version        = '';
 	private $dir           = null;
 	private $installerName = 'cgsecureinstaller';
-	private $cgsecure_force_update_version = "2.2.5";
+	private $cgsecure_force_update_version = "2.2.6";
 	const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
 	const SERVER_CONFIG_FILE_NONE = '';
     const CGPATH = '/media/com_cgsecure';

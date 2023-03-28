@@ -1,9 +1,9 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   2.1.5
+ * Version		   2.2.6
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (c) 2022 ConseilGouz. All Rights Reserved.
+ * @copyright (c) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  *
  * AbuseIPDB access from https://www.webniraj.com/2019/03/12/auto-reporting-lfd-block-reports-to-abuse-ip-db-v2/
