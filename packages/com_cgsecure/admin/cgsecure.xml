@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="4.0" method="upgrade">
 	<name>COM_CGSECURE</name>
-	<creationDate>2023-03-27</creationDate>
+	<creationDate>2023-03-28</creationDate>
 	<author>ConseilGouz</author>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
 	<copyright>Copyright (C) 2023 ConseilGouz.com. All Rights Reserved</copyright>
 	<license>GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html</license>
-	<version>2.2.3</version>
+	<version>2.2.7</version>
 	<namespace path="src">ConseilGouz\Component\CGSecure</namespace>
 	<description>COM_CGSECURE_XML_DESCRIPTION</description>
-	<scriptfile>script.php</scriptfile>
     <install>
 		<sql>
 			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql
@@ -35,11 +34,9 @@
             <menu link="option=com_cgsecure&amp;view=logs" view="logs">COM_CGSECURE_LOGS</menu>
         </submenu>
 		<files folder="admin">
-			<filename>index.html</filename>
 			<filename>cgsecure.xml</filename>
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
-			<filename>script.php</filename>
 			<folder>sql</folder>
 			<folder>forms</folder>
 			<folder>services</folder>

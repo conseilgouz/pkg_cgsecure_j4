@@ -27,7 +27,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 	private $previous_version        = '';
 	private $dir           = null;
 	private $installerName = 'cgsecureinstaller';
-	private $cgsecure_force_update_version = "2.2.6";
+	private $cgsecure_force_update_version = "2.2.7";
 	const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
 	const SERVER_CONFIG_FILE_NONE = '';
     const CGPATH = '/media/com_cgsecure';
@@ -148,10 +148,6 @@ class PlgSystemCgsecureInstallerInstallerScript
 	}
 	// Begin update HTACCESS -----------------------------------------------
 	private function forceHTAccess() {
-		// get security code from table
-		$helperFile = JPATH_SITE . '/libraries/cgsecure/ipcheck.php';
-		if (!class_exists('CGIpCheckHelper') && is_file($helperFile))	include_once $helperFile;		
-		$cgsecure_params = CGIpCheckHelper::getParams();
 		$this->security = $cgsecure_params->security; // htaccess has been created => security must contain a value
 	    $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
 	    if (!$serverConfigFile) { // no .htaccess file : copy default htaccess.txt as .htaccess
@@ -236,7 +232,8 @@ class PlgSystemCgsecureInstallerInstallerScript
 	}	
 	private function read_cgfile($afile) {
 		$readBuffer = file($afile, FILE_IGNORE_NEW_LINES); 
-        $this->config  = $this->getParams();	
+        $this->config  = $this->getParams();
+		$this->security =	$this->config->security;
 		if ($this->config->multi == '1') {// site multi-adresse
 			$server = '('.str_replace(',','|',$this->config->get('multisite','')).')';
 			$dir = "";

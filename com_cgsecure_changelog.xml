@@ -2,12 +2,24 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>2.2.7</version>
+        <note>
+            <item>Update : 28/03/2023</item>
+        </note>
+		<fix>
+			<item>Cleanup installation script</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>2.2.6</version>
         <note>
             <item>Update : 28/03/2023</item>
         </note>
 		<fix>
 			<item>Invalid version in cgaccess file</item>
+			<item>Normalize version numbers in component/plugins/library</item>
 		</fix>
 	</changelog>
 	<changelog>
