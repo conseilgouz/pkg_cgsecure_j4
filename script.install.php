@@ -148,12 +148,11 @@ class PlgSystemCgsecureInstallerInstallerScript
 	}
 	// Begin update HTACCESS -----------------------------------------------
 	private function forceHTAccess() {
-		// get security code
+		// get security code from table
 		$helperFile = JPATH_SITE . '/libraries/cgsecure/ipcheck.php';
 		if (!class_exists('CGIpCheckHelper') && is_file($helperFile))	include_once $helperFile;		
 		$cgsecure_params = CGIpCheckHelper::getParams();
-		$this->security = $cgsecure_params->security;
-		if ($this->security == "0") $this->security = $this->random_float(0,1);
+		$this->security = $cgsecure_params->security; // htaccess has been created => security must contain a value
 	    $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
 	    if (!$serverConfigFile) { // no .htaccess file : copy default htaccess.txt as .htaccess
 	        $source = JPATH_ROOT.self::CGPATH .'/txt/htaccess.txt';
