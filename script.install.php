@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 2.2.2
+ * Version			: 2.2.5
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -27,7 +27,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 	private $previous_version        = '';
 	private $dir           = null;
 	private $installerName = 'cgsecureinstaller';
-	private $cgsecure_force_update_version = "2.2.2";
+	private $cgsecure_force_update_version = "2.2.5";
 	const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
 	const SERVER_CONFIG_FILE_NONE = '';
     const CGPATH = '/media/com_cgsecure';
@@ -148,6 +148,12 @@ class PlgSystemCgsecureInstallerInstallerScript
 	}
 	// Begin update HTACCESS -----------------------------------------------
 	private function forceHTAccess() {
+		// get security code
+		$helperFile = JPATH_SITE . '/libraries/cgsecure/ipcheck.php';
+		if (!class_exists('CGIpCheckHelper') && is_file($helperFile))	include_once $helperFile;		
+		$cgsecure_params = CGIpCheckHelper::getParams();
+		$this->security = $cgsecure_params->security;
+		if ($this->security == "0") $this->security = $this->random_float(0,1);
 	    $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
 	    if (!$serverConfigFile) { // no .htaccess file : copy default htaccess.txt as .htaccess
 	        $source = JPATH_ROOT.self::CGPATH .'/txt/htaccess.txt';
@@ -170,7 +176,11 @@ class PlgSystemCgsecureInstallerInstallerScript
 	    } 
 	    Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : Error during insert'));
 		return;
-	}	
+	}
+	// from https://www.php.net/manual/en/function.lcg-value.php#75562 
+	private function random_float($min,$max) {
+		return ($min+lcg_value()*(abs($max-$min)));
+	}
 	private function getServerConfigFile($file)
 	{
 		if (file_exists($this->getServerConfigFilePath($file))
