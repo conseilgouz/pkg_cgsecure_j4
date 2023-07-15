@@ -47,19 +47,19 @@ $wa->useScript('keepalive')
 				<input type="checkbox" name="toggle" value="" title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 			</th>			
 			<th width="5%" class="center">
-				<?php echo JHtml::_('grid.sort', 'COM_CGSECURE_ID', 'a.id', $listDirn, $listOrder); ?>
+				<?php echo HTMLHelper::_('grid.sort', 'COM_CGSECURE_ID', 'a.id', $listDirn, $listOrder); ?>
 			</th>
 			<th width="15%" class="center">
-				<?php echo JHtml::_('grid.sort', 'COM_CGSECURE_IP', 'a.ip', $listDirn, $listOrder); ?>
+				<?php echo HTMLHelper::_('grid.sort', 'COM_CGSECURE_IP', 'a.ip', $listDirn, $listOrder); ?>
 			</th>
 			<th width="10%" class="center">
-				<?php echo JHtml::_('grid.sort', 'COM_CGSECURE_COUNTRY', 'a.country', $listDirn, $listOrder); ?>
+				<?php echo HTMLHelper::_('grid.sort', 'COM_CGSECURE_COUNTRY', 'a.country', $listDirn, $listOrder); ?>
 			</th>
             <th width="20%" class="center">
-                <?php echo JHtml::_('grid.sort', 'COM_CGSECURE_LOGS_ACTION', 'a.action', $listDirn, $listOrder); ?>	
+                <?php echo HTMLHelper::_('grid.sort', 'COM_CGSECURE_LOGS_ACTION', 'a.action', $listDirn, $listOrder); ?>	
             </th>
 			<th width="20%" class="center">
-				<?php echo JHtml::_('grid.sort', 'COM_CGSECURE_LOGS_ATTEMPTDATE', 'a.attempt_date', $listDirn, $listOrder); ?>
+				<?php echo HTMLHelper::_('grid.sort', 'COM_CGSECURE_LOGS_ATTEMPTDATE', 'a.attempt_date', $listDirn, $listOrder); ?>
 			</th>
 			
 

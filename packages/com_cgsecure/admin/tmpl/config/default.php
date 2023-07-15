@@ -35,8 +35,8 @@ $wa->useScript('keepalive')
     <div id="j-main-container">
 <?php endif;?>
             <div class="nr-main-header">
-                <h2><?php echo JText::_('CGSECURE_CONFIG'); ?></h2>
-                <p><?php echo JText::_('CGSECURE_CONFIG_DESC'); ?></p>
+                <h2><?php echo Text::_('CGSECURE_CONFIG'); ?></h2>
+                <p><?php echo Text::_('CGSECURE_CONFIG_DESC'); ?></p>
             </div>
             <div class="nr-main-content">
         		<form action="<?php echo Route::_('index.php?option=com_cgsecure&view=config'); ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
@@ -46,7 +46,7 @@ $wa->useScript('keepalive')
 
                             foreach ($this->form->getFieldSets() as $key => $fieldset)
                             {
-                                echo HTMLHelper::_('uitab.addTab', 'tab', $fieldset->name, JText::_($fieldset->label));
+                                echo HTMLHelper::_('uitab.addTab', 'tab', $fieldset->name, Text::_($fieldset->label));
                                 echo $this->form->renderFieldSet($fieldset->name);
                                 echo HTMLHelper::_('uitab.endTab');
                             }

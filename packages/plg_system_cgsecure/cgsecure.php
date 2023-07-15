@@ -2,7 +2,7 @@
 /**
  * @package 	CGSecure
  * from karebu secure (kSesure)
- * Version			: 2.2.6
+ * Version			: 2.3.0
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -66,7 +66,7 @@ class plgSystemCGSecure extends CMSPlugin
         {
             if (substr(php_sapi_name(), 0, 3) == 'cgi')
             {
-                Factory::getApplication()->enqueueMessage(JText::_('CG_SECURE_NOT_APACHE_HANDLER'),'error');
+                Factory::getApplication()->enqueueMessage(Text::_('CG_SECURE_NOT_APACHE_HANDLER'),'error');
                 return true;
             }
             

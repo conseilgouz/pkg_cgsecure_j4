@@ -1,7 +1,7 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 2.1.5
+ * Version			: 2.3.0
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -10,6 +10,8 @@
 */
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
 const _JEXEC = 1;
 define('BLACKHOLE_PATH', dirname(__FILE__) .'/');
 
@@ -86,14 +88,14 @@ $tmp = '<html lang="fr-fr" dir="ltr"><head><meta charset="utf-8" />
       <title>Erreur: CG Secure HtAccess Blocked</title></head>';
 $tmp = '<style>.text-center {text-align: center !important;}.align-self-center{align-self: center !important;}</style>';
 $tmp .= '<body class="error-page" style="" ><div class="text-center align-self-center">';
-$tmp .= '<h1>'.JText::_('CGSECURE_MSG_H1').'</h1>';
+$tmp .= '<h1>'.Text::_('CGSECURE_MSG_H1').'</h1>';
 $tmp .= '<div>'	 ;
 $prefixe = $_SERVER['SERVER_NAME'];
 $prefixe = substr(str_replace('www.','',$prefixe),0,2);
 $ctl = false;
 $errtype = "e"; // supposed blocking error
 // init error message
-$err = JText::sprintf('CGSECURE_MSG_BAD',$ua);
+$err = Text::sprintf('CGSECURE_MSG_BAD',$ua);
 $tmp .= $err.'</div></body></html>';
 echo $tmp;
 $err = $prefixe.$errtype.'-'.$err;

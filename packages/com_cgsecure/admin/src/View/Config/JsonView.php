@@ -64,7 +64,7 @@ class JsonView extends AbstractView
 		}
 		$arr = [];
 		$arr['retour'] = $msg;
-		echo new \JResponseJson($arr); 
+		echo new JsonResponse($arr); 
     }
 	// delete CG Secure information in .htaccess file
 	private function delHTAccess() {
