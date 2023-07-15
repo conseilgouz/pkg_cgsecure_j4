@@ -391,7 +391,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 		return true;
 	}
 	private function installPackages() {
-		$packages = JFolder::folders($this->dir . '/packages');
+		$packages = Folder::folders($this->dir . '/packages');
 
 		$packages = array_diff($packages, ['library_cgsecure']);
 
@@ -438,7 +438,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 	}
 	private function uninstallInstaller()
 	{
-		if ( ! JFolder::exists(JPATH_PLUGINS . '/system/' . $this->installerName)) {
+		if ( ! Folder::exists(JPATH_PLUGINS . '/system/' . $this->installerName)) {
 			return;
 		}
 		$this->delete([
@@ -459,11 +459,11 @@ class PlgSystemCgsecureInstallerInstallerScript
 	public function delete($files = [])	{
 		foreach ($files as $file) {
 			if (is_dir($file)) {
-				JFolder::delete($file);
+				Folder::delete($file);
 			}
 
 			if (is_file($file))	{
-				JFile::delete($file);
+				File::delete($file);
 			}
 		}
 	}
