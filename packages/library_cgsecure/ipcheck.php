@@ -18,6 +18,7 @@ use Joomla\Utilities\IpHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
 
 class CGIpCheckHelper{
     private static $my_name = "CGIpCheck";
@@ -100,7 +101,7 @@ class CGIpCheckHelper{
 		if (self::$logging) Log::addLogger(array('text_file' => 'cgipcheck.trace.log'), Log::DEBUG, array(self::$caller));
 		if (in_array($ip,self::$latest_rejected)) {
 		    if (self::check_hacker(self::$errtype,$ip)) { // no errtype change : ok
-				if (self::$logging) Log::add(self::$context.' : '.JText::_('CG_IPCHECK_ALREADY_REJECTED').$ip, Log::DEBUG, self::$caller); 
+				if (self::$logging) Log::add(self::$context.' : '.Text::_('CG_IPCHECK_ALREADY_REJECTED').$ip, Log::DEBUG, self::$caller); 
 				self::redir_out();
 				return false;
 			}
@@ -123,7 +124,7 @@ class CGIpCheckHelper{
 					self::set_rejected(self::$caller,self::$errtype,$ip,'unknown',self::$params->keep);
 					self::redir_out();
 				} elseif (($countries != '*') && (!in_array($json_array->country_code,$pays_autorise))) {
-					if (self::$logging) Log::add(JText::_("CG_IPCHECK_UNAUTHORIZED").$json_array->country_code, Log::DEBUG, self::$caller);
+					if (self::$logging) Log::add(Text::_("CG_IPCHECK_UNAUTHORIZED").$json_array->country_code, Log::DEBUG, self::$caller);
 					self::set_rejected(self::$caller,self::$errtype,$ip,$json_array->country_code,self::$params->keep);
 					self::redir_out();
 				}				
@@ -147,7 +148,7 @@ class CGIpCheckHelper{
 						self::redir_out();
 					} elseif (($countries != '*') && (!in_array($json_array->country_code,$pays_autorise))) { 
 						if (self::$report) self::report(self::$context,$ip);
-						if (self::$logging) Log::add(JText::_("CG_IPCHECK_UNAUTHORIZED").$json_array->country_code, Log::DEBUG, self::$caller);
+						if (self::$logging) Log::add(Text::_("CG_IPCHECK_UNAUTHORIZED").$json_array->country_code, Log::DEBUG, self::$caller);
 						self::set_rejected(self::$caller,self::$errtype,$ip,$json_array->country_code,self::$params->keep);
 						self::redir_out();
 					
@@ -159,7 +160,7 @@ class CGIpCheckHelper{
 					self::redir_out();
 				}
 			} elseif (($countries != '*') && (!in_array($resp->data->countryCode,$pays_autorise))) {
-			    if (self::$logging) Log::add(self::$context.' : '.JText::_("CG_IPCHECK_UNAUTHORIZED").$ip.','.$resp->data->countryCode, Log::DEBUG, self::$caller);
+			    if (self::$logging) Log::add(self::$context.' : '.Text::_("CG_IPCHECK_UNAUTHORIZED").$ip.','.$resp->data->countryCode, Log::DEBUG, self::$caller);
 			    if (self::$report) self::report(self::$context,$ip);
 			    self::set_rejected(self::$caller,self::$errtype,$ip,$resp->data->countryCode,self::$params->keep);
 			    self::redir_out();
@@ -457,14 +458,14 @@ class CGIpCheckHelper{
 		$current = self::read_current(self::getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),$list);
 		if ($current == '') { // read error : don't store anything
 			File::delete($wait);
-			return JText::_('CGSECURE_ADD_ADMIN_HTACCESS_INSERT_ERROR');		
+			return Text::_('CGSECURE_ADD_ADMIN_HTACCESS_INSERT_ERROR');		
 		}
 		if (self::store_file(self::getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),$current)) {
 			File::delete($wait);
 	        return;
 	    } 
 		File::delete($wait);
-	    return JText::_('CGSECURE_ADD_ADMIN_HTACCESS_INSERT_ERROR');		
+	    return Text::_('CGSECURE_ADD_ADMIN_HTACCESS_INSERT_ERROR');		
 	}
 	// read current .htaccess file, add new IP list and remove old IP list
 	private static function read_current($afile,$list) {
@@ -530,7 +531,7 @@ class CGIpCheckHelper{
 				return File::write($pathToHtaccess,$records );
 			}
 		}
-		return JText::_('CGSECURE_ADD_ADMIN_HTACCESS_MERGE_ERROR');;
+		return Text::_('CGSECURE_ADD_ADMIN_HTACCESS_MERGE_ERROR');;
 	}
 	
 	private static function getServerConfigFile($file)
