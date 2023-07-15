@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 2.3.1
+ * Version			: 2.3.2
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -17,7 +17,7 @@ use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Version;
-use Joomla\CMS\Installer;
+use Joomla\CMS\Installer\Installer;
 
 class PlgSystemCgsecureInstallerInstallerScript
 {
