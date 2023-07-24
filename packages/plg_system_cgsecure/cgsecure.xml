@@ -7,7 +7,7 @@
 	<license>GNU General Public License</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<version>2.3.4</version>
+	<version>2.3.5</version>
 	<description>CG_SECURE_DESC</description>
 	<files>
 		<filename plugin="cgsecure">cgsecure.php</filename>
