@@ -1,7 +1,7 @@
 <?php
 /**
 * CG Secure Component For Joomla 4
-* Version			: 2.2.3
+* Version			: 2.3.3
 * Package			: CG Secure Component
 * copyright 		: Copyright (C) 2023 ConseilGouz. All rights reserved.
 * license    		: http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
 
 class com_cgsecureInstallerScript
 {

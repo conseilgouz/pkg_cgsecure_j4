@@ -1,9 +1,9 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 2.1.5
+ * Version			: 2.3.3
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
 **/
 namespace ConseilGouz\Component\CGSecure\Administrator\View\Config;
@@ -13,8 +13,8 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\AbstractView;
 use Joomla\CMS\Table\Table;

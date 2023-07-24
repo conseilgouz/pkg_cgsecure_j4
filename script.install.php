@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 2.3.2
+ * Version			: 2.3.3
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -13,8 +13,8 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text as JText;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Version;
 use Joomla\CMS\Installer\Installer;
@@ -438,7 +438,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 	}
 	private function uninstallInstaller()
 	{
-		if ( ! Folder::exists(JPATH_PLUGINS . '/system/' . $this->installerName)) {
+		if ( ! is_dir(JPATH_PLUGINS . '/system/' . $this->installerName)) {
 			return;
 		}
 		$this->delete([
