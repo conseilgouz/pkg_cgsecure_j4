@@ -60,7 +60,8 @@ class ConfigTable extends Table implements VersionableTableInterface
             $db->getQuery(true)
                 ->select('COUNT(*)')
                 ->from($db->quoteName($this->_tbl))
-                ->where($db->quoteName('name') . ' = ' . $db->quote($key))
+                ->where($db->quoteName('name') . ' = :key')
+				->bind(':key',$key,\Joomla\Database\ParameterType::STRING)
         )->loadResult();
 
         $exists = $result > 0 ? true : false;
@@ -102,7 +103,8 @@ class ConfigTable extends Table implements VersionableTableInterface
 	        $db->getQuery(true)
 	        ->select('*')
 	        ->from($db->quoteName($this->_tbl))
-	        ->where($db->quoteName('name') . ' = ' . $db->quote($key))
+	        ->where($db->quoteName('name') . ' = :key')
+			->bind(':key',$key,\Joomla\Database\ParameterType::STRING)
 	        )->loadObject();
         	        
 	    $this->resaparams = $result;

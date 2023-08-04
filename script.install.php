@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 2.3.3
+ * Version			: 2.4.0
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -18,6 +18,7 @@ use Joomla\Filesystem\Folder;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Version;
 use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Log\Log;
 
 class PlgSystemCgsecureInstallerInstallerScript
 {
@@ -335,9 +336,6 @@ class PlgSystemCgsecureInstallerInstallerScript
 
 	private function createExtensionRoot()
 	{
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.file');
-
 		$destination = JPATH_PLUGINS . '/system/' . $this->installerName;
 
 		Folder::create($destination);
@@ -417,7 +415,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 	        $db->execute();
         }
         catch (RuntimeException $e) {
-            JLog::add('unable to enable Plugins CGSecure', JLog::ERROR, 'jerror');
+            Log::add('unable to enable Plugins CGSecure', Log::ERROR, 'jerror');
         }
 
 		return true;

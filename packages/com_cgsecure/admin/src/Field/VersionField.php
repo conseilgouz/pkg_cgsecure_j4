@@ -41,7 +41,8 @@ class VersionField extends FormField
 		$query
 			->select($db->quoteName('manifest_cache'))
 			->from($db->quoteName('#__extensions'))
-			->where($db->quoteName('element') . '=' . $db->Quote($extension));
+			->where($db->quoteName('element') . '= :ext')
+			->bind(':ext',$extension,\Joomla\Database\ParameterType::STRING);
 		$db->setQuery($query, 0, 1);
 		$row = $db->loadAssoc();
 		$tmp = json_decode($row['manifest_cache']);

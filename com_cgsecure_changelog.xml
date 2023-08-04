@@ -2,6 +2,19 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>2.4.0</version>
+        <note>
+            <item>Update : 04/08/2023</item>
+        </note>
+		<change>
+			<item>Use IpHelper to determine ip address</item>
+			<item>sql : use prepared statements</item>
+		</change>
+	</changelog>
+
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>2.3.5</version>
         <note>
             <item>Update : 24/07/2023</item>

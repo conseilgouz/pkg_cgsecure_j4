@@ -1,7 +1,7 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   2.2.6
+ * Version		   2.4.0
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (c) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -90,8 +90,8 @@ class CGIpCheckHelper{
 		self::$errtype = $plugin->errtype;
 		self::$context = $context;
         self::$latest_rejected = self::get_rejected();
-		// $ip = IpHelper::getIp(); 
-		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip = IpHelper::getIp(); 
+		// $ip = $_SERVER['REMOTE_ADDR'];
  // $ip = '218.92.1.534'; // test hackeur chinois 
  // $ip = '54.36.148.179'; // in abuseip whitelist
 		if (self::whiteList($ip)) return true; 
@@ -181,7 +181,8 @@ class CGIpCheckHelper{
 		self::$caller = $plugin->myname;
 		self::$message = $plugin->mymessage;
 		self::$context = $context;
-		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip = IpHelper::getIp(); 
+		// $ip = $_SERVER['REMOTE_ADDR'];
         if (self::$context  != 'SystemCGSecure') { // no test when system, otherwise, you'll loose your admin....
  // $ip = '222.186.42.7'; // test hackeur chinois 
 		}
@@ -215,7 +216,7 @@ class CGIpCheckHelper{
 	}
 	// Check IP in whitelist or local
     public static function whiteList($ip = NULL) {
-		if (!$ip) $ip = $_SERVER['REMOTE_ADDR'];
+		if (!$ip) $ip = IpHelper::getIp();  // $ip = $_SERVER['REMOTE_ADDR'];
 		$whitelist = self::$params->whitelist;
 		$arr_whitelist = explode(',',$whitelist);
 		if ( in_array($ip, $arr_whitelist) || ($ip == '::1') || ($ip == '127.0.0.1')) { // dans liste ou local
@@ -286,7 +287,8 @@ class CGIpCheckHelper{
 		$query = $db->getQuery(true);
         $query->select($db->quoteName('errtype'))
 	            ->from($db->quoteName('#__cg_rejected_ip'))
-	            ->where($db->quoteName('ip').'="'.$ip.'"');
+	            ->where($db->quoteName('ip').'= :ip')
+				->bind(':ip',$ip,\Joomla\Database\ParameterType::STRING);
         $db->setQuery($query);
         try {
 	        $type = $db->loadResult();
@@ -311,11 +313,6 @@ class CGIpCheckHelper{
 	    } else {
 	        $mainframe->redirect(self::$params->redir_ext);
 	    }
-	}
-	// from https://stackoverflow.com/questions/3003145/how-to-get-the-client-ip-address-in-php
-	private static function get_ip() {
-	    if (($_SERVER['REMOTE_ADDR'] == '::1') ||  ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) return '::1';
-		return $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_X_REAL_IP'] ?? $_SERVER['REMOTE_ADDR'];
 	}
 // curl request function
 	private static function abuseIPDBrequest($path, $method, $data) {
