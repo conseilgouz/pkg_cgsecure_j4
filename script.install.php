@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 2.4.0
+ * Version			: 2.4.1
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -125,6 +125,10 @@ class PlgSystemCgsecureInstallerInstallerScript
 			->where($db->quoteName('location') . ' like "%conseilgouz.com/updates/com_cgsecure%"');
 		$db->setQuery($query);
 		$db->execute();
+		// remove obsolete file 
+		$this->delete([
+			JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.php',
+		]);		
 		// Check if HTACCESS file has to be updated
 		$serverConfigFile = $this->getServerConfigFile('.htaccess');
 		if (!$serverConfigFile) { // no .htaccess file

@@ -2,6 +2,24 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>2.4.1</version>
+        <note>
+            <item>Update : 29/08/2023</item>
+        </note>
+		<change>
+			<item>update blackhole-bad-bots whitelist</item>
+			<item>change media/cg_secure/cg_no_robot/index.php to index.txt</item>
+		</change>
+		<addition>
+			<item>add specific .htaccess to images and media directories</item>
+		</addition>
+		<fix>
+			<item>Joomla! 5.x compatibility</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>2.4.0</version>
         <note>
             <item>Update : 04/08/2023</item>
@@ -11,7 +29,6 @@
 			<item>sql : use prepared statements</item>
 		</change>
 	</changelog>
-
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>

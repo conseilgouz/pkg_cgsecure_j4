@@ -1,7 +1,7 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 2.3.3
+ * Version			: 2.4.1
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -58,6 +58,8 @@ class JsonView extends AbstractView
 				$msg = $this->deleteIPSHTAccess();
 			} elseif ($access == 1) {// add CG Secure lines to htaccess file
 				$msg = $this->addHTAccess();
+				// add .htaccess in images and media directories
+				$this->protectdirs();
 			} elseif ($access == 2) { // delete hackers IP 
 				$msg = $this->deleteIPSHTAccess();
 			}
@@ -73,6 +75,10 @@ class JsonView extends AbstractView
 		    return Text::_('CGSECURE_NO_HTACCESS');
 		}
 		$current = $this->read_current($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+		if (!$current) { // empty .htaccess 
+		    File::delete($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS)); 
+			return "";
+		}
 		$cgFile = '';
 		$rejips = '';
 		if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),$current,$cgFile,$rejips)) {
@@ -120,6 +126,18 @@ class JsonView extends AbstractView
 	    } 
 	    return Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
 	}
+	// copy CG Secure information in .htaccess from images and media directories
+	private function protectdirs() {
+		if (file_exists(JPATH_ROOT.'/images/.htaccess') && file_exists(JPATH_ROOT.'/media/.htaccess')) 
+			return; // .htaccess already present in images and media directories
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
+		$dest = JPATH_ROOT.'/images/.htaccess';
+		if (is_file($dest))	File::delete($dest); 
+		if (!copy($source,$dest)) return Text::_('CGSECURE_PROTECTDIRS_ERROR');
+		$dest = JPATH_ROOT.'/media/.htaccess';
+		if (is_file($dest))	File::delete($dest); 
+		if (!copy($source,$dest)) return Text::_('CGSECURE_PROTECTDIRS_ERROR');
+	}
 	// add Bad robots blocking
 	// - add lines in robots.txt files if it exists, or copy default robots.txt file
 	// - create cg_no_robots dir
@@ -153,6 +171,11 @@ class JsonView extends AbstractView
 	      catch(Exception $e) {
 	          return Text::_('CGSECURE_ADD_ROBOTS_ERR');
 	      }
+  		$source = JPATH_ROOT.'/cg_no_robot/index.txt';
+		$dest = JPATH_ROOT.'/cg_no_robot/index.php';
+		if (is_file($dest))	File::delete($dest); // remove index.php file if present
+		if (!rename($source,$dest)) return Text::_('CGSECURE_ADD_ROBOTS_ERR');
+		
     	return Text::_('CGSECURE_ADD_ROBOTS');
 	}
 	// delete CG Secure information in robots.txt file

@@ -1,9 +1,9 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 2.3.0
+ * Version			: 2.4.1
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  *	
  * from Blackhole for Bad Bots https://perishablepress.com/blackhole-bad-bots/
@@ -70,7 +70,7 @@ function cgsecure_ip_whitelist($cgsecure_params,$ip) {
 }
 
 function blackhole_whitelist($ua) {
-	if (preg_match("/(a6-indexer|adsbot-google|ahrefsbot|aolbuild|apis-google|baidu|bingbot|bingpreview|butterfly|cloudflare|duckduckgo|embedly|facebookexternalhit|facebot|googlebot|ia_archiver|linkedinbot|mediapartners-google|msnbot|netcraftsurvey|outbrain|pinterest|quora|rogerbot|showyoubot|slackbot|slurp|sogou|teoma|tweetmemebot|twitterbot|uptimerobot|urlresolver|vkshare|w3c_validator|wordpress|wprocketbot|yandex)/i", $ua)) {
+	if (preg_match("/(a6-indexer|adsbot-google|ahrefsbot|aolbuild|apis-google|baidu|bingbot|bingpreview|butterfly|chrome|cloudflare|duckduckgo|embedly|facebookexternalhit|facebot|googlebot|google\spage\sspeed|ia_archiver|linkedinbot|mediapartners-google|msnbot|netcraftsurvey|outbrain|pinterest|quora|rogerbot|showyoubot|slackbot|slurp|sogou|teoma|tweetmemebot|twitterbot|uptimerobot|urlresolver|vkshare|w3c_validator|wordpress|wp\srocket|yandex)/i", $ua)) {
 		return true;
 	}
 	return false;

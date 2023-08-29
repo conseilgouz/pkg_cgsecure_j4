@@ -1,7 +1,7 @@
 <?php
 /**
  * @component     Plugin User CG Secure
- * Version			: 2.2.6
+ * Version			: 2.4.1
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -13,6 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 
 class PlgUserCGSecure extends CMSPlugin
 {
@@ -41,11 +42,11 @@ class PlgUserCGSecure extends CMSPlugin
     function onUserLoginFailure( $user)  {
         $this->debug = $this->cgsecure_params->debug;
         if (!$this->debug) return;
-		JLog::addLogger(array('text_file' => 'cgipcheck.trace.log'), JLog::INFO);
+		Log::addLogger(array('text_file' => 'cgipcheck.trace.log'), Log::INFO);
 		$cmd = $_SERVER['REQUEST_URI'];
-		JLog::add('Cmd : '.htmlspecialchars($cmd, ENT_QUOTES), JLog::INFO, "Auth Fail");
+		Log::add('Cmd : '.htmlspecialchars($cmd, ENT_QUOTES), Log::INFO, "Auth Fail");
 		foreach($_REQUEST as $key => $value) {
-		    JLog::add('key : '.htmlspecialchars($key, ENT_QUOTES).":".htmlspecialchars($value, ENT_QUOTES), JLog::INFO, "Auth Fail");
+		    Log::add('key : '.htmlspecialchars($key, ENT_QUOTES).":".htmlspecialchars($value, ENT_QUOTES), Log::INFO, "Auth Fail");
 		}
 	}
 	// Check IP on prepare Forms

@@ -1,0 +1,17 @@
+#------------------------CG SECURE HTACCESS BEGIN-2.4.1---------------
+# an idea from AESecure. CG Secure blocks and reports hacking attempts
+#
+# Block standard Joomla files that are always installed by default
+<FilesMatch "(joomla_black\.gif|joomla_green\.gif|joomla_logo_black\.jpg|powered_by\.png)">
+Order Allow,Deny 
+Deny from all
+</FilesMatch>
+#Deny access to all CGI, Perl, PHP and Python
+<FilesMatch "\.(cgi|php|pl|py|jsp|sh)$">
+Deny from all
+</FilesMatch>
+
+# secure directory by disabling script execution
+AddHandler cgi-script .php .pl .py .jsp .asp .sh .cgi
+Options -ExecCGI
+#------------------------CG SECURE HTACCESS END--------------------
