@@ -2,7 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>3.0.21</version>
+		<version>3.0.3</version>
+        <note>
+            <item>Update : 28/10/2023</item>
+        </note>
+		<fix>
+			<item>Script install error</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>3.0.2</version>
         <note>
             <item>Update : 28/10/2023</item>
         </note>

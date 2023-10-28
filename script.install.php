@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 3.0.2
+ * Version			: 3.0.3
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -126,8 +126,6 @@ class PlgSystemCgsecureInstallerInstallerScript
 		$db->setQuery($query);
 		$db->execute();
 	// fix wrong type in update_sites
-	    $db = Factory::getContainer()->get(DatabaseInterface::class);;
-	    
         $query = $db->getQuery(true);
 		$query->update($db->quoteName('#__update_sites'))
 			  ->set($db->qn('type') . ' = "extension"')
