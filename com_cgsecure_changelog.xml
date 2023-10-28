@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.0.21</version>
+        <note>
+            <item>Update : 28/10/2023</item>
+        </note>
+		<fix>
+			<item>Bad Robots : call CGIpcheck</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.0.1</version>
         <note>
             <item>Update : 28/10/2023</item>

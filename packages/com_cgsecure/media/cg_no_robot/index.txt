@@ -1,8 +1,8 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 2.4.1
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+ * Version			: 3.0.2
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  *	
@@ -11,6 +11,7 @@
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use ConseilGouz\CGSecure\Helper\Cgipcheck;
 
 const _JEXEC = 1;
 define('BLACKHOLE_PATH', dirname(__FILE__) .'/');
@@ -48,14 +49,11 @@ if (($_SERVER['REMOTE_ADDR'] == '::1') ||  ($_SERVER['REMOTE_ADDR'] == '127.0.0.
 } else {
 	$ip = $_SERVER['REMOTE_ADDR'];
 }
-$helperFile = JPATH_SITE . '/libraries/cgsecure/ipcheck.php';
-if (!class_exists('CGIpCheckHelper') && is_file($helperFile))	include_once $helperFile;
-if (!class_exists('CGIpCheckHelper')) { // library not found
-	return  true;
-}
-$cgsecure_params = \CGIpCheckHelper::getParams();
+$helperFile = JPATH_SITE . '/libraries/cgsecure/Helper/Cgipcheck.php';
+if (is_file($helperFile))	include_once $helperFile;
+$cgsecure_params = Cgipcheck::getParams();
 if (cgsecure_ip_whiteList($cgsecure_params,$ip)) die('Nothing to see here'); // ip in whitelist
-if (\CGIpCheckHelper::getLatest_ips($ip)) die('Restricted access'); // already blocked : die
+if (Cgipcheck::getLatest_ips($ip)) die('Restricted access'); // already blocked : die
 $ua = isset($_SERVER['HTTP_USER_AGENT']) ? blackhole_sanitize($_SERVER['HTTP_USER_AGENT']) : null;
 
 if (blackhole_whitelist($ua)) die('Nothing to see here');
@@ -99,11 +97,11 @@ $err = Text::sprintf('CGSECURE_MSG_BAD',$ua);
 $tmp .= $err.'</div></body></html>';
 echo $tmp;
 $err = $prefixe.$errtype.'-'.$err;
-\CGIpCheckHelper::block_hacker($myname,$err,$errtype,$ip);
+Cgipcheck::block_hacker($myname,$err,$errtype,$ip);
 if ($cgsecure_params->logging_bad == 1)  {
 	Log::addLogger(array('text_file' => 'cgbadrobots.trace.php'), Log::DEBUG,Array('CGBadRobots'));
 	Log::add($ip.' : '.$err, Log::DEBUG, 'CGBadRobots'); 
 }
 // CG Secure report to AbuseIP and reject it unsing htaccess file (if errortype = e)
 $report = $cgsecure_params->report == 1;
-if ($report) \CGIpCheckHelper::report_hacker($myname,$err,$errtype,$ip);
+if ($report) Cgipcheck::report_hacker($myname,$err,$errtype,$ip);

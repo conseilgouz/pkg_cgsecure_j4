@@ -2,8 +2,8 @@
 
 /**
  * @package    CG Secure
- * Version			: 2.4.1
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+ * Version			: 3.0.2
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  * @license    GNU/GPLv2
@@ -125,6 +125,20 @@ class PlgSystemCgsecureInstallerInstallerScript
 			->where($db->quoteName('location') . ' like "%conseilgouz.com/updates/com_cgsecure%"');
 		$db->setQuery($query);
 		$db->execute();
+	// fix wrong type in update_sites
+	    $db = Factory::getContainer()->get(DatabaseInterface::class);;
+	    
+        $query = $db->getQuery(true);
+		$query->update($db->quoteName('#__update_sites'))
+			  ->set($db->qn('type') . ' = "extension"')
+			  ->where($db->qn('type') . ' = "plugin"');
+		$db->setQuery($query);
+        try {
+	        $db->execute();
+        }
+        catch (RuntimeException $e) {
+            Log::add('unable to enable Plugin site_form_override', Log::ERROR, 'jerror');
+        }
 		// remove obsolete file 
 		$this->delete([
 			JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.php',
