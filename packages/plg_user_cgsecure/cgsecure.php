@@ -14,6 +14,7 @@ use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use ConseilGouz\CGSecure\Helper\Cgipcheck;
 
 class PlgUserCGSecure extends CMSPlugin
 {
@@ -26,16 +27,7 @@ class PlgUserCGSecure extends CMSPlugin
 	{
 		parent::__construct($subject, $config);
 
-		$helperFile = JPATH_SITE . '/libraries/cgsecure/ipcheck.php';
-
-		if (!class_exists('CGIpCheckHelper') && is_file($helperFile))
-		{
-			include_once $helperFile;
-		}
-		if (!class_exists('CGIpCheckHelper')) { // library not found
-			return  true;
-		}
-		$this->cgsecure_params = \CGIpCheckHelper::getParams();
+		$this->cgsecure_params = Cgipcheck::getParams();
 	}
 
 	// more info on UserLoginFailure
@@ -61,14 +53,10 @@ class PlgUserCGSecure extends CMSPlugin
 		    return true;
 		}
 		if (($name[0] == 'com_users')  && ($name[1] == 'profile') ) return true; // Contact forms call com_user.profile, so ignore this one
-		if (!class_exists('CGIpCheckHelper')) { // library not found
-			Factory::getApplication()->enqueueMessage(Text::_('CGSECURE_LIB_NOTFOUND'),'error');
-			return  true;
-		}
 		$prefixe = $_SERVER['SERVER_NAME'];
 		$prefixe = substr(str_replace('www.','',$prefixe),0,2);
 		$this->mymessage = $prefixe.$this->errtype.'-'.$this->mymessage;
 
-		\CGIpCheckHelper::check_ip($this,$this->myname.' : '.$form_name);
+		Cgipcheck::check_ip($this,$this->myname.' : '.$form_name);
 	}
 }

@@ -9,6 +9,7 @@
  * AbuseIPDB access from https://www.webniraj.com/2019/03/12/auto-reporting-lfd-block-reports-to-abuse-ip-db-v2/
 **/
 // No direct access.
+namespace ConseilGouz\CGSecure\Helper;
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
@@ -16,11 +17,11 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Log\Log;
 use Joomla\Utilities\IpHelper;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Language\Text;
 
-class CGIpCheckHelper{
+class Cgipcheck{
     private static $my_name = "CGIpCheck";
 	private static $abuseIPDB = "https://api.abuseipdb.com/api/v2/";
 	private static $iplocate = 'https://www.iplocate.io/api/lookup/';	
@@ -47,7 +48,7 @@ class CGIpCheckHelper{
 		        self::$params = json_decode($params->params);
 		        return self::$params;
 		    }
-		    catch (RuntimeException $e) {
+		    catch (\RuntimeException $e) {
 		        return array();
 		    }
 		}

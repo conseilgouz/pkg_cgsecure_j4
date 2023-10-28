@@ -1,8 +1,8 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   2.2.8
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+ * Version		   3.0.0
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  *
@@ -10,6 +10,7 @@
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use ConseilGouz\CGSecure\Helper\Cgipcheck;
 
 const _JEXEC = 1;
 
@@ -60,13 +61,9 @@ if (($_SERVER['REMOTE_ADDR'] == '::1') ||  ($_SERVER['REMOTE_ADDR'] == '127.0.0.
 }
 //$ip = '218.92.0.11'; // test
 $myname='CGSecureHTAccess';
-$helperFile = JPATH_SITE . '/libraries/cgsecure/ipcheck.php';
-if (!class_exists('CGIpCheckHelper') && is_file($helperFile))	include_once $helperFile;
-if (!class_exists('CGIpCheckHelper')) { // library not found
-	return  true;
-}
-if (CGIpCheckHelper::getLatest_ips($ip)) die('Restricted access'); // already blocked : die
-$cgsecure_params = CGIpCheckHelper::getParams();
+
+if (Cgipcheck::getLatest_ips($ip)) die('Restricted access'); // already blocked : die
+$cgsecure_params = Cgipcheck::getParams();
 $security = $cgsecure_params->security;
 
 if(isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $security)) { return ; } // CG Secure OK : on ignore les erreurs htaccess
@@ -109,5 +106,5 @@ if (($cgsecure_params->logging_ht == 1) || (($cgsecure_params->logging_ht == 2) 
 }
 // CG Secure report to AbuseIP and reject it unsing htaccess file (if errortype = e)
 $report = $cgsecure_params->report;
-if ($report) \CGIpCheckHelper::report_hacker($myname,$err.$block,$errtype,$ip);
+if ($report) \Cgipcheck::report_hacker($myname,$err.$block,$errtype,$ip);
 die();
