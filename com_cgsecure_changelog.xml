@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.0.1</version>
+        <note>
+            <item>Update : 28/10/2023</item>
+        </note>
+		<fix>
+			<item>htaccess.php: namespace not working</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.0.0</version>
         <note>
             <item>Update : 28/10/2023</item>

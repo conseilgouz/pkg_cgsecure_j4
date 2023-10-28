@@ -1,8 +1,8 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   2.4.0
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+ * Version		   3.0.1
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (c) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  *
