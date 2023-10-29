@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.0.4</version>
+        <note>
+            <item>Update : 29/10/2023</item>
+        </note>
+		<fix>
+			<item>Error CGIpCheckHelper on logout</item>
+			<item>cg_no_robot : replace index.php by new version if exists</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.0.3</version>
         <note>
             <item>Update : 28/10/2023</item>

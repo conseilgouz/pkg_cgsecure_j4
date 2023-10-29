@@ -2,7 +2,7 @@
 /**
  * @package 	CGSecure
  * from karebu secure (kSesure)
- * Version			: 3.0.0
+ * Version			: 3.0.4
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -64,7 +64,7 @@ class plgSystemCGSecure extends CMSPlugin
         } else { // Compatibility : looking for ?<password>
             $logged = isset($_GET[$this->cgsecure_params->password]);
             if (!$logged) {
-                if (($this->cgsecure_params->selredir == 'LOCAL') || (\CGIpCheckHelper::whiteList())) {	
+                if (($this->cgsecure_params->selredir == 'LOCAL') || (\Cgipcheck::whiteList())) {	
 						$mainframe->redirect(URI::root()); 
 				} else { 
 					$mainframe->redirect($this->cgsecure_params->redir_ext);

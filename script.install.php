@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 3.0.3
+ * Version			: 3.0.4
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -140,7 +140,15 @@ class PlgSystemCgsecureInstallerInstallerScript
 		// remove obsolete file 
 		$this->delete([
 			JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.php',
-		]);		
+		]);	
+		// replace index.php file in cg_no_robot dir by new version
+		$norobots = JPATH_ROOT.'/cg_no_robot';
+		if (is_dir($norobots)) { // cg_no_robot dir exists : copy new copy of index.php -------------------------------
+			$this->delete([$norobots.'/index.php']);
+			File::copy(
+				JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.txt',
+				$norobots. '/index.php'	);
+		}
 		// Check if HTACCESS file has to be updated
 		$serverConfigFile = $this->getServerConfigFile('.htaccess');
 		if (!$serverConfigFile) { // no .htaccess file
