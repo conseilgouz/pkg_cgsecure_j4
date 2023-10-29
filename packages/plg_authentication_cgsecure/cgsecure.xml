@@ -2,12 +2,12 @@
 <extension version="4.0" type="plugin" group="authentication" method="upgrade">
 	<name>PLG_AUTH_COUNTRY</name>
 	<author>ConseilGouz</author>
-	<creationDate>2023/10/28</creationDate>
+	<creationDate>2023/10/29</creationDate>
 	<copyright>(C)2023 ConseilGouz. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<version>3.0.4</version>
+	<version>3.0.5</version>
 	<description>PLG_AUTH_COUNTRY_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="cgsecure">cgsecure.php</filename>
