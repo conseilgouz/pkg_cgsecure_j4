@@ -2,12 +2,12 @@
 <extension version="4.0" type="plugin" group="system" method="upgrade">
 	<name>plgcgsecureinstaller</name>
 	<author>ConseilGouz</author>
-	<creationDate>2023-10-28</creationDate>
-	<copyright>(C)2023 ConseilGouz. All rights reserved.</copyright>
-	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<creationDate>2024-01-14</creationDate>
+	<copyright>(C)2024 ConseilGouz. All rights reserved.</copyright>
+	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<version>3.0.5</version>
+	<version>3.0.6</version>
 	<description>CG Secure</description>
 	<scriptfile>script.install.php</scriptfile>
 	<files>

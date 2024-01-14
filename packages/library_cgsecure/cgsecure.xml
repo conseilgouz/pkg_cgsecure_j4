@@ -3,13 +3,12 @@
 	<name>CGSecure Library</name>
 	<libraryname>cgsecure</libraryname>
 	<author>ConseilGouz</author>
-	<version>3.0.5</version>
-	<creationDate>2023-10-29</creationDate>
-	<copyright>(C)2023 ConseilGouz. All rights reserved.</copyright>
-	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
+	<version>3.0.6</version>
+	<creationDate>2024-01-14</creationDate>
+	<copyright>(C)2024 ConseilGouz. All rights reserved.</copyright>
+	<license>GNU General Public License version 3 or later; https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<license>https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL</license>
 	<namespace>ConseilGouz\CGSecure</namespace>
 	<files>
 		<folder>Helper</folder>

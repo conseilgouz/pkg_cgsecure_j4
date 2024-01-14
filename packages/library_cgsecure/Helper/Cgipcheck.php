@@ -1,9 +1,9 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   3.0.1
+ * Version		   3.0.6
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
- * @copyright (c) 2023 ConseilGouz. All Rights Reserved.
+ * @copyright (c) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  *
  * AbuseIPDB access from https://www.webniraj.com/2019/03/12/auto-reporting-lfd-block-reports-to-abuse-ip-db-v2/
@@ -511,6 +511,7 @@ class Cgipcheck{
 		$ret .= "<RequireAll>". PHP_EOL;
 		$ret .= "Require all granted". PHP_EOL;
 		foreach($list as $key => $ip) {
+			if (strpos($ip,':') !== false) continue; // IPV6 : ignore it, blocked later : bug in OVH/APACH 
 			$ret .= "require not ip ".$ip.PHP_EOL;
 		}
 		$ret .= "</RequireAll>". PHP_EOL;
