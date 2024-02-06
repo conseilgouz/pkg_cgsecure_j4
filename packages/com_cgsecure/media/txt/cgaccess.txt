@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-2.2.7--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.0.6--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -47,7 +47,7 @@ ServerSignature Off
 </IfModule>
 <IfModule mod_setenvif.c>
 # Block bad user agents 
- SetEnvIfNoCase ^User-Agent$ .*(aesop_com_spiderman|ahrefsbot|alexibot|backweb|bandit|batchftp|bigfoot).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(aesop_com_spiderman|ahrefsbot|alexibot|amazonbot|backweb|bandit|batchftp|bigfoot|bytespider).* HTTP_STAYOUT
  SetEnvIfNoCase ^User-Agent$ .*(black.?hole|blackwidow|blowfish|botalot|bot.?mailto:craftbot@yahoo.com|buddy|builtbottough|bullseye).* HTTP_STAYOUT
  SetEnvIfNoCase ^User-Agent$ .*(cheesebot|cherrypicker|chinaclaw|collector|copier|copyrightcheck).* HTTP_STAYOUT
  SetEnvIfNoCase ^User-Agent$ .*(cosmos|crescent|curl|custo|da|diibot|disco|dittospyder|download.?demon|dragonfly).* HTTP_STAYOUT
