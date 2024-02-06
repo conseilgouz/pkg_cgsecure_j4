@@ -2,11 +2,11 @@
 
 /**
  * @package    CG Secure
- * Version			: 3.0.4
+ * Version			: 3.0.7
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
- * @license    GNU/GPLv2
+ * @license    GNU/GPLv3
  */
 // no direct access
 defined('_JEXEC') or die;
@@ -29,7 +29,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 	private $previous_version        = '';
 	private $dir           = null;
 	private $installerName = 'cgsecureinstaller';
-	private $cgsecure_force_update_version = "2.2.7";
+	private $cgsecure_force_update_version = "3.0.7";
 	const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
 	const SERVER_CONFIG_FILE_NONE = '';
     const CGPATH = '/media/com_cgsecure';
