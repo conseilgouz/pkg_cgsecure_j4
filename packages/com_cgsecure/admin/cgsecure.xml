@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="4.0" method="upgrade">
 	<name>COM_CGSECURE</name>
-	<creationDate>2024-01-14</creationDate>
+	<creationDate>2024-02-06</creationDate>
 	<author>ConseilGouz</author>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
 	<copyright>Copyright (C) 2024 ConseilGouz.com. All Rights Reserved</copyright>
 	<license>GNU/GPL Version 3 or later - https://www.gnu.org/licenses/gpl-3.0.html</license>
-	<version>3.0.6</version>
+	<version>3.0.7</version>
 	<namespace path="src">ConseilGouz\Component\CGSecure</namespace>
 	<description>COM_CGSECURE_XML_DESCRIPTION</description>
     <install>
@@ -48,6 +48,8 @@
 			<language tag="fr-FR">language/fr-FR/com_cgsecure.sys.ini</language>
 			<language tag="en-GB">language/en-GB/com_cgsecure.ini</language>
 			<language tag="en-GB">language/en-GB/com_cgsecure.sys.ini</language>
+			<language tag="nl-NL">language/nl-NL/com_cgsecure.ini</language>
+			<language tag="nl-NL">language/nl-NL/com_cgsecure.sys.ini</language>
 		</languages>
 	</administration>
 	<media destination="com_cgsecure" folder="media">

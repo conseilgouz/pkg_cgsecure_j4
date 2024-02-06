@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.0.7</version>
+        <note>
+            <item>Update : 06/02/2024</item>
+        </note>
+		<addition>
+			<item>NL Language files, thank you Johan Peters</item>
+			<item>bad bots : add amazonbot,bytespider bot </item>
+		</addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.0.6</version>
         <note>
             <item>Update : 14/01/2024</item>
