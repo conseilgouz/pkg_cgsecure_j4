@@ -1,9 +1,9 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 2.4.1
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
+ * Version			: 3.0.8
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
+ * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
 **/
 namespace ConseilGouz\Component\CGSecure\Administrator\View\Config;
@@ -121,7 +121,13 @@ class JsonView extends AbstractView
 		} else { // no custom file : use cgaccess.txt file
 			$cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess.txt');
 		}
-	    if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),$current,$cgFile,$rejips)) {
+		$this->config  = $this->getParams();
+		$specific = $this->config->specific;
+		if ($specific) {
+		    $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$specific.PHP_EOL; 
+		    $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
+		}
+		if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),$current,$cgFile,$rejips,$specific)) {
 	        return Text::_('CGSECURE_ADD_HTACCESS');
 	    } 
 	    return Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
@@ -237,6 +243,14 @@ class JsonView extends AbstractView
 				$cgLines = false;
 				continue;
 			}
+			if ($line === '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------')	{
+			    $cgLines = true;
+			    continue;
+			}
+			if ($line === '#------------------------CG SECURE SPECIFIC CODE END------------------------') {
+			    $cgLines = false;
+			    continue;
+			}
 			if ($cgLines) {
 				// When we are between our makers all content should be removed
 				continue;
@@ -329,11 +343,11 @@ class JsonView extends AbstractView
 		}
 		return $outBuffer;
 	}
-	private function merge_file($file, $current,$cgFile,$rejips) {
+	private function merge_file($file, $current,$cgFile,$rejips,$specific='') {
 		$pathToFile  = $file;
 		if (file_exists($pathToFile)) {
 			if (is_readable($pathToFile)) {
-				$records = $rejips.$cgFile.$current; // pour éviter les conflits, on se met devant....
+				$records = $rejips.$specific.$cgFile.$current; // pour éviter les conflits, on se met devant....
 				// Write the htaccess using the Frameworks File Class
 				return File::write($pathToFile,$records );
 			}

@@ -71,8 +71,10 @@
 			<option value="2">ERROR</option>
 			
 		</field>
-		<field name="security" type="hidden" default="0">
-		</field>
+		<field showon="htaccess:1" name="specific" type="textarea" label="CGSECURE_SPECIFIC" description="CGSECURE_SPECIFIC_DESC" cols="400" rows="6" filter="raw" 
+				default=""	/>	
+		<field name="security" type="hidden" default="0"></field>
+		  
 	</fieldset>
     <fieldset name="badrobots" label="Bad Robots" description="Block Bad Robots">
 		<field name="notebad" type="note" label="CGSECURE_BADROBOTS" description="CGSECURE_BADROBOTS_DESC" />
