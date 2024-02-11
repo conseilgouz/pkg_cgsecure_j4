@@ -9,6 +9,9 @@
 		<addition>
 			<item>Add specific code in .htaccess file</item>
 		</addition>
+		<fix>
+			<item>Fix notices in script.install.php file</item>
+		</fix>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>
