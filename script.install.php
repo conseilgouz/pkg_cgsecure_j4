@@ -175,7 +175,6 @@ class PlgSystemCgsecureInstallerInstallerScript
 	}
 	// Begin update HTACCESS -----------------------------------------------
 	private function forceHTAccess() {
-		$this->security = $cgsecure_params->security; // htaccess has been created => security must contain a value
 	    $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
 	    if (!$serverConfigFile) { // no .htaccess file : copy default htaccess.txt as .htaccess
 	        $source = JPATH_ROOT.self::CGPATH .'/txt/htaccess.txt';
