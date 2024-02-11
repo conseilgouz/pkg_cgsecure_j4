@@ -192,7 +192,14 @@ class PlgSystemCgsecureInstallerInstallerScript
 		} else { // no custom file : use cgaccess.txt file
 			$cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess.txt');
 		}
-	    if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),$current,$cgFile,$rejips)) {
+        $this->config  = $this->getParams();
+		$specific = $this->config->specific;
+		if ($specific) {
+		    $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$specific.PHP_EOL; 
+		    $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
+		}
+		
+	    if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),$current,$cgFile,$rejips,$specific)) {
 			return; // everything OK => exit
 	    } 
 	    Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : Error during insert'));
@@ -247,6 +254,14 @@ class PlgSystemCgsecureInstallerInstallerScript
 			if ($line === '#------------------------CG SECURE BAD ROBOTS END---------------------') {
 				$cgLines = false;
 				continue;
+			}
+			if ($line === '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------')	{
+			    $cgLines = true;
+			    continue;
+			}
+			if ($line === '#------------------------CG SECURE SPECIFIC CODE END------------------------') {
+			    $cgLines = false;
+			    continue;
 			}
 			if ($cgLines) {
 				// When we are between our makers all content should be removed
@@ -321,11 +336,11 @@ class PlgSystemCgsecureInstallerInstallerScript
 		return $params;
 		
 	}
-	private function merge_file($file, $current,$cgFile,$rejips) {
+	private function merge_file($file, $current,$cgFile,$rejips,$specific) {
 		$pathToFile  = $file;
 		if (file_exists($pathToFile)) {
 			if (is_readable($pathToFile)) {
-				$records = $rejips.$cgFile.$current; // pour éviter les conflits, on se met devant....
+				$records = $rejips.$specific.$cgFile.$current; // pour éviter les conflits, on se met devant....
 				// Write the htaccess using the Frameworks File Class
 				return File::write($pathToFile,$records );
 			}
