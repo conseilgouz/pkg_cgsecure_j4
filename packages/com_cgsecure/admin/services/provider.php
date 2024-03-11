@@ -1,10 +1,10 @@
 <?php
 /**
- * @component     CG Secure - Joomla 4.0.0
- * Version			: 2.1.5
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (c) 2022 ConseilGouz. All Rights Reserved.
- * @author ConseilGouz 
+ * @component     CG Secure - Joomla 4.x/5.x
+ * Version			: 3.0.11
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
+ * @copyright (c) 2024 ConseilGouz. All Rights Reserved.
+ * @author ConseilGouz
 **/
 defined('_JEXEC') or die;
 
@@ -24,32 +24,30 @@ use Joomla\DI\ServiceProviderInterface;
  *
  * @since  4.0.0
  */
-return new class implements ServiceProviderInterface
-{
-	/**
-	 * Registers the service provider with a DI container.
-	 *
-	 * @param   Container  $container  The DI container.
-	 *
-	 * @return  void
-	 *
-	 * @since   4.0.0
-	 */
-	public function register(Container $container)
-	{
-		$container->registerServiceProvider(new MVCFactory('\\ConseilGouz\\Component\\CGSecure'));
-		$container->registerServiceProvider(new ComponentDispatcherFactory('\\ConseilGouz\\Component\\CGSecure'));
-		$container->registerServiceProvider(new RouterFactory('\\ConseilGouz\\Component\\CGSecure'));
-		$container->set(
-			ComponentInterface::class,
-			function (Container $container)
-			{
-				$component = new CGSecureComponent($container->get(ComponentDispatcherFactoryInterface::class));
-				$component->setMVCFactory($container->get(MVCFactoryInterface::class));
-				$component->setRouterFactory($container->get(RouterFactoryInterface::class));
+return new class () implements ServiceProviderInterface {
+    /**
+     * Registers the service provider with a DI container.
+     *
+     * @param   Container  $container  The DI container.
+     *
+     * @return  void
+     *
+     * @since   4.0.0
+     */
+    public function register(Container $container)
+    {
+        $container->registerServiceProvider(new MVCFactory('\\ConseilGouz\\Component\\CGSecure'));
+        $container->registerServiceProvider(new ComponentDispatcherFactory('\\ConseilGouz\\Component\\CGSecure'));
+        $container->registerServiceProvider(new RouterFactory('\\ConseilGouz\\Component\\CGSecure'));
+        $container->set(
+            ComponentInterface::class,
+            function (Container $container) {
+                $component = new CGSecureComponent($container->get(ComponentDispatcherFactoryInterface::class));
+                $component->setMVCFactory($container->get(MVCFactoryInterface::class));
+                $component->setRouterFactory($container->get(RouterFactoryInterface::class));
 
-				return $component;
-			}
-		);
-	}
+                return $component;
+            }
+        );
+    }
 };

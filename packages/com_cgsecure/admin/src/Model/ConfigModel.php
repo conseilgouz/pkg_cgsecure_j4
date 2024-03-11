@@ -1,24 +1,26 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 2.1.5
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
- * @author ConseilGouz 
+ * Version			: 3.0.11
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
+ * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
+ * @author ConseilGouz
 **/
+
 namespace ConseilGouz\Component\CGSecure\Administrator\Model;
 
 defined('_JEXEC') or die('Restricted access');
-use Joomla\CMS\HTML\Registry;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Form\Form;
- 
+
 /**
  * Config Model Class
  */
-class ConfigModel extends AdminModel {
+class ConfigModel extends AdminModel
+{
     /**
      * Method to allow derived classes to preprocess the form.
      *
@@ -34,7 +36,6 @@ class ConfigModel extends AdminModel {
      */
     protected function preprocessForm(Form $form, $data, $group = 'content')
     {
-        // $form->addFieldPath(__DIR__ . '/forms/fields');
         $form->addRulePath(__DIR__ . '/forms/rules');
 
         parent::preprocessForm($form, $data, $group);
@@ -53,8 +54,7 @@ class ConfigModel extends AdminModel {
         // Get the form.
         $form = $this->loadForm('com_cgsecure.config', 'config', array('control' => 'jform', 'load_data' => $loadData));
 
-        if (empty($form))
-        {
+        if (empty($form)) {
             return false;
         }
 
@@ -68,29 +68,28 @@ class ConfigModel extends AdminModel {
      */
     protected function loadFormData()
     {
-        $db = Factory::getDBo();
-		$table = Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
-		$params = json_decode($table->getSecureParams()->params);
-		
-		return $params;
+        $factory = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory();
+        $table   = $factory->createTable('Config', 'Administrator');
+        $params  = json_decode($table->getSecureParams()->params);
+
+        return $params;
     }
-	/**
-	 * Method to get a table object, load it if necessary.
-	 *
-	 * @param   string  $name     The table name. Optional.
-	 * @param   string  $prefix   The class prefix. Optional.
-	 * @param   array   $options  Configuration array for model. Optional.
-	 *
-	 * @return  Table  A Table object
-	 *
-	 * @since   4.0.0
-	 * @throws  \Exception
-	 */
-    public function getTable($type = 'ConfigTable', $prefix = '', $config = array()) 
+    /**
+     * Method to get a table object, load it if necessary.
+     *
+     * @param   string  $name     The table name. Optional.
+     * @param   string  $prefix   The class prefix. Optional.
+     * @param   array   $options  Configuration array for model. Optional.
+     *
+     * @return  Table  A Table object
+     *
+     * @since   4.0.0
+     * @throws  \Exception
+     */
+    public function getTable($type = 'ConfigTable', $prefix = '', $config = array())
     {
-        $db = Factory::getDBo();
-        return Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
-        
+        $factory = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory();
+        return $factory->createTable('Config', 'Administrator');
     }
 
     /**
@@ -98,7 +97,9 @@ class ConfigModel extends AdminModel {
      */
     public function validate($form, $data, $group = null)
     {
-        if (!parent::validate($form, $data, $group)) return false;
+        if (!parent::validate($form, $data, $group)) {
+            return false;
+        }
         $name = $data['name'];
         unset($data["name"]);
 
@@ -106,6 +107,5 @@ class ConfigModel extends AdminModel {
             'name'   => $name,
             'params' => json_encode($data)
         );
-    } 
+    }
 }
-

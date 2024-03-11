@@ -2,6 +2,31 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.0.11</version>
+        <note>
+            <item>Update : 11/03/2024</item>
+        </note>
+		<fix>
+			<item>Joomla 5.x compatibility</item>
+            <item>Missing SERVER_CONFIG_FILE_NONE definition</item>
+            <item>Remove unused classes</item>
+            <item>EOL from LF to CRLF</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>3.0.10</version>
+        <note>
+            <item>Update : 16/02/2024</item>
+        </note>
+		<fix>
+			<item>install : fix old cg secure system plugin in schemas table</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.0.9</version>
         <note>
             <item>Update : 12/02/2024</item>

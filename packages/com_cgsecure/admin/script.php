@@ -1,72 +1,53 @@
 <?php
 /**
-* CG Secure Component For Joomla 4
-* Version			: 2.3.3
+* CG Secure Component For Joomla 4.x/5.x
+* Version			: 3.0.11
 * Package			: CG Secure Component
-* copyright 		: Copyright (C) 2023 ConseilGouz. All rights reserved.
-* license    		: http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+* copyright 		: Copyright (C) 2024 ConseilGouz. All rights reserved.
+* license    		: https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
 */
 // No direct access to this file
 defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 
 class com_cgsecureInstallerScript
 {
-	private $min_joomla_version      = '4.0';
-	private $min_php_version         = '7.2';
-	private $name                    = 'CG Secure';
-	private $exttype                 = 'component';
-	private $extname                 = 'cgsecure';
-	private $previous_version        = '';
-	private $dir           = null;
-	private $lang = null;
-	private $installerName = 'cgsecureinstaller';
-	public function __construct()
-	{
-		$this->dir = __DIR__;
-	}
-    function preflight($type, $parent)
+    private $min_joomla_version      = '4.0';
+    private $min_php_version         = '7.2';
+    private $name                    = 'CG Secure';
+    private $exttype                 = 'component';
+    private $extname                 = 'cgsecure';
+    private $previous_version        = '';
+    private $dir           = null;
+    private $lang = null;
+    private $installerName = 'cgsecureinstaller';
+    public function __construct()
     {
+        $this->dir = __DIR__;
     }
-    
-    function install($parent)
+    public function uninstall($parent)
     {
-    }
-    
-    function uninstall($parent)
-    {
-		
-		$db = Factory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
-			->delete('#__extensions')
-		    ->where($db->quoteName('element') . ' like "%cgsecure%"');
-		$db->setQuery($query);
-		$result = $db->execute();
-		$obsloteFolders = ['/plugins/system/cgsecure', '/plugins/authentication/cgsecure','/plugins/user/cgsecure','/libraries/cgsecure','/media/com_cgsecure'];
-		// Remove plugins' files.
-		foreach ($obsloteFolders as $folder)
-		{
-			$f = JPATH_SITE . $folder;
+            ->delete('#__extensions')
+            ->where($db->quoteName('element') . ' like "%cgsecure%"');
+        $db->setQuery($query);
+        $result = $db->execute();
+        $obsloteFolders = ['/plugins/system/cgsecure', '/plugins/authentication/cgsecure','/plugins/user/cgsecure','/libraries/cgsecure','/media/com_cgsecure'];
+        // Remove plugins' files.
+        foreach ($obsloteFolders as $folder) {
+            $f = JPATH_SITE . $folder;
 
-			if (!@file_exists($f) || !is_dir($f) || is_link($f))
-			{
-				continue;
-			}
+            if (!@file_exists($f) || !is_dir($f) || is_link($f)) {
+                continue;
+            }
 
-			Folder::delete($f);
-		}
-		
-		Factory::getApplication()->enqueueMessage('CG Secure package uninstalled', 'notice');
+            Folder::delete($f);
+        }
+
+        Factory::getApplication()->enqueueMessage('CG Secure package uninstalled', 'notice');
     }
-    
-    function update($parent)
-    {
-    }
-    
-    function postflight($type, $parent)
-    {
-     }
 
 }
