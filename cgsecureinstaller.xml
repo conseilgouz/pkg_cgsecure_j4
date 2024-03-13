@@ -7,7 +7,7 @@
 	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<version>3.0.13</version>
+	<version>3.0.14</version>
 	<description>CG Secure</description>
 	<scriptfile>script.install.php</scriptfile>
 	<files>
