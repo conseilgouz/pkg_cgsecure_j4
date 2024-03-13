@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 3.0.11
+ * Version			: 3.0.13
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -346,11 +346,10 @@ class PlgSystemCgsecureInstallerInstallerScript
     }
     private function getParams()
     {
-        $factory = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory();
-        $table = $factory->createTable('Config', 'Administrator');
-        $params = json_decode($table->getSecureParams()->params);
-
-        return $params;
+        $db = Factory::getDBo();
+		$table = Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
+		$params = json_decode($table->getSecureParams()->params);
+		return $params;
 
     }
     private function merge_file($file, $current, $cgFile, $rejips, $specific)

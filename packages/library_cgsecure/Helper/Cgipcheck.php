@@ -1,7 +1,7 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   3.0.11
+ * Version		   3.0.13
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (c) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -21,6 +21,7 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
+use Joomla\CMS\Table\Table;
 use Joomla\Utilities\IpHelper;
 
 class Cgipcheck
@@ -48,8 +49,7 @@ class Cgipcheck
     public static function getParams()
     {
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $factory = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory();
-        $table   = $factory->createTable('Config', 'Administrator');
+        $table = Table::getInstance('ConfigTable', 'ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
 
         if (!$table) {// appel par fichier .htaccess
             $query = $db->getQuery(true);

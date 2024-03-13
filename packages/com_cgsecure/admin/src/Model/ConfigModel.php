@@ -1,7 +1,7 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.11
+ * Version			: 3.0.13
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -68,8 +68,8 @@ class ConfigModel extends AdminModel
      */
     protected function loadFormData()
     {
-        $factory = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory();
-        $table   = $factory->createTable('Config', 'Administrator');
+        $db = Factory::getDBo();
+		$table = Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
         $params  = json_decode($table->getSecureParams()->params);
 
         return $params;
@@ -88,8 +88,8 @@ class ConfigModel extends AdminModel
      */
     public function getTable($type = 'ConfigTable', $prefix = '', $config = array())
     {
-        $factory = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory();
-        return $factory->createTable('Config', 'Administrator');
+        $db = Factory::getDBo();
+        return Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
     }
 
     /**
