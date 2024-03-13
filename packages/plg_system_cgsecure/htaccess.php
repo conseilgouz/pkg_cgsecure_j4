@@ -41,7 +41,7 @@ $app = $container->get(\Joomla\CMS\Application\SiteApplication::class);
 
 $session  = Factory::getApplication()->getSession();
 $sec      = $session->get('cgsecure');
-$language = Factory::getApplication()->getLanguage();
+$language = Factory::getLanguage();
 $lang     = null; // default language (gb)
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
     $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
