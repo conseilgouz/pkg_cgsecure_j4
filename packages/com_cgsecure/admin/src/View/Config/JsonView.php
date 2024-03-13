@@ -16,6 +16,8 @@ use Joomla\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\AbstractView;
 use Joomla\CMS\Response\JsonResponse;
+use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 use Exception;
 
 /**
@@ -405,10 +407,10 @@ class JsonView extends AbstractView
     }
     private function getParams()
     {
-        $db = Factory::getDBo();
-		$table = Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
-		$params = json_decode($table->getSecureParams()->params);
-		return $params;
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $table = Table::getInstance('ConfigTable', 'ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
+        $params = json_decode($table->getSecureParams()->params);
+        return $params;
 
     }
 }
