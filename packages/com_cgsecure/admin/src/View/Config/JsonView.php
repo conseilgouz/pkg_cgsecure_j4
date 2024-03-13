@@ -1,7 +1,7 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.11
+ * Version			: 3.0.12
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -11,15 +11,10 @@ namespace ConseilGouz\Component\CGSecure\Administrator\View\Config;
 
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
-use Joomla\Registry\Registry;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\AbstractView;
-use Joomla\CMS\Table\Table;
 use Joomla\CMS\Response\JsonResponse;
 use Exception;
 
@@ -50,6 +45,16 @@ class JsonView extends AbstractView
         $access = (int)$input->get('access');
         $this->security = $input->get('security');
         $msg = "";
+
+        $wait = self::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
+        if (file_exists($wait)) {
+            $arr = [];
+            $arr['retour'] = 'err : already in progress';
+            echo new JsonResponse($arr);
+            return;
+        }
+        $msg = 'wait...';
+        File::write($wait, $msg);
         if ($type == 'robots') {
             if ($access == 0) { // delete CG Secure lines from robots.txt file and delete cg_robots dir
                 $msg = $this->delRobots();
@@ -59,7 +64,7 @@ class JsonView extends AbstractView
         } elseif ($type == 'htaccess') {
             if ($access == 0) { // delete CG Secure lines from htaccess file
                 $msg = $this->delHTAccess();
-                $msg = $this->deleteIPSHTAccess();
+                $msg .= '<br>'.$this->deleteIPSHTAccess();
             } elseif ($access == 1) {// add CG Secure lines to htaccess file
                 $msg = $this->addHTAccess();
                 // add .htaccess in images and media directories
@@ -68,6 +73,7 @@ class JsonView extends AbstractView
                 $msg = $this->deleteIPSHTAccess();
             }
         }
+        File::delete($wait);
         $arr = [];
         $arr['retour'] = $msg;
         echo new JsonResponse($arr);

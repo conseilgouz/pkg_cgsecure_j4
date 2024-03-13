@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.0.12</version>
+        <note>
+            <item>Update : 13/03/2024</item>
+        </note>
+		<fix>
+			<item>Admin : block simultaneous updates</item>
+            <item>Recreate button : check activation value</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.0.11</version>
         <note>
             <item>Update : 11/03/2024</item>

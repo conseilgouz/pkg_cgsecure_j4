@@ -1,8 +1,8 @@
 /**
  * @component     CG Secure
- * Version			: 2.1.5
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * Version			: 3.0.12
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
+ * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
 **/
 var timeout;
@@ -18,7 +18,9 @@ jQuery(document).ready(function($){
 		} else { // already exists
 			$security = $('input[id="jform_security"]').val();
 		}
-		create_htaccess($,1,$security); // create htaccess
+        $access = 0;
+        if ($('input[id="jform_htaccess1"]').hasClass('active')) $access= 1;
+		create_htaccess($,$access,$security); // create htaccess
 	})
 });
 function create_htaccess($,access,security) {
@@ -27,7 +29,9 @@ function create_htaccess($,access,security) {
 				data: { [token]: "1", task: "display", format: "json",type: "htaccess", access: access, security: security },
 				success: function(result, status, xhr) {
 					res = result.data.retour;
+                    console.log('res : '+res);
 					$('#cg_result').html(res);
+                    if (res.startsWith('err :')) return; // contains an error : exit
 					Joomla.submitbutton('config.apply'); // force save config.
 					},
 				error: function(message) {console.log(message.responseText)}
