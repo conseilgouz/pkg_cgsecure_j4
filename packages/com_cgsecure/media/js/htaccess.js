@@ -5,7 +5,7 @@
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
 **/
-var timeout;
+var cgsecureinprogress;
 
 jQuery(document).ready(function($){
 	$('input[id="jform_htaccess0"]').on("click mouseup keyup",function(){
@@ -34,8 +34,10 @@ jQuery(document).ready(function($){
 	if ($('input[id="jform_multisite"]').val() == "") $('input[id="jform_multisite"]').val(document.URL.split("/")[2]);
 });
 function htaccess($,access,security) {
-			var token = $("#token").attr("name");
-            $('#reload').css("display","none")
+    		var token = $("#token").attr("name");
+            if (cgsecureinprogress) return;
+            $('#reload').css("display","none"); 
+            cgsecureinprogress = true;
 			$.ajax({
 				data: { [token]: "1", task: "display", format: "json", type: "htaccess", access: access, security: security },
 				success: function(result, status, xhr) {
@@ -43,6 +45,6 @@ function htaccess($,access,security) {
 					$('#cg_result').html(res);
 					Joomla.submitbutton('config.apply'); // force save config.
 					},
-				error: function(message) {console.log(message.responseText)}
+				error: function(message) {console.log(message.responseText);cgsecureinprogress = false;}
 			});	
 }
