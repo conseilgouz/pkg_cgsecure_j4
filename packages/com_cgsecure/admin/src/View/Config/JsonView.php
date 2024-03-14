@@ -1,7 +1,7 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.13
+ * Version			: 3.1.1
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -11,14 +11,14 @@ namespace ConseilGouz\Component\CGSecure\Administrator\View\Config;
 
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\AbstractView;
 use Joomla\CMS\Response\JsonResponse;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
-use Exception;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 
 /**
  * Config View
@@ -40,6 +40,7 @@ class JsonView extends AbstractView
      */
     public function display($tpl = null)
     {
+        Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
         // Check for errors.
         $this->app = Factory::getApplication();
         $input = Factory::getApplication()->input;
