@@ -1,8 +1,8 @@
 /**
  * @component     CG Secure
- * Version			: 2.1.5
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * Version			: 3.1.1
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
+ * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
 **/
 var timeout;
@@ -35,6 +35,7 @@ jQuery(document).ready(function($){
 });
 function htaccess($,access,security) {
 			var token = $("#token").attr("name");
+            $('#reload').css("display","none")
 			$.ajax({
 				data: { [token]: "1", task: "display", format: "json", type: "htaccess", access: access, security: security },
 				success: function(result, status, xhr) {

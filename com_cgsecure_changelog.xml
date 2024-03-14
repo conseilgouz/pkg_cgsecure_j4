@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.1.1</version>
+        <note>
+            <item>Update : 14/03/2024</item>
+        </note>
+		<fix>
+			<item>Admin : hide recreate button if activate button is clicked </item>
+            <item>uninstall : uninstall everything in unisntall admin</item>
+		</fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.1.0</version>
         <note>
             <item>Update : 13/03/2024</item>
