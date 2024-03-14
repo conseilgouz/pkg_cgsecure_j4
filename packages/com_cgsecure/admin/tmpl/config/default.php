@@ -1,7 +1,7 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.11
+ * Version			: 3.1.1
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -9,10 +9,11 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 
 HTMLHelper::_('jquery.framework'); // Force Jquery load
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
@@ -51,7 +52,7 @@ foreach ($this->form->getFieldSets() as $key => $fieldset) {
 echo HTMLHelper::_('uitab.endTabSet');
 ?>
         		    </div>
-					<?php echo HTMLHelper::_('form.token'); ?>
+                    <input id="token" type="hidden" name="<?php echo Session::getFormToken();?>" value="1" />';
         		    <input type="hidden" name="task" value="" />
         		    <input type="hidden" name="name" value="config" />
         		</form>

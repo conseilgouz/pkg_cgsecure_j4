@@ -8,6 +8,7 @@
         </note>
 		<fix>
 			<item>Admin : hide recreate button if activate button is clicked </item>
+			<item>Admin : checktoken</item>
             <item>uninstall : uninstall everything in unisntall admin</item>
 		</fix>
 	</changelog>
