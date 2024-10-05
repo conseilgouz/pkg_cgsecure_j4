@@ -152,7 +152,7 @@ class JsonView extends AbstractView
         }
         return Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
     }
-    // copy CG Secure information in .htaccess from images and media directories
+    // copy CG Secure information in .htaccess from images, media, administrator directories
     private function protectdirs()
     {
         if (file_exists(JPATH_ROOT.'/images/.htaccess') && file_exists(JPATH_ROOT.'/media/.htaccess')) {
@@ -173,6 +173,18 @@ class JsonView extends AbstractView
         if (!copy($source, $dest)) {
             return Text::_('CGSECURE_PROTECTDIRS_ERROR');
         }
+        if (file_exists(JPATH_ROOT.'/administrator/.htaccess')) {
+            return;
+        } // .htaccess already present in administrator directory
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt';
+        $dest = JPATH_ROOT.'/administrator/.htaccess';
+        if (is_file($dest)) {
+            File::delete($dest);
+        }
+        if (!copy($source, $dest)) {
+            return Text::_('CGSECURE_PROTECTDIRS_ERROR');
+        }
+        
     }
     // add Bad robots blocking
     // - add lines in robots.txt files if it exists, or copy default robots.txt file

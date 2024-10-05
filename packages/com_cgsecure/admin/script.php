@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 
 class com_cgsecureInstallerScript
@@ -30,7 +31,7 @@ class com_cgsecureInstallerScript
     
     function uninstall($parent)
     {
-		$db = Factory::getDbo();
+		$db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
 			->delete('#__extensions')
 		    ->where($db->quoteName('element') . ' like "%cgsecure%"');

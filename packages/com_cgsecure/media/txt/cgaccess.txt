@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.1.0--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.1.2--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -78,6 +78,7 @@ ServerSignature Off
  Allow from All
  Deny from env=HTTP_STAYOUT
 </IfModule>
+
 #####
 ##### Common attacks #############
 #####
@@ -222,4 +223,17 @@ RewriteCond %{QUERY_STRING} \b(lipitor|phentermin|pro[sz]ac|sandyauer|tramadol|t
 RewriteCond %{QUERY_STRING} \b(ultram|unicauca|valium|viagra|vicodin|vuiton|xanax|ypxaieo)\b [NC]
 RewriteRule .* plugins/system/cgsecure/htaccess.php?e=20&t=w&m=%1___%2&sec=??security?? [L]
 </IfModule>
+
+# 8G FIREWALL:[ROGUE PHP FILES]
+# https://m0n.co/8g-addon-rogue-php-files
+<IfModule mod_rewrite.c>
+RewriteCond %{REQUEST_URI} /(_0-load|00|00212|007|00x69|01|05623ecdddd|07|08_45_27_loggo|0803|0|0aa1883c|0byte|0day|0m|0wn3d|1|2|10|100|404|911|1050804k|a|b|d|g|k|abc|admin1|adminer|ajaxcommandshell|akismet|alf4|alfa|alfa2|alfa5|alfashell|alfx|alfa4|alfav4|amad|anasslost|anassgmr|ancvxia|ande|andre|andr3a|angel|angelwhitehat|angie|anonghost|anonghostshell|an0n)\.php [NC,OR]
+RewriteCond %{REQUEST_URI} /(an0nym0us|anoncol7|anongt|anonym0us|anonymous|anzost|ars|as|b374k|beez|black|bloodsecv4|bump|byp|byp4ss|bypas|bypass|c|c22|c99|c100|cgi|changeall|cmd|con|config|configuration|cp|cpanel|cpn|css|cyber|d0mains|d4rk|dam|db|disqus|dom|drm|dz|dz0|egy|egyshell|eval|exp|exploit|exploits|f0x|file|filemanager|fm|fox|foxx|func|fx|fx0|gaza|golge)\.php [NC,OR]
+RewriteCond %{REQUEST_URI} /(h4ck|h4cked|h4ntu|h4x|h4x0r|hack|hax|index1|indoxploit|info|inj3ct0r|ironshell|isko|islam|j3|jackal|jacker|jaguar|ja|jaja|jajaja|jar|java|javacpl|killer|king|ksa|l3b|ls|m1n1|madspot|madspotshell|m4r0c|marvins|mini|minishell|modules|mysql|network|newshell|newup|nkr|offline|olux|pr1v|press-this|priv|priv8|r1z|r0k|r00t|r57|readme|root)\.php [NC,OR]
+RewriteCond %{REQUEST_URI} /(s|sa|sa2|sado|sh3ll|shel|shell|sm|smevk|sniper|sok|sql|sql-new|ss|sym|sym403|sym404|symbpass|syml1nk|symlink|symlinkbypass|syrian_shell|system|system_log|t00|think|tmp|up|uploader|uploads|uploadfile|uploadfile1|user|v4team|vuln)\.php [NC,OR]
+RewriteCond %{REQUEST_URI} /(w|w3br00t|webadmin|webr00t|webroot|whmcrack|whmcracker|whmcs|wp-|ws|ws0|wso|wsoshell|ws0shell|wso25|wsoshell|up|x|xa|xccc|xd|xx|xxx|zdz|zone-h)\.php [NC,OR]
+RewriteCond %{REQUEST_URI} /(admin2\.asp|alfa-shell-v4(.*)|blindshell\.c|cgishell\.pl|controller\.ashx|jaguar\.izri|perl\.alfa|xx\.pl) [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=21&t=e&m=%1&sec=??security?? [L]
+</IfModule>
+
 #------------------------CG SECURE HTACCESS END--------------------

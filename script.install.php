@@ -2,7 +2,7 @@
 
 /**
  * @package    CG Secure
- * Version			: 3.1.0
+ * Version			: 3.1.2
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -32,7 +32,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $previous_version        = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "3.1.0";
+    private $cgsecure_force_update_version = "3.1.2";
     private $security;
     private $config;
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
@@ -178,6 +178,35 @@ class PlgSystemCgsecureInstallerInstallerScript
         } // No CG Secure line in htacces file => exit
         if (!$version || ($version && ($version < $this->cgsecure_force_update_version))) {
             $this->forceHTAccess(); // update htaccess
+            $this->htaccess_other_dirs(); // create htaccess file in media,images/administrator dir
+        }
+    }
+    private function htaccess_other_dirs() {
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
+        // media : block php
+        $f = JPATH_ROOT . '/media/.htaccess';
+        if (!@file_exists($f) ) { // .htaccess in media dir 
+            $dest   = JPATH_ROOT.'/media/.htaccess';
+            if (!copy($source, $dest)) {
+                Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : add HTACCESS in media error'));
+            }
+        }
+        // images : block php
+        $f = JPATH_ROOT . '/images/.htaccess';
+        if (!@file_exists($f) ) { // .htaccess in images dir
+            $dest   = JPATH_ROOT.'/images/.htaccess';
+            if (!copy($source, $dest)) {
+                Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : add HTACCESS in media error'));
+            }
+        }
+        // administrator : block protected directories
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt';
+        $f = JPATH_ROOT . '/administrator/.htaccess';
+        if (!@file_exists($f) ) { // .htaccess in images dir
+            $dest   = JPATH_ROOT.'/administrator/.htaccess';
+            if (!copy($source, $dest)) {
+                Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : add HTACCESS in media error'));
+            }
         }
     }
     // Begin update HTACCESS -----------------------------------------------
@@ -347,7 +376,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     }
     private function getParams()
     {
-        $db = Factory::getDBo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 		$table = Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
 		$params = json_decode($table->getSecureParams()->params);
 		return $params;
@@ -475,7 +504,7 @@ class PlgSystemCgsecureInstallerInstallerScript
             JPATH_PLUGINS . '/system/' . $this->installerName . '/language',
             JPATH_PLUGINS . '/system/' . $this->installerName,
         ]);
-        $db = Factory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->delete('#__extensions')
             ->where($db->quoteName('element') . ' = ' . $db->quote($this->installerName))

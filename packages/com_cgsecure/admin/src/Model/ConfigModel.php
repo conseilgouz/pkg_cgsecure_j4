@@ -1,7 +1,6 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.13
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -15,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Form\Form;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Config Model Class
@@ -68,7 +68,7 @@ class ConfigModel extends AdminModel
      */
     protected function loadFormData()
     {
-        $db = Factory::getDBo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 		$table = Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
         $params  = json_decode($table->getSecureParams()->params);
 
@@ -88,7 +88,7 @@ class ConfigModel extends AdminModel
      */
     public function getTable($type = 'ConfigTable', $prefix = '', $config = array())
     {
-        $db = Factory::getDBo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         return Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
     }
 

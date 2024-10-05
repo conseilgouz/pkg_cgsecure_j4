@@ -2,6 +2,23 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.1.2</version>
+        <note>
+            <item>Update : 05/10/2024</item>
+        </note>
+		<addition>
+			<item>htaccess : Rogue PHP file attacks protection</item>
+            <item>media : add htaccess file to disable php execution from this directory</item>
+            <item>admin : add htaccess file to this directory</item>
+		</addition>
+        <fix>
+            <item>Installer : replace all getDbo()</item>
+            <item>com_cgsecure : replace all getDbo()</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.1.1</version>
         <note>
             <item>Update : 14/03/2024</item>
