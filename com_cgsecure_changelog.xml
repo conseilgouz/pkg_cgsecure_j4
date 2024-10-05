@@ -9,7 +9,7 @@
 		<addition>
 			<item>htaccess : Rogue PHP file attacks protection</item>
             <item>media : add htaccess file to disable php execution from this directory</item>
-            <item>admin : add htaccess file to this directory</item>
+            <item>admin : add htaccess file to administrator directory</item>
 		</addition>
         <fix>
             <item>Installer : replace all getDbo()</item>
