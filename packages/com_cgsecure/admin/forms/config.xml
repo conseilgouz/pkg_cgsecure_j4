@@ -21,6 +21,7 @@
 		</field>
 		<field name="api_key" showon="report:1" type="text" size="50" default="" label="CGSECURE_API_KEY" description="CGSECURE_API_KEY_DESC" />
 		<field name="country" type="text" size="50" default="" label="CGSECURE_COUNTRY" description="CGSECURE_COUNTRY_DESC" validate="country"/>
+		<field name="blockedcountry" type="text" size="50" default="" label="CGSECURE_BLOCKCOUNTRY" description="CGSECURE_BLOCKCOUNTRY_DESC" validate="country"/>
 		<field name="keep" type="text" size="10" default="10" label="CGSECURE_KEEP" description="CGSECURE_KEEP_DESC" />
 		<field name="testing" type="hidden" class="switcher btn-group" default="0" label="CGSECURE_TESTING_ENABLE" description="CGSECURE_TESTING_ENABLE_DESC">
 			<option value="0">JNO</option>

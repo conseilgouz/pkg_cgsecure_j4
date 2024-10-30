@@ -8,7 +8,11 @@
         </note>
         <fix>
             <item>White List : remove any unwanted character, no space</item>
+            <item>In AbuseIPDB White List : accept it</item>
         </fix>
+		<addition>
+			<item>Blocked countries list</item>
+        </addition>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>

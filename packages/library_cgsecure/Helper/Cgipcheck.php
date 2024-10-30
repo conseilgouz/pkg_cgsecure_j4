@@ -136,6 +136,8 @@ class Cgipcheck
         if (extension_loaded('curl')) {
             $countries = self::$params->country;
             $pays_autorise = explode(',', $countries);
+            $blockedcountries = self::$params->blockedcountry;
+            $pays_interdit = explode(',', $blockedcountries);
             $resp = self::abuseIPDBrequest('check', 'GET', [ 'ipAddress' => $ip, 'maxAgeInDays' => 30, 'verbose' => true ]);
             if (!isset($resp->data)) { // AbuseIP Error
                 if (isset($resp->errors)) {
@@ -156,7 +158,8 @@ class Cgipcheck
                     }
                     self::set_rejected(self::$caller, self::$errtype, $ip, 'unknown', self::$params->keep);
                     self::redir_out();
-                } elseif (($countries != '*') && (!in_array($json_array->country_code, $pays_autorise))) {
+                } elseif ((($countries != '*') && (!in_array($json_array->country_code, $pays_autorise)))
+                            || (($blockedcountries != '') && (in_array($json_array->country_code, $pays_interdit)))) {
                     if (self::$logging) {
                         Log::add(Text::_("CG_IPCHECK_UNAUTHORIZED").$json_array->country_code, Log::DEBUG, self::$caller);
                     }
@@ -166,7 +169,7 @@ class Cgipcheck
                 return;
             }
             if ($resp->data->isWhitelisted) { // in AbuseIPDB whitelist
-                self::redir_out();
+                // self::redir_out();
                 return true;
             }
             // Verifie si l'IP du visiteur est dans la liste des pays que j'ai autorise
@@ -187,7 +190,8 @@ class Cgipcheck
                         }
                         self::set_rejected(self::$caller, self::$errtype, $ip, 'unknown', self::$params->keep);
                         self::redir_out();
-                    } elseif (($countries != '*') && (!in_array($json_array->country_code, $pays_autorise))) {
+                    } elseif ((($countries != '*') && (!in_array($json_array->country_code, $pays_autorise)))
+                            || (($blockedcountries != '') && (in_array($json_array->country_code, $pays_interdit)))) {
                         if (self::$report) {
                             self::report(self::$context, $ip);
                         }
@@ -208,7 +212,8 @@ class Cgipcheck
                     self::set_rejected(self::$caller, self::$errtype, $ip, 'unknown', self::$params->keep);
                     self::redir_out();
                 }
-            } elseif (($countries != '*') && (!in_array($resp->data->countryCode, $pays_autorise))) {
+            } elseif ((($countries != '*') && (!in_array($resp->data->countryCode, $pays_autorise)))
+                    || (($blockedcountries != '') && (in_array($resp->data->countryCode, $pays_interdit)))) {
                 if (self::$logging) {
                     Log::add(self::$context.' : '.Text::_("CG_IPCHECK_UNAUTHORIZED").$ip.','.$resp->data->countryCode, Log::DEBUG, self::$caller);
                 }
@@ -297,7 +302,7 @@ class Cgipcheck
             $ip = IpHelper::getIp();
         }
         $whitelist = self::$params->whitelist;
-        $whitelist = str_replace(" ","",$whitelist); // remove any space
+        $whitelist = str_replace(" ", "", $whitelist); // remove any space
         $whitelist = preg_replace("/(?![a-fA-F0-9.,:]])/", "", $whitelist); // remove unwanted characters
         $arr_whitelist = explode(',', $whitelist);
         if (in_array($ip, $arr_whitelist) || ($ip == '::1') || ($ip == '127.0.0.1')) { // dans liste ou local
@@ -446,7 +451,7 @@ class Cgipcheck
     private static function report($context, $ip)
     {
 
-        if  (self::$params->api_key != "") { // il faut une cle API
+        if (self::$params->api_key != "") { // il faut une cle API
             $json = self::abuseIPDBrequest('report', 'POST', ['ip' => $ip,'categories' => 15,'comment' => self::$message]);
             $msg = "other error";
             if ($json) {
@@ -614,7 +619,7 @@ class Cgipcheck
         $ret .= "<IfModule mod_authz_core.c>".PHP_EOL;
         $ret .= "<RequireAll>". PHP_EOL;
         $ret .= "Require all granted". PHP_EOL;
-        foreach($list as $key => $ip) {
+        foreach ($list as $key => $ip) {
             if (strpos($ip, ':') !== false) {
                 continue;
             } // IPV6 : ignore it, blocked later : bug in OVH/APACH

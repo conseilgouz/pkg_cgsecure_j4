@@ -24,7 +24,7 @@ class CountryRule extends FormRule
     public function test(\SimpleXMLElement $element, $value, $group = null, Registry $input = null, Form $form = null)
     {
 
-        if ($value == "*") {
+        if ($value == "*" || $value == "") {
             return $value;
         } // all countries alloawed
 
