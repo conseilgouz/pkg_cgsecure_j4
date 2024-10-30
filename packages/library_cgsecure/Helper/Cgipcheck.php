@@ -297,6 +297,8 @@ class Cgipcheck
             $ip = IpHelper::getIp();
         }
         $whitelist = self::$params->whitelist;
+        $whitelist = str_replace(" ","",$whitelist); // remove any space
+        $whitelist = preg_replace("/(?![a-fA-F0-9.,:]])/", "", $whitelist); // remove unwanted characters
         $arr_whitelist = explode(',', $whitelist);
         if (in_array($ip, $arr_whitelist) || ($ip == '::1') || ($ip == '127.0.0.1')) { // dans liste ou local
             return true;
