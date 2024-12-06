@@ -1,7 +1,6 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   3.0.13
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (c) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -114,6 +113,7 @@ class Cgipcheck
         $ip = IpHelper::getIp();
         // $ip = $_SERVER['REMOTE_ADDR'];
         // $ip = '218.92.1.234'; // test hackeur chinois
+        // $ip = '92.184.96.127'; // in abuseip confidence = 0
         // $ip = '54.36.148.179'; // in abuseip whitelist
         if (self::whiteList($ip)) {
             return true;
@@ -168,7 +168,7 @@ class Cgipcheck
                 }
                 return;
             }
-            if ($resp->data->isWhitelisted) { // in AbuseIPDB whitelist
+            if ($resp->data->isWhitelisted || $resp->data->abuseConfidenceScore == 0) { // in AbuseIPDB whitelist
                 // self::redir_out();
                 return true;
             }
@@ -273,7 +273,7 @@ class Cgipcheck
                 }
                 return false; // suppose OK
             }
-            if ($resp->data->isWhitelisted) {
+            if ($resp->data->isWhitelisted || $resp->data->abuseConfidenceScore == 0) { // in AbuseIPDB whitelist
                 return false;
             } // in AbuseIPDB whitelist
             // Verifie si l'IP du visiteur est dans la liste des pays que j'ai autorise

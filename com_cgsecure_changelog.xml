@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.1.5</version>
+        <note>
+            <item>Update : 06/12/2024</item>
+        </note>
+        <fix>
+            <item>In AbuseIPDB White List or confidence = 0 : accept it</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.1.4</version>
         <note>
             <item>Update : 12/11/2024</item>

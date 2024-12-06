@@ -2,12 +2,12 @@
 <extension type="plugin" group="system" method="upgrade" version="4.0">
 	<name>System - CG Secure</name>
 	<author>conseilgouz</author>
-	<creationDate>2024-11-12</creationDate>
+	<creationDate>2024-12-06</creationDate>
 	<copyright>(C)2024 ConseilGouz. All rights reserved.</copyright>
 	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<version>3.1.4</version>
+	<version>3.1.5</version>
 	<description>CG_SECURE_DESC</description>
 	<files>
 		<filename plugin="cgsecure">cgsecure.php</filename>
