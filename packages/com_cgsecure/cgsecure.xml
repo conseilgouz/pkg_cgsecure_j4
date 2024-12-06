@@ -7,7 +7,7 @@
 	<authorUrl>www.conseilgouz.com</authorUrl>
 	<copyright>Copyright (C) 2024 ConseilGouz.com. All Rights Reserved</copyright>
 	<license>GNU/GPL Version 3 or later - https://www.gnu.org/licenses/gpl-3.0.html</license>
-	<version>3.1.5</version>
+	<version>3.1.6</version>
 	<scriptfile>script.php</scriptfile>
 	<namespace path="src">ConseilGouz\Component\CGSecure</namespace>
 	<description>COM_CGSECURE_XML_DESCRIPTION</description>
@@ -35,7 +35,6 @@
             <menu link="option=com_cgsecure&amp;view=logs" view="logs">COM_CGSECURE_LOGS</menu>
         </submenu>
 		<files folder="admin">
-			<filename>cgsecure.xml</filename>
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
 			<filename>script.php</filename>
