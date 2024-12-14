@@ -2,7 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>3.1.6</version>
+		<version>3.1.7</version>
+        <note>
+            <item>Update : 14/12/2024</item>
+        </note>
+        <fix>
+            <item>In AbuseIPDB White List or confidence = 0 : do it after country check</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>3.1.7</version>
         <note>
             <item>Update : 06/12/2024</item>
         </note>

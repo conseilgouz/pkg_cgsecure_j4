@@ -13,7 +13,6 @@ namespace ConseilGouz\CGSecure\Helper;
 
 defined('_JEXEC') or die();
 
-use Joomla\CMS\Application\CMSWebApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
@@ -112,7 +111,7 @@ class Cgipcheck
         self::$latest_rejected = self::get_rejected();
         $ip = IpHelper::getIp();
         // $ip = $_SERVER['REMOTE_ADDR'];
-        // $ip = '218.92.1.234'; // test hackeur chinois
+        // $ip = '218.92.1.234'; // test hackeur chinois/confidence = 0
         // $ip = '92.184.96.127'; // in abuseip confidence = 0
         // $ip = '54.36.148.179'; // in abuseip whitelist
         if (self::whiteList($ip)) {
@@ -168,10 +167,6 @@ class Cgipcheck
                 }
                 return;
             }
-            if ($resp->data->isWhitelisted || $resp->data->abuseConfidenceScore == 0) { // in AbuseIPDB whitelist
-                // self::redir_out();
-                return true;
-            }
             // Verifie si l'IP du visiteur est dans la liste des pays que j'ai autorise
             if ($resp->data->countryCode == "") { // AbuseIPDB : no country
                 if (self::$logging) {
@@ -222,9 +217,11 @@ class Cgipcheck
                 }
                 self::set_rejected(self::$caller, self::$errtype, $ip, $resp->data->countryCode, self::$params->keep);
                 self::redir_out();
-            } elseif (isset($resp->data->reports) && (count($resp->data->reports) > 0)) { // country OK : check if already reported
+            } elseif (isset($resp->data->reports) && (count($resp->data->reports) > 0) 
+                    && !$resp->data->isWhitelisted && ($resp->data->abuseConfidenceScore > 0)
+                    ) { // country OK : check if already reported or whitelisted in abuseIPDB or not active anymore
                 if (self::$logging) {
-                    Log::add(self::$context.' : SPAM, ip: '.$ip.', reported = '.count($resp->data->reports), Log::DEBUG, self::$caller);
+                    Log::add(self::$context.' : SPAM, ip: '.$ip.', reported = '.count($resp->data->reports).',confidence = '.$resp->data->abuseConfidenceScore, Log::DEBUG, self::$caller);
                 }
                 if (self::$report) {
                     self::report(self::$context, $ip);
@@ -273,18 +270,17 @@ class Cgipcheck
                 }
                 return false; // suppose OK
             }
-            if ($resp->data->isWhitelisted || $resp->data->abuseConfidenceScore == 0) { // in AbuseIPDB whitelist
-                return false;
-            } // in AbuseIPDB whitelist
             // Verifie si l'IP du visiteur est dans la liste des pays que j'ai autorise
             if (isset($resp->data->countryCode) && ($resp->data->countryCode == "")) { // AbuseIPDB perdu
                 if (self::$logging) {
                     Log::add(self::$context.' : '.'Country not found in AbuseIPDB, ip '.$ip.','.$resp->data->countryCode, Log::DEBUG, self::$caller);
                 }
                 return true; // spammeur
-            } elseif (isset($resp->data->reports) && (count($resp->data->reports) > 0)) { // country OK : check if already reported
+            } elseif (isset($resp->data->reports) && (count($resp->data->reports) > 0)
+                      && !$resp->data->isWhitelisted && ($resp->data->abuseConfidenceScore > 0)
+                      ) { // country OK : check if already reported or whitelisted in abuseIPDB or not active anymore
                 if (self::$logging) {
-                    Log::add(self::$context.' : SPAM, ip: '.$ip.', reported = '.count($resp->data->reports), Log::DEBUG, self::$caller);
+                    Log::add(self::$context.' : SPAM, ip: '.$ip.', reported = '.count($resp->data->reports).',confidence = '.$resp->data->abuseConfidenceScore, Log::DEBUG, self::$caller);
                 }
                 return true; // spammeur
             }
