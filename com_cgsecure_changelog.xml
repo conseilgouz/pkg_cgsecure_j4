@@ -9,6 +9,9 @@
         <change>
             <item>Joomla 6.x compatibility</item>
         </change>
+        <fix>
+            <item>Missing Error message 21 : Rogue PHP files</item>
+        </fix>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>
