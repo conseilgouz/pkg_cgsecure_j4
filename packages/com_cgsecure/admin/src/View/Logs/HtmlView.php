@@ -1,7 +1,6 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.11
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -9,6 +8,7 @@
 
 namespace ConseilGouz\Component\CGSecure\Administrator\View\Logs;
 
+defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Helper\ContentHelper;
@@ -28,11 +28,11 @@ class HtmlView extends BaseHtmlView
     {
 
         // Get data from the model
-        $this->form	= $this->get('Form');
-        $this->items = $this->get('Items');
-        $this->state = $this->get('State');
+        $model = $this->getModel();
+        $this->items = $model->getItems();
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_cgsecure');
-        $this->pagination = $this->get('Pagination');  // 4.0
+        $this->pagination = $model->getPagination();
         $this->addToolbar();
         parent::display($tpl);
     }

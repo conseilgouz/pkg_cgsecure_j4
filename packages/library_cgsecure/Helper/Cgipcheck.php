@@ -19,7 +19,6 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
-use Joomla\CMS\Table\Table;
 use Joomla\Utilities\IpHelper;
 
 class Cgipcheck
@@ -47,8 +46,8 @@ class Cgipcheck
     public static function getParams()
     {
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $table = Table::getInstance('ConfigTable', 'ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
-
+        // $table = Table::getInstance('ConfigTable', 'ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
+        $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
         if (!$table) {// appel par fichier .htaccess
             $query = $db->getQuery(true);
             $query->select('*')
@@ -217,9 +216,9 @@ class Cgipcheck
                 }
                 self::set_rejected(self::$caller, self::$errtype, $ip, $resp->data->countryCode, self::$params->keep);
                 self::redir_out();
-            } elseif (isset($resp->data->reports) && (count($resp->data->reports) > 0) 
+            } elseif (isset($resp->data->reports) && (count($resp->data->reports) > 0)
                     && !$resp->data->isWhitelisted && ($resp->data->abuseConfidenceScore > 0)
-                    ) { // country OK : check if already reported or whitelisted in abuseIPDB or not active anymore
+            ) { // country OK : check if already reported or whitelisted in abuseIPDB or not active anymore
                 if (self::$logging) {
                     Log::add(self::$context.' : SPAM, ip: '.$ip.', reported = '.count($resp->data->reports).',confidence = '.$resp->data->abuseConfidenceScore, Log::DEBUG, self::$caller);
                 }
@@ -278,7 +277,7 @@ class Cgipcheck
                 return true; // spammeur
             } elseif (isset($resp->data->reports) && (count($resp->data->reports) > 0)
                       && !$resp->data->isWhitelisted && ($resp->data->abuseConfidenceScore > 0)
-                      ) { // country OK : check if already reported or whitelisted in abuseIPDB or not active anymore
+            ) { // country OK : check if already reported or whitelisted in abuseIPDB or not active anymore
                 if (self::$logging) {
                     Log::add(self::$context.' : SPAM, ip: '.$ip.', reported = '.count($resp->data->reports).',confidence = '.$resp->data->abuseConfidenceScore, Log::DEBUG, self::$caller);
                 }

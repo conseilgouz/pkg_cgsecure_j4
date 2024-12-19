@@ -1,7 +1,6 @@
 <?php
 /**
  * @component     Plugin User CG Secure
- * Version			: 3.0.11
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -38,7 +37,7 @@ class PlgUserCGSecure extends CMSPlugin
         Log::addLogger(array('text_file' => 'cgipcheck.trace.log'), Log::INFO);
         $cmd = $_SERVER['REQUEST_URI'];
         Log::add('Cmd : '.htmlspecialchars($cmd, ENT_QUOTES), Log::INFO, "Auth Fail");
-        foreach($_REQUEST as $key => $value) {
+        foreach ($_REQUEST as $key => $value) {
             Log::add('key : '.htmlspecialchars($key, ENT_QUOTES).":".htmlspecialchars($value, ENT_QUOTES), Log::INFO, "Auth Fail");
         }
     }

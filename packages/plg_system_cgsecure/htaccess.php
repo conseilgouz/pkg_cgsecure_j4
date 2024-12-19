@@ -1,7 +1,6 @@
 <?php
 /**
  * @component      CG Secure
- * Version		   3.0.11
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -41,7 +40,7 @@ $app = $container->get(\Joomla\CMS\Application\SiteApplication::class);
 
 $session  = Factory::getApplication()->getSession();
 $sec      = $session->get('cgsecure');
-$language = Factory::getLanguage();
+$language = Factory::getApplication()->getLanguage();
 $lang     = null; // default language (gb)
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
     $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
@@ -69,7 +68,7 @@ if (Cgipcheck::getLatest_ips($ip)) {
 } // already blocked : die
 $security = $cgsecure_params->security;
 
-if(isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $security)) {
+if (isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $security)) {
     return ;
 } // CG Secure OK : on ignore les erreurs htaccess
 

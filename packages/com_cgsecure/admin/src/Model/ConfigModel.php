@@ -14,7 +14,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Form\Form;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * Config Model Class
@@ -68,8 +67,8 @@ class ConfigModel extends AdminModel
      */
     protected function loadFormData()
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-		$table = Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
+        $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
+
         $params  = json_decode($table->getSecureParams()->params);
 
         return $params;
@@ -88,8 +87,7 @@ class ConfigModel extends AdminModel
      */
     public function getTable($type = 'ConfigTable', $prefix = '', $config = array())
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-        return Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
+        return Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
     }
 
     /**

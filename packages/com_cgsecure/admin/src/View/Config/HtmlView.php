@@ -1,7 +1,6 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.11
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -43,7 +42,7 @@ class HtmlView extends BaseHtmlView
         // $app = Factory::getApplication();
         $model       = $this->getModel();
 
-        $this->form    = $this->get('Form');
+        $this->form    = $model->getForm();
         $this->formControl = $this->form ? $this->form->getFormControl() : null;
 
         // Set the toolbar

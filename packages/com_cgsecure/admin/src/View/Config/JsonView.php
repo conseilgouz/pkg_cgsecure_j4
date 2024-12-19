@@ -1,7 +1,6 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.1.1
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -15,8 +14,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\AbstractView;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 
@@ -184,7 +181,7 @@ class JsonView extends AbstractView
         if (!copy($source, $dest)) {
             return Text::_('CGSECURE_PROTECTDIRS_ERROR');
         }
-        
+
     }
     // add Bad robots blocking
     // - add lines in robots.txt files if it exists, or copy default robots.txt file
@@ -216,11 +213,11 @@ class JsonView extends AbstractView
         // jimport('joomla.filesystem.folder');
         try { // delete cg_no_robot folder if exists
             Folder::delete($dest);
-        } catch(Exception $e) {// ignore error
+        } catch (\Exception $e) {// ignore error
         }
         try {
             Folder::copy($source, $dest);
-        } catch(Exception $e) {
+        } catch (\Exception $e) {
             return Text::_('CGSECURE_ADD_ROBOTS_ERR');
         }
         $source = JPATH_ROOT.'/cg_no_robot/index.txt';
@@ -251,7 +248,7 @@ class JsonView extends AbstractView
         $dest = JPATH_ROOT.'/cg_no_robot';
         try {
             Folder::delete($dest);
-        } catch(Exception $e) {
+        } catch (\Exception $e) {
             return Text::_('CGSECURE_DEL_ROBOTS_ERROR');
         }
         return Text::_('CGSECURE_DEL_ROBOTS');
@@ -420,8 +417,9 @@ class JsonView extends AbstractView
     }
     private function getParams()
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $table = Table::getInstance('ConfigTable', 'ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
+        //        $table = Table::getInstance('ConfigTable', 'ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
+        $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
+
         $params = json_decode($table->getSecureParams()->params);
         return $params;
 

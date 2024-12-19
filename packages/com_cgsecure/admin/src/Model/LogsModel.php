@@ -1,7 +1,6 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.11
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -12,6 +11,7 @@ namespace ConseilGouz\Component\CGSecure\Administrator\Model;
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
 
@@ -20,7 +20,7 @@ use Joomla\Database\DatabaseInterface;
  */
 class LogsModel extends ListModel
 {
-    public function __construct($config = array())
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null)
     {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -33,7 +33,7 @@ class LogsModel extends ListModel
             );
         }
 
-        parent::__construct($config);
+        parent::__construct($config, $factory);
     }
 
     protected function populateState($ordering = null, $direction = null)

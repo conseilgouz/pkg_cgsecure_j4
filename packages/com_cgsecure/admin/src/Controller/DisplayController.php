@@ -1,7 +1,6 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.11
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -10,10 +9,7 @@
 namespace ConseilGouz\Component\CGSecure\Administrator\Controller;
 
 \defined('_JEXEC') or die;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\Router\Route;
 
 class DisplayController extends BaseController
 {
@@ -37,9 +33,6 @@ class DisplayController extends BaseController
      */
     public function display($cachable = false, $urlparams = false)
     {
-        $view   = $this->input->get('view', 'config');
-        $layout = $this->input->get('layout', 'default');
-        $id     = $this->input->getInt('id');
 
         parent::display();
 

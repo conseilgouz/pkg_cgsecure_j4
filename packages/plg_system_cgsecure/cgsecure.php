@@ -2,7 +2,6 @@
 /**
  * @package 	CGSecure
  * from karebu secure (kSesure)
- * Version			: 3.0.11
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz

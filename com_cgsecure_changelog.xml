@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.2.0</version>
+        <note>
+            <item>Update : 19/12/2024</item>
+        </note>
+        <change>
+            <item>Joomla 6.x compatibility</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.1.7</version>
         <note>
             <item>Update : 14/12/2024</item>

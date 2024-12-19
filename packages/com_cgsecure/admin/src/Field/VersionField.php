@@ -9,14 +9,14 @@
 
 namespace ConseilGouz\Component\CGSecure\Administrator\Field;
 
+// Prevent direct access
+defined('_JEXEC') || die;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
 use Joomla\String\StringHelper;
-
-// Prevent direct access
-defined('_JEXEC') || die;
 
 class VersionField extends FormField
 {
@@ -35,7 +35,6 @@ class VersionField extends FormField
 
         $version = '';
 
-        $jinput = Factory::getApplication()->input;
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query
