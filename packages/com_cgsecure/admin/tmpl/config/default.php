@@ -51,7 +51,7 @@ foreach ($this->form->getFieldSets() as $key => $fieldset) {
 echo HTMLHelper::_('uitab.endTabSet');
 ?>
         		    </div>
-                    <input id="token" type="hidden" name="<?php echo Session::getFormToken();?>" value="1" />';
+                    <input id="token" type="hidden" name="<?php echo Session::getFormToken();?>" value="1" />
         		    <input type="hidden" name="task" value="" />
         		    <input type="hidden" name="name" value="config" />
         		</form>

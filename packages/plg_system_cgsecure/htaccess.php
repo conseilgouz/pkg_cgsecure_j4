@@ -48,7 +48,9 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
         $lang = 'fr-FR';
     }
 }
-$language->load('com_cgsecure', JPATH_ADMINISTRATOR, $lang, true);
+if ($language) {
+    $language->load('com_cgsecure', JPATH_ADMINISTRATOR, $lang, true);
+}
 header('Access-Control-Allow-Origin: *');
 if (($_SERVER['REMOTE_ADDR'] == '::1') ||  ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
     $ip = '::1';

@@ -1,6 +1,5 @@
 /**
  * @component     CG Secure
- * Version			: 3.0.12
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
@@ -24,16 +23,18 @@ jQuery(document).ready(function($){
 	})
 });
 function create_htaccess($,access,security) {
-			var token = $("#token").attr("name");
-			$.ajax({
-				data: { [token]: "1", task: "display", format: "json",type: "htaccess", access: access, security: security },
-				success: function(result, status, xhr) {
-					res = result.data.retour;
-                    console.log('res : '+res);
-					$('#cg_result').html(res);
-                    if (res.startsWith('err :')) return; // contains an error : exit
-					Joomla.submitbutton('config.apply'); // force save config.
-					},
-				error: function(message) {console.log(message.responseText)}
-			});	
+	var token = $("#token").attr("name");
+	$.ajax({
+		data: { [token]: "1", task: "display", format: "json",type: "htaccess", access: access, security: security },
+		success: function(result, status, xhr) {
+            res = result.data.retour;
+            console.log('res : '+res);
+            if (res.startsWith('err :')) {
+               Joomla.renderMessages({error: [res]});
+               return; // contains an error : exit
+            }
+            Joomla.submitbutton('config.apply'); // force save config.
+		},
+		error: function(message) {console.log(message.responseText)}
+	});	
 }
