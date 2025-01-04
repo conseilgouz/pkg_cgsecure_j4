@@ -3,7 +3,7 @@
  * CG Secure Component for Joomla 4.x/5.x
  *
  * @author     ConseilgGouz
- * @copyright (C) 2024 www.conseilgouz.com. All Rights Reserved.
+ * @copyright (C) 2025 www.conseilgouz.com. All Rights Reserved.
  * @license    GNU/GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
  */
 

@@ -11,6 +11,7 @@
         </change>
         <fix>
             <item>Missing Error message 21 : Rogue PHP files</item>
+            <item>Check htaccess file before installing/updating it</item>
         </fix>
 	</changelog>
 	<changelog>

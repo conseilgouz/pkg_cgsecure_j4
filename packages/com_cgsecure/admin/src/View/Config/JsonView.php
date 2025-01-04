@@ -2,7 +2,7 @@
 /**
  * @component     CG Secure
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
- * @copyright (C) 2024 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
 **/
 
@@ -14,6 +14,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\AbstractView;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 
@@ -95,7 +96,7 @@ class JsonView extends AbstractView
         if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips)) {
             return Text::_('CGSECURE_DEL_HTACCESS');
         } else {
-            return Text::_('CGSECURE_DEL_HTACCESS_ERROR');
+            return 'err : '.Text::_('CGSECURE_DEL_HTACCESS_ERROR');
         }
     }
     // delete CG Secure information in .htaccess file
@@ -111,7 +112,7 @@ class JsonView extends AbstractView
         if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips)) {
             return Text::_('CGSECURE_DEL_IP_HTACCESS');
         } else {
-            return Text::_('CGSECURE_DEL_IP_HTACCESS_ERROR');
+            return 'err : '.Text::_('CGSECURE_DEL_IP_HTACCESS_ERROR');
         }
     }
     // add CG Secure information from .htaccess file
@@ -122,14 +123,14 @@ class JsonView extends AbstractView
             $source = JPATH_ROOT.self::CGPATH .'/txt/htaccess.txt';
             $dest = $this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS);
             if (!copy($source, $dest)) {
-                return Text::_('CGSECURE_ADD_HTACCESS_ERROR');
+                return 'err : '.Text::_('CGSECURE_ADD_HTACCESS_ERROR');
             }
         }
         // save htaccess file before adding CG Secure lines
         $source = $this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS);
         $dest = JPATH_ROOT.self::CGPATH .'/backup/htaccess.av'.gmdate('Ymd-His', time());
         if (!copy($source, $dest)) {
-            return Text::_('CGSECURE_SAVE_HTACCESS_ERROR');
+            return 'err : '.Text::_('CGSECURE_SAVE_HTACCESS_ERROR');
         }
         $current = $this->read_current($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
         $rejips = $this->get_current_ips($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
@@ -147,7 +148,9 @@ class JsonView extends AbstractView
         if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific)) {
             return Text::_('CGSECURE_ADD_HTACCESS');
         }
-        return Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
+        // Error : restore saved version
+        copy($dest, $source);
+        return 'err : '.Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
     }
     // copy CG Secure information in .htaccess from images, media, administrator directories
     private function protectdirs()
@@ -161,14 +164,14 @@ class JsonView extends AbstractView
             File::delete($dest);
         }
         if (!copy($source, $dest)) {
-            return Text::_('CGSECURE_PROTECTDIRS_ERROR');
+            return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
         }
         $dest = JPATH_ROOT.'/media/.htaccess';
         if (is_file($dest)) {
             File::delete($dest);
         }
         if (!copy($source, $dest)) {
-            return Text::_('CGSECURE_PROTECTDIRS_ERROR');
+            return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
         }
         if (file_exists(JPATH_ROOT.'/administrator/.htaccess')) {
             return;
@@ -179,7 +182,7 @@ class JsonView extends AbstractView
             File::delete($dest);
         }
         if (!copy($source, $dest)) {
-            return Text::_('CGSECURE_PROTECTDIRS_ERROR');
+            return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
         }
 
     }
@@ -194,18 +197,18 @@ class JsonView extends AbstractView
             $source = JPATH_ROOT.self::CGPATH .'/txt/robots.txt';
             $dest = $this->getServerConfigFilePath($filename);
             if (!copy($source, $dest)) {
-                return Text::_('CGSECURE_ADD_ROBOTS_ERROR');
+                return 'err : '.Text::_('CGSECURE_ADD_ROBOTS_ERROR');
             }
         }
         $source = $this->getServerConfigFilePath($filename);
         $dest = JPATH_ROOT.self::CGPATH .'/backup/robots.av'.gmdate('Ymd-His', time());
         if (!copy($source, $dest)) {
-            return Text::_('CGSECURE_SAVE_ROBOTS_ERROR');
+            return 'err : '.Text::_('CGSECURE_SAVE_ROBOTS_ERROR');
         }
         $current = $this->read_current($this->getServerConfigFilePath($filename));
         $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgrobots.txt');
         if (!$this->merge_file($this->getServerConfigFilePath($filename), $current, $cgFile, '')) {
-            return Text::_('CGSECURE_ADD_ROBOTS_INSERT_ERROR');
+            return 'err : '.Text::_('CGSECURE_ADD_ROBOTS_INSERT_ERROR');
         }
         // copy cg_no_robot folder to root*
         $source = JPATH_ROOT.self::CGPATH .'/cg_no_robot';
@@ -218,7 +221,7 @@ class JsonView extends AbstractView
         try {
             Folder::copy($source, $dest);
         } catch (\Exception $e) {
-            return Text::_('CGSECURE_ADD_ROBOTS_ERR');
+            return 'err : '.Text::_('CGSECURE_ADD_ROBOTS_ERR');
         }
         $source = JPATH_ROOT.'/cg_no_robot/index.txt';
         $dest = JPATH_ROOT.'/cg_no_robot/index.php';
@@ -226,7 +229,7 @@ class JsonView extends AbstractView
             File::delete($dest);
         } // remove index.php file if present
         if (!rename($source, $dest)) {
-            return Text::_('CGSECURE_ADD_ROBOTS_ERR');
+            return 'err : '.Text::_('CGSECURE_ADD_ROBOTS_ERR');
         }
 
         return Text::_('CGSECURE_ADD_ROBOTS');
@@ -243,13 +246,13 @@ class JsonView extends AbstractView
         $cgFile = '';
         $rejips = '';
         if (!$this->merge_file($this->getServerConfigFilePath($filename), $current, $cgFile, $rejips)) {
-            return  Text::_('CGSECURE_DEL_ROBOTS_ERROR');
+            return  'err : '.Text::_('CGSECURE_DEL_ROBOTS_ERROR');
         }
         $dest = JPATH_ROOT.'/cg_no_robot';
         try {
             Folder::delete($dest);
         } catch (\Exception $e) {
-            return Text::_('CGSECURE_DEL_ROBOTS_ERROR');
+            return 'err : '.Text::_('CGSECURE_DEL_ROBOTS_ERROR');
         }
         return Text::_('CGSECURE_DEL_ROBOTS');
 
@@ -397,7 +400,14 @@ class JsonView extends AbstractView
             if (is_readable($pathToFile)) {
                 $records = $rejips.$specific.$cgFile.$current; // pour éviter les conflits, on se met devant....
                 // Write the htaccess using the Frameworks File Class
-                return File::write($pathToFile, $records);
+                $bool = File::write($pathToFile, $records);
+                if ($bool) {
+                    if ($this->check_site()) {
+                        return $bool;
+                    } else {
+                        return false;
+                    }
+                }
             }
         }
         return Text::_('CGSECURE_MERGE_ERROR');
@@ -417,11 +427,26 @@ class JsonView extends AbstractView
     }
     private function getParams()
     {
-        //        $table = Table::getInstance('ConfigTable', 'ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
         $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
-
         $params = json_decode($table->getSecureParams()->params);
         return $params;
 
+    }
+    private function check_site()
+    {
+        $url = URI::root();
+        try {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_URL, $url);
+            $response = curl_exec($curl);
+            curl_close($curl);
+            return $response;
+        } catch (\RuntimeException $e) {
+            return false;
+        }
+        return false;
     }
 }
