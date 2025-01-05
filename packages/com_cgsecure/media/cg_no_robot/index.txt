@@ -1,9 +1,8 @@
 <?php
 /**
  * @component     CG Secure
- * Version			: 3.0.2
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
- * @copyright (C) 2023 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  *	
  * from Blackhole for Bad Bots https://perishablepress.com/blackhole-bad-bots/
@@ -34,7 +33,6 @@ require_once JPATH_LIBRARIES . '/import.legacy.php';
 require_once JPATH_LIBRARIES . '/cms.php';
 
 Factory::getApplication('site');  // start application, otherwise JText won't work....
-$language = Factory::getLanguage();
 $lang = null; // default language (gb)
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ) {
 	$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'],0,2);
@@ -42,7 +40,14 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ) {
 		$lang = 'fr-FR';
 	} 
 }
-$language->load('com_cgsecure',JPATH_ADMINISTRATOR,$lang,true);
+$language = Factory::getApplication()->getLanguage();
+if (!$language) {
+    Factory::getApplication()->loadLanguage();
+    $language = Factory::getApplication()->getLanguage();
+}
+if ($language) {
+    $language->load('com_cgsecure', JPATH_ADMINISTRATOR, $lang, true);
+}
 header('Access-Control-Allow-Origin: *');
 if (($_SERVER['REMOTE_ADDR'] == '::1') ||  ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
 	$ip = '::1'; // localhost

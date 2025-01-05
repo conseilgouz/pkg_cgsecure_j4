@@ -9,7 +9,6 @@
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Language\Language;
 use ConseilGouz\CGSecure\Helper\Cgipcheck;
 
 const _JEXEC = 1;
