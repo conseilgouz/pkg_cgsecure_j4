@@ -9,6 +9,7 @@
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Language\Language;
 use ConseilGouz\CGSecure\Helper\Cgipcheck;
 
 const _JEXEC = 1;
@@ -40,13 +41,17 @@ $app = $container->get(\Joomla\CMS\Application\SiteApplication::class);
 
 $session  = Factory::getApplication()->getSession();
 $sec      = $session->get('cgsecure');
-$language = Factory::getApplication()->getLanguage();
 $lang     = null; // default language (gb)
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
     $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
     if ($lang == 'fr') {
         $lang = 'fr-FR';
     }
+}
+$language = Factory::getApplication()->getLanguage();
+if (!$language) {
+    Factory::getApplication()->loadLanguage();
+    $language = Factory::getApplication()->getLanguage();
 }
 if ($language) {
     $language->load('com_cgsecure', JPATH_ADMINISTRATOR, $lang, true);

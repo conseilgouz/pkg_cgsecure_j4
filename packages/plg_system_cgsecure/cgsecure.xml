@@ -2,7 +2,7 @@
 <extension type="plugin" group="system" method="upgrade" version="4.0">
 	<name>System - CG Secure</name>
 	<author>conseilgouz</author>
-	<creationDate>2024-12-19</creationDate>
+	<creationDate>2025-01-05</creationDate>
 	<copyright>(C)2024 ConseilGouz. All rights reserved.</copyright>
 	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>

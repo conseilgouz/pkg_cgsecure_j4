@@ -437,13 +437,21 @@ class JsonView extends AbstractView
         $url = URI::root();
         try {
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_URL, $url);
-            $response = curl_exec($curl);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HEADER, 0);
+            curl_setopt($curl, CURLOPT_NOBODY, 0);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_exec($curl);
+            $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             curl_close($curl);
-            return $response;
+            if ($responseCode == 500) {
+                return false;
+            }
+            return true;
         } catch (\RuntimeException $e) {
             return false;
         }

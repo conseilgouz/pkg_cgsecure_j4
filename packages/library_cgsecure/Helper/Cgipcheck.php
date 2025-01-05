@@ -46,21 +46,19 @@ class Cgipcheck
     public static function getParams()
     {
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        // $table = Table::getInstance('ConfigTable', 'ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
-        $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
-        if (!$table) {// appel par fichier .htaccess
-            $query = $db->getQuery(true);
-            $query->select('*')
-            ->from($db->quoteName('#__cgsecure_config'));
-            $db->setQuery($query);
-            try {
-                $params = $db->loadObject();
-                self::$params = json_decode($params->params);
-                return self::$params;
-            } catch (\RuntimeException $e) {
-                return array();
-            }
+
+        $query = $db->getQuery(true);
+        $query->select('*')
+        ->from($db->quoteName('#__cgsecure_config'));
+        $db->setQuery($query);
+        try {
+            $params = $db->loadObject();
+            self::$params = json_decode($params->params);
+            return self::$params;
+        } catch (\RuntimeException $e) {
+            return array();
         }
+
         self::$params = json_decode($table->getSecureParams()->params);
         return self::$params;
     }
@@ -70,7 +68,6 @@ class Cgipcheck
         // read latest_ips file
         $file = JPATH_ROOT . '/media/com_cgsecure/backup/latest_ips.txt';
         $readBuffer = file($file, FILE_IGNORE_NEW_LINES);
-        $outBuffer = '';
         foreach ($readBuffer as $id => $line) {
             self::$latest_ips[] = $line;
         }
@@ -81,7 +78,6 @@ class Cgipcheck
         if (in_array($ip, self::$latest_ips)) {
             return true;
         }
-
         self::$latest_ips[] = $ip;
         if (count(self::$latest_ips) > 20) {
             array_shift(self::$latest_ips);
@@ -94,8 +90,6 @@ class Cgipcheck
         if (is_readable($file)) {
             // Write the htaccess using the Frameworks File Class
             File::write($file, $out);
-
-
         }
         return false;
     }
@@ -113,6 +107,7 @@ class Cgipcheck
         // $ip = '218.92.1.234'; // test hackeur chinois/confidence = 0
         // $ip = '92.184.96.127'; // in abuseip confidence = 0
         // $ip = '54.36.148.179'; // in abuseip whitelist
+        // $ip = '3.92.135.245'; // us hacker
         if (self::whiteList($ip)) {
             return true;
         }
@@ -509,7 +504,7 @@ class Cgipcheck
             return false;
         }
         self::$blockip  = self::$params->blockip == 1;
-        if ((self::$blockip == 1) && ($errtype = "e")) { // new hacker
+        if ((self::$blockip == 1) && ($errtype == "e")) { // new hacker
             $hackers = self::get_htaccess_List(); //get hackers list
             self::store_htaccess($hackers); // block them
         }
@@ -629,11 +624,24 @@ class Cgipcheck
     {
         $pathToHtaccess  = $htaccess;
         if (file_exists($pathToHtaccess)) {
+            copy($pathToHtaccess, $pathToHtaccess.'.wait');
             if (is_readable($pathToHtaccess)) {
                 $records = $current;
                 // Write the htaccess using the Frameworks File Class
-                return File::write($pathToHtaccess, $records);
+                $bool = File::write($pathToHtaccess, $records);
+                if ($bool) {
+                    if (self::check_site()) {
+                        File::delete($pathToHtaccess.'.wait');
+                        return $bool;
+                    } else {
+                        // restore previous version
+                        copy($pathToHtaccess.'.wait', $pathToHtaccess);
+                        File::delete($pathToHtaccess.'.wait');
+                        return false;
+                    }
+                }
             }
+            File::delete($pathToHtaccess.'.wait');
         }
         return Text::_('CGSECURE_ADD_ADMIN_HTACCESS_MERGE_ERROR');
         ;
@@ -651,4 +659,32 @@ class Cgipcheck
     {
         return JPATH_ROOT . DIRECTORY_SEPARATOR . $file;
     }
+
+    // check if website is still working
+    private static function check_site()
+    {
+        $url = URI::root();
+        try {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HEADER, 0);
+            curl_setopt($curl, CURLOPT_NOBODY, 0);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_exec($curl);
+            $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            curl_close($curl);
+            if ($responseCode == 500) {
+                return false;
+            }
+            return true;
+        } catch (\RuntimeException $e) {
+            return false;
+        }
+        return false;
+    }
+
 }
