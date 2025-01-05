@@ -10,11 +10,11 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text as JText;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Version;
 use Joomla\Database\DatabaseInterface;
@@ -181,11 +181,12 @@ class PlgSystemCgsecureInstallerInstallerScript
             $this->htaccess_other_dirs(); // create htaccess file in media,images/administrator dir
         }
     }
-    private function htaccess_other_dirs() {
+    private function htaccess_other_dirs()
+    {
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         // media : block php
         $f = JPATH_ROOT . '/media/.htaccess';
-        if (!@file_exists($f) ) { // .htaccess in media dir 
+        if (!@file_exists($f)) { // .htaccess in media dir
             $dest   = JPATH_ROOT.'/media/.htaccess';
             if (!copy($source, $dest)) {
                 Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
@@ -193,7 +194,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         }
         // images : block php
         $f = JPATH_ROOT . '/images/.htaccess';
-        if (!@file_exists($f) ) { // .htaccess in images dir
+        if (!@file_exists($f)) { // .htaccess in images dir
             $dest   = JPATH_ROOT.'/images/.htaccess';
             if (!copy($source, $dest)) {
                 Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
@@ -202,7 +203,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         // administrator : block protected directories
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt';
         $f = JPATH_ROOT . '/administrator/.htaccess';
-        if (!@file_exists($f) ) { // .htaccess in images dir
+        if (!@file_exists($f)) { // .htaccess in images dir
             $dest   = JPATH_ROOT.'/administrator/.htaccess';
             if (!copy($source, $dest)) {
                 Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
@@ -246,11 +247,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         Factory::getApplication()->enqueueMessage('CGSECURE : Error during insert');
         return;
     }
-    // from https://www.php.net/manual/en/function.lcg-value.php#75562
-    private function random_float($min, $max)
-    {
-        return ($min + lcg_value() * (abs($max - $min)));
-    }
+
     private function getServerConfigFile($file)
     {
         if (file_exists($this->getServerConfigFilePath($file))
@@ -538,7 +535,8 @@ class PlgSystemCgsecureInstallerInstallerScript
             Factory::getApplication()->enqueueMessage(JText::_('ERROR_INSTALLATION_LIBRARY_FAILED'), 'error');
             return false;
         }
-        Factory::getCache()->clean('_system');
+        $cachecontroller = Factory::getContainer()->get(CacheControllerFactoryInterface::class)->createCacheController();
+        $cachecontroller->clean('_system');
         return true;
     }
     private function uninstallInstaller()
@@ -558,7 +556,8 @@ class PlgSystemCgsecureInstallerInstallerScript
             ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
         $db->setQuery($query);
         $db->execute();
-        Factory::getCache()->clean('_system');
+        $cachecontroller = Factory::getContainer()->get(CacheControllerFactoryInterface::class)->createCacheController();
+        $cachecontroller->clean('_system');
     }
 
     public function delete($files = [])
