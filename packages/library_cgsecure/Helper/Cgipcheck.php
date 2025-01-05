@@ -53,13 +53,10 @@ class Cgipcheck
         $db->setQuery($query);
         try {
             $params = $db->loadObject();
-            self::$params = json_decode($params->params);
-            return self::$params;
         } catch (\RuntimeException $e) {
             return array();
         }
-
-        self::$params = json_decode($table->getSecureParams()->params);
+        self::$params = json_decode($params->params);
         return self::$params;
     }
     // check brute force

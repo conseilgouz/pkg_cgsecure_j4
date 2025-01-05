@@ -2,7 +2,6 @@
 
 /**
  * @package    CG Secure
- * Version			: 3.1.2
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
@@ -15,11 +14,12 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text as JText;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Version;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
-use Joomla\CMS\Table\Table;
 
 class PlgSystemCgsecureInstallerInstallerScript
 {
@@ -188,7 +188,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         if (!@file_exists($f) ) { // .htaccess in media dir 
             $dest   = JPATH_ROOT.'/media/.htaccess';
             if (!copy($source, $dest)) {
-                Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : add HTACCESS in media error'));
+                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
             }
         }
         // images : block php
@@ -196,7 +196,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         if (!@file_exists($f) ) { // .htaccess in images dir
             $dest   = JPATH_ROOT.'/images/.htaccess';
             if (!copy($source, $dest)) {
-                Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : add HTACCESS in media error'));
+                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
             }
         }
         // administrator : block protected directories
@@ -205,7 +205,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         if (!@file_exists($f) ) { // .htaccess in images dir
             $dest   = JPATH_ROOT.'/administrator/.htaccess';
             if (!copy($source, $dest)) {
-                Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : add HTACCESS in media error'));
+                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
             }
         }
     }
@@ -217,14 +217,14 @@ class PlgSystemCgsecureInstallerInstallerScript
             $source = JPATH_ROOT.self::CGPATH .'/txt/htaccess.txt';
             $dest = $this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS);
             if (!copy($source, $dest)) {
-                return Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : add HTACCESS error'));
+                return Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS error');
             }
         }
         // save htaccess file before adding CG Secure lines
         $source = $this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS);
         $dest = JPATH_ROOT.self::CGPATH .'/backup/htaccess.av'.gmdate('Ymd-His', time());
         if (!copy($source, $dest)) {
-            return Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : save HTACCESS error'));
+            return Factory::getApplication()->enqueueMessage('CGSECURE : save HTACCESS error');
         }
         $current = $this->read_current($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
         $rejips = $this->get_current_ips($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
@@ -243,7 +243,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific)) {
             return; // everything OK => exit
         }
-        Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : Error during insert'));
+        Factory::getApplication()->enqueueMessage('CGSECURE : Error during insert');
         return;
     }
     // from https://www.php.net/manual/en/function.lcg-value.php#75562
@@ -377,22 +377,68 @@ class PlgSystemCgsecureInstallerInstallerScript
     private function getParams()
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
-		$table = Table::getInstance('ConfigTable','ConseilGouz\\Component\\CGSecure\Administrator\\Table\\', array('dbo' => $db));
-		$params = json_decode($table->getSecureParams()->params);
-		return $params;
-
+        $query = $db->getQuery(true);
+        $query->select('*')
+        ->from($db->quoteName('#__cgsecure_config'));
+        $db->setQuery($query);
+        try {
+            $params = $db->loadObject();
+        } catch (\RuntimeException $e) {
+            return array();
+        }
+        $params = json_decode($params->params);
+        return $params;
     }
     private function merge_file($file, $current, $cgFile, $rejips, $specific)
     {
         $pathToFile  = $file;
         if (file_exists($pathToFile)) {
+            copy($pathToFile, $pathToFile.'.wait');
             if (is_readable($pathToFile)) {
                 $records = $rejips.$specific.$cgFile.$current; // pour éviter les conflits, on se met devant....
                 // Write the htaccess using the Frameworks File Class
-                return File::write($pathToFile, $records);
+                $bool = File::write($pathToFile, $records);
+                if ($bool) {
+                    if (self::check_site()) {
+                        File::delete($pathToFile.'.wait');
+                        return $bool;
+                    } else {
+                        // restore previous version
+                        copy($pathToFile.'.wait', $pathToFile);
+                        File::delete($pathToFile.'.wait');
+                        return false;
+                    }
+                }
             }
+            File::delete($pathToFile.'.wait');
         }
-        return Factory::getApplication()->enqueueMessage(JText::_('CGSECURE : merge error'));
+        return Factory::getApplication()->enqueueMessage('CGSECURE : merge error');
+    }
+    // check if website is still working
+    private function check_site()
+    {
+        $url = URI::root();
+        try {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HEADER, 0);
+            curl_setopt($curl, CURLOPT_NOBODY, 0);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_exec($curl);
+            $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            curl_close($curl);
+            if ($responseCode == 500) {
+                return false;
+            }
+            return true;
+        } catch (\RuntimeException $e) {
+            return false;
+        }
+        return false;
     }
 
     // End HTACCESS update -------------------------------------------------------------
