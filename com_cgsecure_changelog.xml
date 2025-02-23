@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.2.1</version>
+        <note>
+            <item>Update : 23/02/2025</item>
+        </note>
+        <change>
+            <item>Add block countries in check_spammer function</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.2.0</version>
         <note>
             <item>Update : 05/01/2025</item>

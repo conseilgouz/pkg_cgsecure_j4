@@ -237,7 +237,7 @@ class Cgipcheck
         $ip = IpHelper::getIp();
         // $ip = $_SERVER['REMOTE_ADDR'];
         if (self::$context  != 'SystemCGSecure') { // no test when system, otherwise, you'll loose your admin....
-            // $ip = '222.186.42.7'; // test hackeur chinois
+            //$ip = '222.186.42.7'; // test hackeur chinois
         }
         if (self::whiteList($ip)) {
             return false;
@@ -261,12 +261,24 @@ class Cgipcheck
                 }
                 return false; // suppose OK
             }
+            $countries = self::$params->country;
+            $pays_autorise = explode(',', $countries);
+
+            $blockedcountries = self::$params->blockedcountry;
+            $pays_interdit = explode(',', $blockedcountries);
+
             // Verifie si l'IP du visiteur est dans la liste des pays que j'ai autorise
             if (isset($resp->data->countryCode) && ($resp->data->countryCode == "")) { // AbuseIPDB perdu
                 if (self::$logging) {
                     Log::add(self::$context.' : '.'Country not found in AbuseIPDB, ip '.$ip.','.$resp->data->countryCode, Log::DEBUG, self::$caller);
                 }
                 return true; // spammeur
+            } elseif ((($countries != '*') && (!in_array($resp->data->countryCode, $pays_autorise)))
+                     || (($blockedcountries != '') && (in_array($resp->data->countryCode, $pays_interdit)))) {
+                if (self::$logging) {
+                    Log::add(self::$context.' : '.Text::_("CG_PHOCADOWNLOAD_UNAUTHORIZED").$ip.','.$resp->data->countryCode, Log::DEBUG, self::$caller);
+                }
+                return true; // unauthorized country
             } elseif (isset($resp->data->reports) && (count($resp->data->reports) > 0)
                       && !$resp->data->isWhitelisted && ($resp->data->abuseConfidenceScore > 0)
             ) { // country OK : check if already reported or whitelisted in abuseIPDB or not active anymore
