@@ -68,7 +68,7 @@ class JsonView extends AbstractView
                 $msg .= '<br>'.$this->deleteIPSHTAccess();
             } elseif ($access == 1) {// add CG Secure lines to htaccess file
                 $msg = $this->addHTAccess();
-                // add .htaccess in images and media directories
+                // add .htaccess in images, media, files, administrator directories
                 $this->protectdirs();
             } elseif ($access == 2) { // delete hackers IP
                 $msg = $this->deleteIPSHTAccess();
@@ -152,12 +152,14 @@ class JsonView extends AbstractView
         copy($dest, $source);
         return 'err : '.Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
     }
-    // copy CG Secure information in .htaccess from images, media, administrator directories
+    // copy CG Secure information in .htaccess from images, media, files, administrator directories
     private function protectdirs()
     {
-        if (file_exists(JPATH_ROOT.'/images/.htaccess') && file_exists(JPATH_ROOT.'/media/.htaccess')) {
-            return;
-        } // .htaccess already present in images and media directories
+        if (file_exists(JPATH_ROOT.'/images/.htaccess') 
+            && file_exists(JPATH_ROOT.'/media/.htaccess')
+            && (is_dir(JPATH_ROOT.'/files') && file_exists(JPATH_ROOT.'/files/.htaccess')) ) {
+            return; // .htaccess already present in images/media/files directories
+        } 
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         $dest = JPATH_ROOT.'/images/.htaccess';
         if (is_file($dest)) {
@@ -173,9 +175,18 @@ class JsonView extends AbstractView
         if (!copy($source, $dest)) {
             return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
         }
+        if (is_dir(JPATH_ROOT.'/files')) {// Joomla 5.3.0 : new directory
+            $dest = JPATH_ROOT.'/files/.htaccess';
+            if (is_file($dest)) {
+                File::delete($dest);
+            }
+            if (!copy($source, $dest)) {
+                return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
+            }
+        }
         if (file_exists(JPATH_ROOT.'/administrator/.htaccess')) {
-            return;
-        } // .htaccess already present in administrator directory
+            return; // .htaccess already present in administrator directory
+        } 
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt';
         $dest = JPATH_ROOT.'/administrator/.htaccess';
         if (is_file($dest)) {
@@ -184,7 +195,6 @@ class JsonView extends AbstractView
         if (!copy($source, $dest)) {
             return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
         }
-
     }
     // add Bad robots blocking
     // - add lines in robots.txt files if it exists, or copy default robots.txt file

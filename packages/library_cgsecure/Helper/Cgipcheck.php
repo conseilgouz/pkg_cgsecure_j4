@@ -124,9 +124,15 @@ class Cgipcheck
             }
         }
         if (extension_loaded('curl')) {
-            $countries = self::$params->country;
+            $countries = [];
+            if (isset(self::$params->country)) {
+                $countries = self::$params->country;
+            }
             $pays_autorise = explode(',', $countries);
-            $blockedcountries = self::$params->blockedcountry;
+            $blockedcountries = [];
+            if (isset(self::$params->blockedcountry)) {
+                $blockedcountries = self::$params->blockedcountry;
+            }
             $pays_interdit = explode(',', $blockedcountries);
             $resp = self::abuseIPDBrequest('check', 'GET', [ 'ipAddress' => $ip, 'maxAgeInDays' => 30, 'verbose' => true ]);
             if (!isset($resp->data)) { // AbuseIP Error
@@ -261,10 +267,15 @@ class Cgipcheck
                 }
                 return false; // suppose OK
             }
-            $countries = self::$params->country;
+            $countries = [];
+            if (isset(self::$params->country)) {
+                $countries = self::$params->country;
+            }
             $pays_autorise = explode(',', $countries);
-
-            $blockedcountries = self::$params->blockedcountry;
+            $blockedcountries = [];
+            if (isset(self::$params->blockedcountry)) {
+                $blockedcountries = self::$params->blockedcountry;
+            }
             $pays_interdit = explode(',', $blockedcountries);
 
             // Verifie si l'IP du visiteur est dans la liste des pays que j'ai autorise

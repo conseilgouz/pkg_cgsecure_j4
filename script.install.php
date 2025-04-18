@@ -192,12 +192,21 @@ class PlgSystemCgsecureInstallerInstallerScript
                 Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
             }
         }
-        // images : block php
+        // images/media/files : block php
         $f = JPATH_ROOT . '/images/.htaccess';
         if (!@file_exists($f)) { // .htaccess in images dir
             $dest   = JPATH_ROOT.'/images/.htaccess';
             if (!copy($source, $dest)) {
                 Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
+            }
+        }
+        if (is_dir(JPATH_ROOT . '/files')) { // Joomla 5.3.0 : new dir
+            $f = JPATH_ROOT . '/files/.htaccess';
+            if (@file_exists($f)) { // .htaccess in files dir
+                $dest   = JPATH_ROOT.'/files/.htaccess';
+                if (!copy($source, $dest)) {
+                    Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
+                }
             }
         }
         // administrator : block protected directories
