@@ -124,7 +124,7 @@ class Cgipcheck
             }
         }
         if (extension_loaded('curl')) {
-            $countries = "";
+            $countries = "*";
             if (isset(self::$params->country)) {
                 $countries = self::$params->country;
             }
@@ -267,7 +267,7 @@ class Cgipcheck
                 }
                 return false; // suppose OK
             }
-            $countries = "";
+            $countries = "*";
             if (isset(self::$params->country)) {
                 $countries = self::$params->country;
             }
