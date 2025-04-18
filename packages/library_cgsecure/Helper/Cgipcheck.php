@@ -101,7 +101,7 @@ class Cgipcheck
         self::$latest_rejected = self::get_rejected();
         $ip = IpHelper::getIp();
         // $ip = $_SERVER['REMOTE_ADDR'];
-        // $ip = '218.92.1.234'; // test hackeur chinois/confidence = 0
+        $ip = '218.92.1.234'; // test hackeur chinois/confidence = 0
         // $ip = '92.184.96.127'; // in abuseip confidence = 0
         // $ip = '54.36.148.179'; // in abuseip whitelist
         // $ip = '3.92.135.245'; // us hacker
@@ -124,12 +124,12 @@ class Cgipcheck
             }
         }
         if (extension_loaded('curl')) {
-            $countries = [];
+            $countries = "";
             if (isset(self::$params->country)) {
                 $countries = self::$params->country;
             }
             $pays_autorise = explode(',', $countries);
-            $blockedcountries = [];
+            $blockedcountries = "";
             if (isset(self::$params->blockedcountry)) {
                 $blockedcountries = self::$params->blockedcountry;
             }
@@ -267,12 +267,12 @@ class Cgipcheck
                 }
                 return false; // suppose OK
             }
-            $countries = [];
+            $countries = "";
             if (isset(self::$params->country)) {
                 $countries = self::$params->country;
             }
             $pays_autorise = explode(',', $countries);
-            $blockedcountries = [];
+            $blockedcountries = "";
             if (isset(self::$params->blockedcountry)) {
                 $blockedcountries = self::$params->blockedcountry;
             }
