@@ -1,0 +1,21 @@
+# Ultimate AI Block List v1.4 20250417
+# from https://perishablepress.com/ultimate-ai-block-list/
+
+<IfModule mod_rewrite.c>
+
+	RewriteEngine On
+
+	RewriteCond %{HTTP_USER_AGENT} (.ai?|Agentic|AI?Article?Writer|AI?Content?Detector|AI?Dungeon|AI?Search?Engine|AI?SEO?Crawler|AI?Writer|AI21?Labs|AI2Bot|AIBot|AIMatrix|AISearchBot|AI?Training|AITraining|Alexa|Alpha?AI|AlphaAI|Amazon?Bedrock|Amazon-Kendra) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (Amazon?Lex|Amazon?Comprehend|Amazon?Sagemaker|Amazon?Silk|Amazon?Textract|AmazonBot|Amelia|AndersPinkBot|Anthropic|AnyPicker|Anyword|Aria?Browse|Articoolo|Automated?Writer|AwarioRssBot|AwarioSmartBot|Azure|BardBot|Brave?Leo|ByteDance) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (Bytespider|CatBoost|CC-Crawler|CCBot|ChatGLM|Chinchilla|Claude|ClearScope|Cohere|Common?Crawl|CommonCrawl|Content?Harmony|Content?King|Content?Optimizer|Content?Samurai|ContentAtScale|ContentBot|Contentedge|Conversion?AI|Copilot) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (CopyAI|Copymatic|Copyscape|Cotoyogi|CrawlQ?AI|Crawlspace|Crew?AI|CrewAI|DALL-E|DataForSeoBot|DataProvider|DeepAI|DeepL|DeepMind|DeepSeek|Diffbot|Doubao?AI|DuckAssistBot|FacebookBot|FacebookExternalHit) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (Falcon|Firecrawl|Flyriver|Frase?AI|FriendlyCrawler|Gemini|Gemma|GenAI|Genspark|GLM|Goose|GPT|Grammarly|Grendizer|Grok|GT?Bot|GTBot|Hemingway?Editor|Hugging?Face|Hypotenuse?AI) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (iaskspider|ICC-Crawler|ImageGen|ImagesiftBot|img2dataset|INK?Editor|INKforall|IntelliSeek|Inferkit|ISSCyberRiskCrawler|JasperAI|Kafkai|Kangaroo|Keyword?Density?AI|Knowledge|KomoBot|LLaMA|LLMs|magpie-crawler|MarketMuse) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (Meltwater|Meta?AI|Meta-AI|Meta-External|MetaAI|MetaTagBot|Mistral|Narrative|NeevaBot|Neural?Text|NeuralSEO|Nova?Act|OAI-SearchBot|Omgili|Open?AI|OpenAI|OpenBot|OpenText?AI|Operator|Outwrite) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (Page?Analyzer?AI|PanguBot|Paperlibot|Paraphraser.io|Perplexity|PetalBot|Phindbot|PiplBot|ProWritingAid|QuillBot|RobotSpider|Rytr|SaplingAI|Scalenut|Scraper|Scrapy|ScriptBook|SEO?Content?Machine|SEO?Robot|Sentibot) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (Sidetrade|Simplified?AI|Sitefinity|Skydancer|SlickWrite|Sonic|Spin?Rewriter|Spinbot|Stability|StableDiffusionBot|Sudowrite|Super?Agent|Surfer?AI|Text?Blaze|TextCortex|The?Knowledge?AI|Timpibot|Vidnami?AI|Webzio|Whisper) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (WordAI|Wordtune|WormsGTP|WPBot|Writecream|WriterZen|Writescope|Writesonic|xAI|xBot|YouBot|Zero?GTP|Zerochat|Zhipu|Zimm) [NC,OR]
+# restore removed block from v1.4
+	RewriteCond %{HTTP_USER_AGENT} (Applebot|BingAI|Bingbot-chat|Google?Bard?AI|Google-CloudVertexBot|Google-Extended|GoogleOther) [NC]
+    RewriteRule .* plugins/system/cgsecure/htaccess.php?e=88&t=w&m=%1&sec=??security?? [L]    
+</IfModule>

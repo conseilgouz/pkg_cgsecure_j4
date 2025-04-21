@@ -2,6 +2,20 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.2.3</version>
+        <note>
+            <item>Update : 22/04/2025</item>
+        </note>
+        <fix>
+            <item>Change trace log file name to cgipcheck.trace.log.php</item>
+        </fix>
+        <addition>
+            <item>New parameter : Block IA Robots (default:no)</item>
+        </addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.2.2</version>
         <note>
             <item>Update : 18/04/2025</item>

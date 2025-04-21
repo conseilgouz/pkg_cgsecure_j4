@@ -34,7 +34,7 @@ class PlgUserCGSecure extends CMSPlugin
         if (!$this->debug) {
             return;
         }
-        Log::addLogger(array('text_file' => 'cgipcheck.trace.log'), Log::INFO);
+        Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::INFO);
         $cmd = $_SERVER['REQUEST_URI'];
         Log::add('Cmd : '.htmlspecialchars($cmd, ENT_QUOTES), Log::INFO, "Auth Fail");
         foreach ($_REQUEST as $key => $value) {

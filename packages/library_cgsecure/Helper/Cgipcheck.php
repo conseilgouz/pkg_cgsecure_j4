@@ -112,7 +112,7 @@ class Cgipcheck
         self::$report = self::$params->report == 1;
         self::$blockip  = self::$params->blockip == 1;
         if (self::$logging) {
-            Log::addLogger(array('text_file' => 'cgipcheck.trace.log'), Log::DEBUG, array(self::$caller));
+            Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::DEBUG, array(self::$caller));
         }
         if (in_array($ip, self::$latest_rejected)) {
             if (self::check_hacker(self::$errtype, $ip)) { // no errtype change : ok
@@ -251,7 +251,7 @@ class Cgipcheck
 
         self::$logging = self::$params->logging == 1;
         if (self::$logging) {
-            Log::addLogger(array('text_file' => 'cgipcheck.trace.log'), Log::DEBUG, array(self::$caller));
+            Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::DEBUG, array(self::$caller));
         }
         if (extension_loaded('curl')) {
             $resp = self::abuseIPDBrequest('check', 'GET', [ 'ipAddress' => $ip, 'maxAgeInDays' => 30, 'verbose' => true ]);
