@@ -5,13 +5,15 @@
  * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
 **/
-
+namespace Conseilgouz\Plugin\Authentication\CGSecure\Extension;
 // No direct access.
 defined('_JEXEC') or die();
+use Joomla\CMS\Event\User\AuthenticationEvent;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\Event\SubscriberInterface;
 use ConseilGouz\CGSecure\Helper\Cgipcheck;
 
-class PlgAuthenticationCGSecure extends CMSPlugin
+final class Cgsecure extends CMSPlugin implements SubscriberInterface
 {
     public $myname = 'AuthentCGSecure';
     public $mymessage = 'Joomla Authentification : try to force the door...';
@@ -25,8 +27,19 @@ class PlgAuthenticationCGSecure extends CMSPlugin
         $this->cgsecure_params = Cgipcheck::getParams();
 
     }
+    /**
+     * Returns an array of events this subscriber will listen to.
+     *
+     * @return  array
+     *
+     * @since   5.0.0
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return ['onUserAuthenticate' => 'onUserAuthenticate'];
+    }
 
-    public function onUserAuthenticate($credentials, $options, &$response)
+    public function onUserAuthenticate(AuthenticationEvent $event)
     {
         $prefixe = $_SERVER['SERVER_NAME'];
         $prefixe = substr(str_replace('www.', '', $prefixe), 0, 2);

@@ -1,8 +1,7 @@
 /**
  * @component     CG Secure
- * Version			: 2.1.5
- * @license http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
- * @copyright (C) 2022 ConseilGouz. All Rights Reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
+ * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz 
  *
  * from https://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript

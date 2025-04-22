@@ -6,15 +6,18 @@
  * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
  */
+namespace Conseilgouz\Plugin\System\CGSecure\Extension;
+
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Event\SubscriberInterface;
 use ConseilGouz\CGSecure\Helper\Cgipcheck;
 
-class plgSystemCGSecure extends CMSPlugin
+final class Cgsecure extends CMSPlugin implements SubscriberInterface
 {
     public $myname = 'SystemCGSecure';
     public $mymessage = 'Joomla Admin : try to force the door...';
@@ -26,14 +29,26 @@ class plgSystemCGSecure extends CMSPlugin
         parent::__construct($subject, $config);
         $this->cgsecure_params = Cgipcheck::getParams();
     }
-    public function onAfterDispatch()
+    /**
+     * Returns an array of events this subscriber will listen to.
+     *
+     * @return  array
+     *
+     * @since   5.0.0
+     */
+    public static function getSubscribedEvents(): array
     {
-        $mainframe 	= Factory::getApplication();
-        $user 		= Factory::getApplication()->getIdentity();
-        $session	= Factory::getApplication()->getSession();
-        if ($session->get('cgsecure')) {
+        return ['onAfterDispatch' => 'onAfterDispatch'];
+    }
+    
+    public function onAfterDispatch($event)
+    {
+        $mainframe 	= $this->getApplication();
+        $user 		= $this->getApplication()->getIdentity();
+        $session	= $this->getApplication()->getSession();
+        if ($session->get('cgsecure')) {// already checked
             return;
-        } // already checked
+        } 
         if (!$mainframe->isClient('administrator') || !$user->guest) {
             return;
         }

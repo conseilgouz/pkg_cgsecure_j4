@@ -5,15 +5,16 @@
  * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
 **/
-
+namespace Conseilgouz\Plugin\User\CGSecure\Extension;
 // No direct access.
 defined('_JEXEC') or die();
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\Event\SubscriberInterface;
 use ConseilGouz\CGSecure\Helper\Cgipcheck;
 
-class PlgUserCGSecure extends CMSPlugin
+final class Cgsecure extends CMSPlugin implements SubscriberInterface
 {
     public $myname = 'UserCGSecure';
     public $mymessage = 'Joomla User : try to access forms...';
@@ -26,9 +27,22 @@ class PlgUserCGSecure extends CMSPlugin
 
         $this->cgsecure_params = Cgipcheck::getParams();
     }
+    /**
+     * Returns an array of events this subscriber will listen to.
+     *
+     * @return  array
+     *
+     * @since   5.0.0
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return ['onUserLoginFailure' => 'onUserLoginFailure',
+                'onContentPrepareForm' => 'onContentPrepareForm'
+                ];
+    }
 
     // more info on UserLoginFailure
-    public function onUserLoginFailure($user)
+    public function onUserLoginFailure($event) // ($user)
     {
         $this->debug = $this->cgsecure_params->debug;
         if (!$this->debug) {
@@ -42,8 +56,10 @@ class PlgUserCGSecure extends CMSPlugin
         }
     }
     // Check IP on prepare Forms
-    public function onContentPrepareForm(Form $form, $data)
+    public function onContentPrepareForm($event) // (Form $form, $data)
     {
+        $form = $event[0];
+        $data = $event[1];
         $form_name = $form->getName();
         $name = explode('.', $form_name);
         $components = $this->cgsecure_params->components;

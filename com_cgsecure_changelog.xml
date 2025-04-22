@@ -12,6 +12,10 @@
         <addition>
             <item>New parameter : Block IA Robots (default:no)</item>
         </addition>
+        <change>
+            <item>Remove JQuery dependency</item>
+            <item>Plugins become service providers</item>
+        </change>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>

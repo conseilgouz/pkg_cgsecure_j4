@@ -72,6 +72,10 @@ class JsonView extends AbstractView
                 $this->protectdirs();
             } elseif ($access == 2) { // delete hackers IP
                 $msg = $this->deleteIPSHTAccess();
+            } elseif ($access == 3) { // delete AI bots
+                $msg = $this->deleteAIHTAccess();
+            } elseif ($access == 4) { // add AI bots
+                $msg = $this->addAIHTAccess();
             }
         }
         File::delete($wait);
@@ -115,6 +119,40 @@ class JsonView extends AbstractView
             return 'err : '.Text::_('CGSECURE_DEL_IP_HTACCESS_ERROR');
         }
     }
+    // delete CG Secure information in .htaccess file
+    private function deleteAIHTAccess()
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_noai($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+        $cgFile = '';
+        $rejips = '';
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '')) {
+            return Text::_('CGSECURE_DEL_IA_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_DEL_IA_HTACCESS_ERROR');
+        }
+    }
+    // delete CG Secure information in .htaccess file
+    private function addAIHTAccess()
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_noai($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+        $cgFile = '';
+        $rejips = '';
+        $this->config  = $this->getParams();
+        $ia = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '', $ia)) {
+            return Text::_('CGSECURE_ADD_IA_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_ADD_AI_HTACCESS_ERROR');
+        }
+    }
     // add CG Secure information from .htaccess file
     private function addHTAccess()
     {
@@ -140,12 +178,16 @@ class JsonView extends AbstractView
             $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess.txt');
         }
         $this->config  = $this->getParams();
-        $specific = $this->config->specific;
-        if ($specific) {
+        $specific = "";
+        if (isset($this->config->specific) && $specific) {
             $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$specific.PHP_EOL;
             $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
         }
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific)) {
+        $ia = "";
+        if (isset($this->config->blockai) && $this->config->blockai) {
+            $ia = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
+        }
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific, $ia)) {
             return Text::_('CGSECURE_ADD_HTACCESS');
         }
         // Error : restore saved version
@@ -155,11 +197,11 @@ class JsonView extends AbstractView
     // copy CG Secure information in .htaccess from images, media, files, administrator directories
     private function protectdirs()
     {
-        if (file_exists(JPATH_ROOT.'/images/.htaccess') 
+        if (file_exists(JPATH_ROOT.'/images/.htaccess')
             && file_exists(JPATH_ROOT.'/media/.htaccess')
-            && (is_dir(JPATH_ROOT.'/files') && file_exists(JPATH_ROOT.'/files/.htaccess')) ) {
+            && (is_dir(JPATH_ROOT.'/files') && file_exists(JPATH_ROOT.'/files/.htaccess'))) {
             return; // .htaccess already present in images/media/files directories
-        } 
+        }
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         $dest = JPATH_ROOT.'/images/.htaccess';
         if (is_file($dest)) {
@@ -186,7 +228,7 @@ class JsonView extends AbstractView
         }
         if (file_exists(JPATH_ROOT.'/administrator/.htaccess')) {
             return; // .htaccess already present in administrator directory
-        } 
+        }
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt';
         $dest = JPATH_ROOT.'/administrator/.htaccess';
         if (is_file($dest)) {
@@ -309,6 +351,14 @@ class JsonView extends AbstractView
                 $cgLines = false;
                 continue;
             }
+            if ($line === '#------------------------CG SECURE IA BOTS BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE IA BOTS END---------------------') {
+                $cgLines = false;
+                continue;
+            }
             if ($cgLines) {
                 // When we are between our makers all content should be removed
                 continue;
@@ -368,6 +418,32 @@ class JsonView extends AbstractView
         }
         return $outBuffer;
     }
+    // read current .htaccess file and remove AI lines
+    private function read_current_noai($afile)
+    {
+        $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
+        $outBuffer = '';
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return '';
+        }
+        $cgLines = false;
+        foreach ($readBuffer as $id => $line) {
+            if ($line === '#------------------------CG SECURE IA BOTS BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE IA BOTS END---------------------') {
+                $cgLines = false;
+                continue;
+            }
+            if ($cgLines) {
+                // When we are between our makers all content should be removed
+                continue;
+            }
+            $outBuffer .= $line . PHP_EOL;
+        }
+        return $outBuffer;
+    }
     private function read_cgfile($afile)
     {
         $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
@@ -403,12 +479,12 @@ class JsonView extends AbstractView
         }
         return $outBuffer;
     }
-    private function merge_file($file, $current, $cgFile, $rejips, $specific = '')
+    private function merge_file($file, $current, $cgFile, $rejips, $specific = '', $ai = '')
     {
         $pathToFile  = $file;
         if (file_exists($pathToFile)) {
             if (is_readable($pathToFile)) {
-                $records = $rejips.$specific.$cgFile.$current; // pour éviter les conflits, on se met devant....
+                $records = $rejips.$specific.$cgFile.$ai.$current; // pour éviter les conflits, on se met devant....
                 // Write the htaccess using the Frameworks File Class
                 $bool = File::write($pathToFile, $records);
                 if ($bool) {
