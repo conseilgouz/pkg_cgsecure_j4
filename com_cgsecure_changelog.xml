@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.2.4</version>
+        <note>
+            <item>Update : 22/04/2025</item>
+        </note>
+        <change>
+            <item>Update cghtaccess.txt from 8G Firewall v1.4</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.2.3</version>
         <note>
             <item>Update : 22/04/2025</item>

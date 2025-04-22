@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.2.3--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.2.4--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -47,7 +47,7 @@ ServerSignature Off
 </IfModule>
 <IfModule mod_setenvif.c>
 # Block bad user agents 
- SetEnvIfNoCase ^User-Agent$ .*(aesop_com_spiderman|ahrefsbot|alexibot|amazonbot|backweb|bandit|batchftp|bigfoot|bytespider).* HTTP_STAYOUT
+SetEnvIfNoCase ^User-Agent$ .*(aesop_com_spiderman|ahrefs|ahrefsbot|alexibot|amazonbot|backweb|bandit|batchftp|bigfoot|bytespider).* HTTP_STAYOUT
  SetEnvIfNoCase ^User-Agent$ .*(black.?hole|blackwidow|blowfish|botalot|bot.?mailto:craftbot@yahoo.com|buddy|builtbottough|bullseye).* HTTP_STAYOUT
  SetEnvIfNoCase ^User-Agent$ .*(cheesebot|cherrypicker|chinaclaw|collector|copier|copyrightcheck).* HTTP_STAYOUT
  SetEnvIfNoCase ^User-Agent$ .*(cosmos|crescent|curl|custo|da|diibot|disco|dittospyder|download.?demon|dragonfly).* HTTP_STAYOUT
@@ -71,9 +71,19 @@ ServerSignature Off
  SetEnvIfNoCase ^User-Agent$ .*(telesoft|the.?intraformant|thenomad|tighttwatbot|titan|urldispatcher).* HTTP_STAYOUT
  SetEnvIfNoCase ^User-Agent$ .*(turingos|turnitinbot|urly.?warning|vacuum|vci|voideye|webauto|webcopier|webfetch|whacker).* HTTP_STAYOUT
  SetEnvIfNoCase ^User-Agent$ .*(webgo.?is|webleacher|webreaper|websauger|webstripper|webwhacker|webzip|widow|wisenutbot|wwwoffle|xaldon|zeus|zyborg|anonymouse).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(zip|emaile|enhancer|fetch|go.?is|auto|bandit|clip|copier|master|reaper|sauger|site.?quester|whack).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(zip|emaile|enhancer|fetch|go.?is|auto|bandit|clip|master|reaper|sauger|site.?quester|whack).* HTTP_STAYOUT
  SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spidermano).* HTTP_STAYOUT
+ # update from 8G-Firewall 1.4
+ SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|pycurl|scan|oppo\sa33|(c99|php|web)shell|site((.){0,2})copier).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(acapbot|acoonbot|attackbot|awario|backdor|becomebot|binlar|blekkobot|blex|bullseye|bunnys|butterfly|careerbot|casper|censysinspect).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(checkpriv|cherrypick|choppy|claudebot|cmsworld|copernic|crawlergo|datacha|(\b)demon(\b)|diavol|discobot).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(dotbot|dotnetdotcom|dumbot|econtext|eolasbot|eventures|feedfinder|flaming|flicky|foobot|fuck).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(gigabot|gozilla|heritrix|httracks?|icarus6j|imagesiftbot|jetbot|jikespider|kmccrew|liebaofast).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(lwp-download|majestic|masscan|mauibot|miner|mechanize|morfeus|moveoverbot|mozlila|nbot|nikto|nominet|nutch).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(petalbot|planetwork|postrank|proximic|purebot|queryseeker|radian6|radiation|remoteview|scooter|seekerspid).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(semalt|siclab|sindice|sistrix|sitebot|siteexplorer|skygrid|sosospider|spbot|sqlmap|stackrambler|surftbot).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(sux0r|suzukacz|true_robots|turnit|vampire|vikspider|webvac|webviewer).* HTTP_STAYOUT
+ SetEnvIfNoCase ^User-Agent$ .*(winhttp|woxbot|xxxyy|yamanalab|yioopbot|youda|zmeu|zune).* HTTP_STAYOUT
  Order Deny,Allow
  Allow from All
  Deny from env=HTTP_STAYOUT
@@ -166,7 +176,7 @@ RewriteRule .* plugins/system/cgsecure/htaccess.php?e=15&t=e&m=%1___%2&sec=??sec
 # Filter against shell attacks
 RewriteCond %{REQUEST_URI} .*((php|my)?shell|remview.*|phpremoteview.*|sshphp.*|pcom|nstview.*|c99|r57|webadmin.*|phpget.*|phpwriter.*|fileditor.*|locus7.*|storm7.*)\.(p?s?x?htm?l?|txt|aspx?|cfml?|cgi|pl|php[3-9]{0,1}|jsp?|sql|xml) [NC,OR]
 RewriteCond %{REQUEST_METHOD} (GET|POST) [NC]
-RewriteCond %{QUERY_STRING} ^(.*)([-_a-z]{1,15})=(chmod|chdir|mkdir|rmdir|whoami|uname|unzip|gunzip|grep|umask|telnet|ssh|ftp|mkmode|logname|edit_file|search_text|find_text|php_eval|download_file|ftp_file_down|ftp_file_up|ftp_brute|mail_file|mysql_dump|db_query)([^a-zA-Z0-9].+)*$ [OR]
+RewriteCond %{QUERY_STRING} ^(.*)([-_a-z]{1,15})=(chmod|chdir|mkdir|rmdir|whoami|uname|unzip|gunzip|grep|umask|telnet|ssh|ftp|mkmode|logname|edit_file|search_text|find_text|php_eval|download_file|ftp_file_down|ftp_file_up|ftp_brute|mail_file|mysql_dump|db_query)([^a-zA-Z0-9].+)*$ [NC,OR]
 RewriteCond %{QUERY_STRING} ^work_dir=.*$ [NC,OR]
 RewriteCond %{QUERY_STRING} ^command=.*&output.*$ [NC,OR]
 RewriteCond %{QUERY_STRING} ^nts_[a-z0-9_]{0,10}=.*$ [NC,OR]
@@ -178,7 +188,10 @@ RewriteCond %{QUERY_STRING} ^(.*)*etc(/|%2F)passwd* [NC,OR]
 RewriteCond %{QUERY_STRING} .*(((\\|%5C)\.\.\\)+).* [NC,OR]
 RewriteCond %{QUERY_STRING} .*(((\/|%2F)\.\.)+).* [NC,OR]
 RewriteCond %{QUERY_STRING} ^(.*)*proc\/self\/environ* [NC]
-RewriteRule .* plugins/system/cgsecure/htaccess.php?e=16&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=16&t=e&m=%1___%2&sec=??security??  [L]
+
+RewriteCond %{REQUEST_METHOD} ^(connect|debug|move|trace|track) [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=16&t=e&m=%1___%2&sec=??security??  [L]
 
 # Block access to hidden files and directories.
 RewriteCond %{REQUEST_URI} "(^|/)\."
@@ -217,10 +230,14 @@ RewriteRule .* plugins/system/cgsecure/htaccess.php?e=10&t=e&m=%1___%2&sec=??sec
 #######RewriteRule robots.txt$ plugins/system/cgsecure/htaccess.php?e=15&t=w&sec=??security?? [L]
 
 # block bad words
-RewriteCond %{QUERY_STRING} \b(ambien|blue\spill|cialis|cocaine|ejaculation|erectile)\b [NC,OR]
+RewriteCond %{QUERY_STRING} \b(ambien|blue\spill|cialis|cocaine|erectile)\b [NC,OR]
 RewriteCond %{QUERY_STRING} \b(erections|hoodia|huronriveracres|impotence|levitra|libido)\b [NC,OR]
 RewriteCond %{QUERY_STRING} \b(lipitor|phentermin|pro[sz]ac|sandyauer|tramadol|troyhamby)\b [NC,OR]
-RewriteCond %{QUERY_STRING} \b(ultram|unicauca|valium|viagra|vicodin|vuiton|xanax|ypxaieo|nvOpzp)\b [NC]
+RewriteCond %{QUERY_STRING} \b(ultram|unicauca|valium|viagra|vicodin|vuiton|xanax|ypxaieo|nvOpzp)\b [NC,OR]
+RewriteCond %{QUERY_STRING} \b(order(\s|%20)by(\s|%20)1--)\b [NC,OR]
+RewriteCond %{QUERY_STRING} \b(@unlink|assert\(|print_r\(|x00|xbshell)\b [NC,OR]
+RewriteCond %{QUERY_STRING} \b(100dollars|best-seo|blue\spill|ejaculat|mopub\.com) [NC,OR]
+RewriteCond %{QUERY_STRING} \b(pornhelm|semalt\.com|social-buttions|todaperfeita) [NC]
 RewriteRule .* plugins/system/cgsecure/htaccess.php?e=20&t=w&m=%1___%2&sec=??security?? [L]
 </IfModule>
 
@@ -236,4 +253,67 @@ RewriteCond %{REQUEST_URI} /(admin2\.asp|alfa-shell-v4(.*)|blindshell\.c|cgishel
 RewriteRule .* plugins/system/cgsecure/htaccess.php?e=21&t=e&m=%1&sec=??security?? [L]
 </IfModule>
 
+# 8G:[REQUEST URI]
+<IfModule mod_rewrite.c>
+	RewriteCond %{REQUEST_URI} (,,,) [NC,OR]
+	RewriteCond %{REQUEST_URI} (-------) [NC,OR]
+	RewriteCond %{REQUEST_URI} (\^|`|<|>|\\|\|) [NC,OR]
+	RewriteCond %{REQUEST_URI} ([a-z0-9]{2000,}) [NC,OR]
+	RewriteCond %{REQUEST_URI} (=?\\(\'|%27)/?)(\.) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(\*|\"|\'|\.|,|&|&amp;?)/?$ [NC,OR]
+	RewriteCond %{REQUEST_URI} (\.)(php)(\()?([0-9]+)(\))?(/)?$ [NC,OR]
+	RewriteCond %{REQUEST_URI} /((.*)header:|(.*)set-cookie:(.*)=) [NC,OR]
+	RewriteCond %{REQUEST_URI} (\.(s?ftp-?)config|(s?ftp-?)config\.) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(f?ckfinder|fck/|fckeditor|fullclick) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)((force-)?download|framework/main)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (\{0\}|\"?0\"?=\"?0|\(/\(|\.\.\.|\+\+\+|\\\") [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(vbull(etin)?|boards|vbforum|vbweb|webvb)(/)? [NC,OR]
+	RewriteCond %{REQUEST_URI} (\.|20)(get|the)(_)(permalink|posts_page_url)(\() [NC,OR]
+	RewriteCond %{REQUEST_URI} (///|\?\?|/&&|/\*(.*)\*/|/:/|\\\\|0x00|%00|%0d%0a) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(cgi_?)?alfa(_?cgiapi|_?data|_?v[0-9]+)?(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (thumbs?(_editor|open)?|tim(thumbs?)?)((\.|%2e)php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)((boot)?_?admin(er|istrator|s)(_events)?)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/%7e)(root|ftp|bin|nobody|named|guest|logs|sshd)(/) [NC,OR]
+	RewriteCond %{REQUEST_URI} (archive|backup|db|master|sql|wp|www|wwwroot)\.(gz|zip) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(\.?mad|alpha|c99|php|web)?sh(3|e)ll([0-9]+|\w)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(admin-?|file-?)(upload)(bg|_?file|ify|svu|ye)?(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(etc|var)(/)(hidden|secret|shadow|ninja|passwd|tmp)(/)?$ [NC,OR]
+	RewriteCond %{REQUEST_URI} (s)?(ftp|http|inurl|php)(s)?(:(/|%2f|%u2215)(/|%2f|%u2215)) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(=|\$&?|&?(pws|rk)=0|_mm|_vti_|cgi(\.|-)|(=|/|;|,)nt\.) [NC,OR]
+	RewriteCond %{REQUEST_URI} (\.)(ds_store|htaccess|htpasswd|init?|mysql-select-db)(/)?$ [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(bin)(/)(cc|chmod|chsh|cpp|echo|id|kill|mail|nasm|perl|ping|ps|python|tclsh)(/)?$ [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(::[0-9999]|%3a%3a[0-9999]|127\.0\.0\.1|ccx|localhost|makefile|pingserver|wwwroot)(/)? [NC,OR]
+	RewriteCond %{REQUEST_URI} ^(/)(123|backup|bak|beta|bkp|default|demo|dev(new|old)?|new-?site|null|old|old_files|old1)(/)?$ [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)?j((\s)+)?a((\s)+)?v((\s)+)?a((\s)+)?s((\s)+)?c((\s)+)?r((\s)+)?i((\s)+)?p((\s)+)?t((\s)+)?(%3a|:) [NC,OR]
+	RewriteCond %{REQUEST_URI} ^(/)(old-?site(back)?|old(web)?site(here)?|sites?|staging|undefined|wordpress([0-9]+)|wordpress-old)(/)?$ [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(filemanager|htdocs|httpdocs|https?|mailman|mailto|msoffice|undefined|usage|var|vhosts|webmaster|www)(/) [NC,OR]
+	RewriteCond %{REQUEST_URI} (\(null\)|\{\$itemURL\}|cast\(0x|echo(.*)kae|etc/passwd|eval\(|null(.*)null|open_basedir|self/environ|\+union\+all\+select) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(db-?|j-?|my(sql)?-?|setup-?|web-?|wp-?)?(admin-?)?(setup-?)?(conf\b|conf(ig)?)(uration)?(\.?bak|\.inc)?(\.inc|\.old|\.php|\.txt) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)((.*)crlf-?injection|(.*)xss-?protection|__(inc|jsc)|author-panel|cgi-bin|database|downloader|(db|mysql)-?admin)(/) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(haders|head|hello|helpear|incahe|includes?|indo(sec)?|infos?|ioptimizes?|jmail|js|king|kiss|kodox|kro|legion|libsoft)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(awstats|document_root|dologin\.action|error.log|extension/ext|htaccess\.|lib/php|listinfo|phpunit/php|remoteview|server/php|www\.root\.) [NC,OR]
+	RewriteCond %{REQUEST_URI} (base64_(en|de)code|benchmark|curl_exec|e?chr|eval|function|fwrite|(f|p)open|html|leak|passthru|p?fsockopen|phpinfo)(.*)(\(|%28)(.*)(\)|%29) [NC,OR]
+	RewriteCond %{REQUEST_URI} (posix_(kill|mkfifo|setpgid|setsid|setuid)|(child|proc)_(close|get_status|nice|open|terminate)|(shell_)?exec|system)(.*)(\(|%28)(.*)(\)|%29) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)((c99|php|web)?shell|crossdomain|fileditor|locus7|nstview|php(get|remoteview|writer)|r57|remview|sshphp|storm7|webadmin)(.*)(\.|%2e|\(|%28) [NC,OR]
+	RewriteCond %{REQUEST_URI} /((wp-)((201\d|202\d|[0-9]{2})|ad|admin(fx|rss|setup)|booking|confirm|crons|data|file|mail|one|plugins?|readindex|reset|setups?|story))(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(^$|-|\!|\w|\.(.*)|100|123|([^iI])?ndex|index\.php/index|3xp|777|7yn|90sec|99|active|aill|ajs\.delivery|al277|alexuse?|ali|allwrite)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(analyser|apache|apikey|apismtp|authenticat(e|ing)|autoload_classmap|backup(_index)?|bakup|bkht|black|bogel|bookmark|bypass|cachee?)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(clean|cm(d|s)|con|connector\.minimal|contexmini|contral|curl(test)?|data(base)?|db|db-cache|db-safe-mode|defau11|defau1t|dompdf|dst)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(elements|emails?|error.log|ecscache|edit-form|eval-stdin|evil|fbrrchive|filemga|filenetworks?|f0x|gank(\.php)?|gass|gel|guide)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(logo_img|lufix|mage|marg|mass|mide|moon|mssqli|mybak|myshe|mysql|mytag_js?|nasgor|newfile|news|nf_?tracking|nginx|ngoi|ohayo|old-?index)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(olux|owl|pekok|petx|php-?info|phpping|popup-pomo|priv|r3x|radio|rahma|randominit|readindex|readmy|reads|repair-?bak|robot(s\.txt)?|root)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(router|savepng|semayan|shell|shootme|sky|socket(c|i|iasrgasf)ontrol|sql(bak|_?dump)?|support|sym403|sys|system_log|test|tmp-?(uploads)?)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(traffic-advice|u2p|udd|ukauka|up__uzegp|up14|upa?|upxx?|vega|vip|vu(ln)?(\w)?|webroot|weki|wikindex|wordpress|wp_logns?|wp_wrong_datlib)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (/)(wp-?install|installation|wp(3|4|5|6)|wpfootes|wpzip|ws0|wsdl|wso(\w)?|www|(uploads|wp-admin)?xleet(-shell)?|xmlsrpc|xup|xxu|xxx|zibi|zipy)(\.php) [NC,OR]
+	RewriteCond %{REQUEST_URI} (bkv74|cachedsimilar|core-stab|crgrvnkb|ctivrc|deadcode|deathshop|dkiz|e7xue|eqxafaj90zir|exploits|ffmkpcal|filellli7|(fox|sid)wso|gel4y|goog1es|gvqqpinc) [NC,OR]
+	RewriteCond %{REQUEST_URI} (@md5|00.temp00|0byte|0d4y|0day|0xor|wso1337|1h6j5|3xp|40dd1d|4price|70bex?|a57bze893|abbrevsprl|abruzi|adminer|aqbmkwwx|archivarix|backdoor|beez5|bgvzc29) [NC,OR]
+	RewriteCond %{REQUEST_URI} (handler_to_code|hax(0|o)r|hmei7|hnap1|home_url=|ibqyiove|icxbsx|indoxploi|jahat|jijle3|kcrew|keywordspy|laobiao|lock360|longdog|marijuan|mod_(aratic|ariimag)) [NC,OR]
+	RewriteCond %{REQUEST_URI} (mobiquo|muiebl|nessus|osbxamip|phpunit|priv8|qcmpecgy|r3vn330|racrew|raiz0|reportserver|r00t|respectmus|rom2823|roseleif|sh3ll|site((.){0,2})copier|sqlpatch|sux0r) [NC,OR]
+	RewriteCond %{REQUEST_URI} (sym403|telerik|uddatasql|utchiha|visualfrontend|w0rm|wangdafa|wpyii2|wsoyanzo|x5cv|xattack|xbaner|xertive|xiaolei|xltavrat|xorz|xsamxad|xsvip|xxxs?s?|zabbix|zebda) [NC,OR]
+	RewriteCond %{REQUEST_URI} (\.)(7z|ab4|ace|afm|alfa|as(h|m)x?|aspx?|aws|axd|bash|ba?k?|bat|bz2|cfg|cfml?|cgi|cms|conf\b|config|ctl|dat|db|dist|dll|eml|eng(ine)?|env|et2|exe|fec|fla|git(ignore)?)$ [NC,OR]
+	RewriteCond %{REQUEST_URI} (\.)(hg|idea|inc|index|ini|inv|jar|jspa?|lib|local|log|lqd|make|mbf|mdb|mmw|mny|mod(ule)?|msi|old|one|orig|out|passwd|pdb|php\.(php|suspect(ed)?)|php([^\/])|phtml?|pl|profiles?)$ [NC,OR]
+	RewriteCond %{REQUEST_URI} (\.)(psd|pst|ptdb|production|pwd|py|qbb|qdf|rar|rdf|remote|save|sdb|sql|sh|soa|svn|swf|swl|swo|swp|stx|tar|tax|tgz?|theme|tls|tmb|tmd|wok|wow|xsd|xtmpl|xz|ya?ml|za|zlib)$ [NC]
+
+    RewriteRule .* plugins/system/cgsecure/htaccess.php?e=22&t=e&m=%1&sec=??security?? [L]
+</IfModule>
 #------------------------CG SECURE HTACCESS END--------------------
