@@ -10,7 +10,7 @@
             <item>Change trace log file name to cgipcheck.trace.log.php</item>
         </fix>
         <addition>
-            <item>New parameter : Block IA Robots (default:no)</item>
+            <item>New parameter : Block AI Robots (default:no)</item>
         </addition>
         <change>
             <item>Remove JQuery dependency</item>
