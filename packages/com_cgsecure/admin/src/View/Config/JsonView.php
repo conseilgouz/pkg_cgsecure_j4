@@ -130,9 +130,9 @@ class JsonView extends AbstractView
         $cgFile = '';
         $rejips = '';
         if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '')) {
-            return Text::_('CGSECURE_DEL_IA_HTACCESS');
+            return Text::_('CGSECURE_DEL_AI_HTACCESS');
         } else {
-            return 'err : '.Text::_('CGSECURE_DEL_IA_HTACCESS_ERROR');
+            return 'err : '.Text::_('CGSECURE_DEL_AI_HTACCESS_ERROR');
         }
     }
     // delete CG Secure information in .htaccess file
@@ -148,7 +148,7 @@ class JsonView extends AbstractView
         $this->config  = $this->getParams();
         $ia = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
         if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '', $ia)) {
-            return Text::_('CGSECURE_ADD_IA_HTACCESS');
+            return Text::_('CGSECURE_ADD_AI_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_ADD_AI_HTACCESS_ERROR');
         }
