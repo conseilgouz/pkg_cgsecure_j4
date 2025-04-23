@@ -15,12 +15,17 @@ use Joomla\CMS\Router\Route;
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 
+HTMLHelper::_('bootstrap.framework');
+
 $user		= Factory::getApplication()->getIdentity();
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
+    
+$linkViewlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component';
+    
 ?>
 <form action="<?php echo Route::_('index.php?option=com_cgsecure&view=logs');?>" method="post" name="adminForm" id="adminForm">
 <?php if (!empty($this->sidebar)) : ?>
@@ -31,6 +36,24 @@ $wa->useScript('keepalive')
 <?php else : ?>
 	<div id="j-main-container">
 <?php endif;?>
+                <!-- Modal !-->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewlog"><?php echo Text::_('COM_CGSECURE_LOGS_BUTTON'); ?></button>
+                <div class="modal fade modal-xl"  id="viewlog" tabindex="-1" aria-labelledby="upload" aria-hidden="true">
+                    <div class="modal-dialog h-75">
+                        <div class="modal-content h-100">
+                             <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                             </div>
+                             <div class="modal-body h-100">
+                                <iframe id="iframeModalWindow" height="100%" src="<?php echo $linkViewlog; ?>" name="iframe_modal"></iframe>      
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin de modal !-->
+
+
+
     <div class="nr-main-header">
         <h2><?php echo Text::_('CGSECURE_LOGS'); ?></h2>
         <p><?php echo Text::_('CGSECURE_LOGS_DESC'); ?></p>
