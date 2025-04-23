@@ -23,8 +23,14 @@ $user		= Factory::getApplication()->getIdentity();
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
-    
-$linkViewlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component';
+
+$fileht = Factory::getApplication()->getConfig()->get('log_path').'/cghtaccess.trace.php';
+
+$fileip = Factory::getApplication()->getConfig()->get('log_path').'/cgipcheck.trace.log.php';
+
+$linkViewHTlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component&type=ht';
+$linkViewIPlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component&type=ip';
+
     
 ?>
 <form action="<?php echo Route::_('index.php?option=com_cgsecure&view=logs');?>" method="post" name="adminForm" id="adminForm">
@@ -37,19 +43,36 @@ $linkViewlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=compone
 	<div id="j-main-container">
 <?php endif;?>
                 <!-- Modal !-->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewlog"><?php echo Text::_('COM_CGSECURE_LOGS_BUTTON'); ?></button>
-                <div class="modal fade modal-xl"  id="viewlog" tabindex="-1" aria-labelledby="upload" aria-hidden="true">
+                <?php if (file_exists($fileht)) { ?>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewloght"><?php echo Text::_('COM_CGSECURE_HTLOGS_BUTTON'); ?></button>
+                <div class="modal fade modal-xl"  id="viewloght" tabindex="-1" aria-labelledby="loght" aria-hidden="true">
                     <div class="modal-dialog h-75">
                         <div class="modal-content h-100">
                              <div class="modal-header">
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                              </div>
                              <div class="modal-body h-100">
-                                <iframe id="iframeModalWindow" height="100%" src="<?php echo $linkViewlog; ?>" name="iframe_modal"></iframe>      
+                                <iframe id="iframeModalWindowHT" height="100%" src="<?php echo $linkViewHTlog; ?>" name="iframe_modal_HT"></iframe>      
                              </div>
                         </div>
                     </div>
                 </div>
+                <?php }
+                if (file_exists($fileip)) { ?>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewlogip"><?php echo Text::_('COM_CGSECURE_IPLOGS_BUTTON'); ?></button>
+                <div class="modal fade modal-xl"  id="viewlogip" tabindex="-1" aria-labelledby="logip" aria-hidden="true">
+                    <div class="modal-dialog h-75">
+                        <div class="modal-content h-100">
+                             <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                             </div>
+                             <div class="modal-body h-100">
+                                <iframe id="iframeModalWindowIP" height="100%" src="<?php echo $linkViewIPlog; ?>" name="iframe_modal_IP"></iframe>      
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <?php } ?>
                 <!-- Fin de modal !-->
 
 

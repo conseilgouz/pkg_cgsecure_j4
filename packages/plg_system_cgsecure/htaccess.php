@@ -126,7 +126,7 @@ echo $tmp;
 $err = $prefixe.$errtype.'-'.$err;
 if (($cgsecure_params->logging_ht == 1) || (($cgsecure_params->logging_ht == 2) && ($errtype == "e"))) {
     Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG, array('CGHTAccess'));
-    Log::add($ip.' : '.$err, Log::DEBUG, 'CGHTAccess');
+    Log::add($err, Log::DEBUG, 'CGHTAccess');
 }
 // CG Secure report to AbuseIP and reject it unsing htaccess file (if errortype = e)
 $report = $cgsecure_params->report;

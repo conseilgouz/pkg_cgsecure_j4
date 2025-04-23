@@ -17,7 +17,14 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
 
-$filename = Factory::getApplication()->getConfig()->get('log_path').'/cghtaccess.trace.php';
+$input = Factory::getApplication()->input;
+$type = $input->get('type', 'ip');
+
+if ($type == 'ht') {
+    $filename = Factory::getApplication()->getConfig()->get('log_path').'/cghtaccess.trace.php';
+} else  {
+    $filename = Factory::getApplication()->getConfig()->get('log_path').'/cgipcheck.trace.log.php';
+}
 $log = [];
 if (file_exists($filename)) {
     $file = fopen($filename, "r");
@@ -29,13 +36,7 @@ if (file_exists($filename)) {
         if ((strlen(trim($line)) > 0) && (substr(trim($line), 0, 1) != "#")) {
             $str = str_replace("+00:00", "", $line);
             $str = str_replace("DEBUG", "", $str);
-            $tbl = explode(' ', $str, 3);
-            $elem = preg_split('/\s+/', $tbl[1]);
-            $str = '<span class="log_date col-2">'.$tbl[0].'</span>';
-            $str .= '<span class="log_ip col-2"> ('.$elem[0].')</span>';
-            $str .= '<span class="log_module col-1">'.$elem[1].'</span> ';
-            $str .= '<span class="log_error col-7">'.$tbl[2].'</span>';
-            $log[] = "<div class='cls_log_line row'>".$str."</div>";
+            $log[] = "<pre class='cls_log_line' style='tab-size:4'>".$str."</pre>";
         }
     }
     fclose($file);
@@ -48,7 +49,12 @@ if (file_exists($filename)) {
 	   <div class="cls_log">	
 			<?php
                 if (count($log) > 0) {
-                    echo "<p style='font-size:15px'>".Text::_('COM_CGSECURE_LOGFILE_DESC')."</p>";
+                    if ($type == 'ht') {
+                        $file = 'cghtaccess.trace.php';
+                    } else {
+                        $file = 'cgipcheck.trace.log.php';
+                    }
+                    echo "<p style='font-size:15px'>".Text::sprintf('COM_CGSECURE_LOGFILE_DESC',$file)."</p>";
                     for ($i = 0;$i < count($log);$i++) {
                         echo $log[$i];
                     }
