@@ -48,7 +48,7 @@ if (file_exists($filename)) {
 	   <div class="cls_log">	
 			<?php
                 if (count($log) > 0) {
-                    echo "<p style='font-size:15px'>".Text::_('COM_CGSECURE_VIEWLOG_DESC')."</p>";
+                    echo "<p style='font-size:15px'>".Text::_('COM_CGSECURE_LOGFILE_DESC')."</p>";
                     for ($i = 0;$i < count($log);$i++) {
                         echo $log[$i];
                     }
