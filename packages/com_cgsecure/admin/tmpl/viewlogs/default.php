@@ -22,7 +22,7 @@ $type = $input->get('type', 'ip');
 
 if ($type == 'ht') {
     $filename = Factory::getApplication()->getConfig()->get('log_path').'/cghtaccess.trace.php';
-} else  {
+} else {
     $filename = Factory::getApplication()->getConfig()->get('log_path').'/cgipcheck.trace.log.php';
 }
 $log = [];
@@ -35,7 +35,17 @@ if (file_exists($filename)) {
         $line = fgets($file);
         if ((strlen(trim($line)) > 0) && (substr(trim($line), 0, 1) != "#")) {
             $str = str_replace("+00:00", "", $line);
-            $str = str_replace("DEBUG", "", $str);
+            // cleanup duplicate info in log files
+            $tab = explode("\t", $str);
+            if ($type == 'ip') {
+                $str = $tab[0].'&#9;'.$tab[1].'&#9;'.$tab[3];
+            } else {
+                $str = $tab[0].'&#9;'.$tab[2].'&#9;'.$tab[3];
+            }
+            if (sizeof($tab) > 4) { // should not exist, but...
+                $str .= '&#9;'.$tab[4];
+            }
+            $str = str_replace("DEBUG ", "", $str);
             $log[] = "<pre class='cls_log_line' style='tab-size:4'>".$str."</pre>";
         }
     }
@@ -54,7 +64,7 @@ if (file_exists($filename)) {
                     } else {
                         $file = 'cgipcheck.trace.log.php';
                     }
-                    echo "<p style='font-size:15px'>".Text::sprintf('COM_CGSECURE_LOGFILE_DESC',$file)."</p>";
+                    echo "<p style='font-size:15px'>".Text::sprintf('COM_CGSECURE_LOGFILE_DESC', $file)."</p>";
                     for ($i = 0;$i < count($log);$i++) {
                         echo $log[$i];
                     }

@@ -9,6 +9,10 @@
         <addition>
             <item>View ipcheck log file button</item>
         </addition>
+        <fix>
+            <item>8G Firewall : remove slash starting lines</item>
+            <item>Viewlogs : remove duplicate info.</item>
+        </fix>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>
