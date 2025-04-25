@@ -39,9 +39,7 @@ if (file_exists($filename)) {
             $tab = explode("\t", $str);
             if ($type == 'ip') {
                 $str = $tab[0].'&#9;'.$tab[1].'&#9;'.$tab[3];
-            } else {
-                $str = $tab[0].'&#9;'.$tab[2].'&#9;'.$tab[3];
-            }
+            } 
             if (sizeof($tab) > 4) { // should not exist, but...
                 $str .= '&#9;'.$tab[4];
             }

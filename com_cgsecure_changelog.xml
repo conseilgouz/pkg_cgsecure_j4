@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.2.10</version>
+        <note>
+            <item>Update : 25/04/2025</item>
+        </note>
+        <fix>
+            <item>Missing msg 88 (AI) in language files</item>
+            <item>Viewlogs : leave IP in htaccess log file.</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.2.9</version>
         <note>
             <item>Update : 24/04/2025</item>
