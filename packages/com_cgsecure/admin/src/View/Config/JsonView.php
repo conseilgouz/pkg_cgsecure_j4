@@ -46,7 +46,6 @@ class JsonView extends AbstractView
         $access = (int)$input->get('access');
         $this->security = $input->get('security');
         $msg = "";
-
         $wait = self::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
         if (file_exists($wait)) {
             $arr = [];
@@ -77,6 +76,9 @@ class JsonView extends AbstractView
             } elseif ($access == 4) { // add AI bots
                 $msg = $this->addAIHTAccess();
             }
+        } elseif ($type == 'logs') {
+            $log = $input->get('adLogs');
+            $msg = 'index.php?option=com_cgsecure&view=viewlogs&tmpl=component&type='.$log;
         }
         File::delete($wait);
         $arr = [];

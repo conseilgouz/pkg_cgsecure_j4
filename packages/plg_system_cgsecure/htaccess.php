@@ -108,7 +108,7 @@ if (isset($_SERVER['REDIRECT_STATUS'])) {
         if ($key == "t") {
             $errtype = substr($value, 0, 1);
         } // one char only
-        if ($key == "m") {
+        if (strpos($value,'___')) {
             $block = '('.str_replace('___', '', $value).')';
         }
         if (($key != "e") && ($key != "sec") && ($key != "t") && ($key != "m")) {

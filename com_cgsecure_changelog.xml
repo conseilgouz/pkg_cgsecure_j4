@@ -2,6 +2,23 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.2.11</version>
+        <note>
+            <item>Update : 28/04/2025</item>
+        </note>
+        <addition>
+            <item>View other log files</item>
+        </addition>
+        <fix>
+            <item>cgi is a valid extension</item>
+        </fix>
+        <change>
+            <item>Block IA bots via htaccess</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.2.10</version>
         <note>
             <item>Update : 25/04/2025</item>

@@ -22,8 +22,10 @@ $type = $input->get('type', 'ip');
 
 if ($type == 'ht') {
     $filename = Factory::getApplication()->getConfig()->get('log_path').'/cghtaccess.trace.php';
-} else {
+} elseif ($type == 'ip') {
     $filename = Factory::getApplication()->getConfig()->get('log_path').'/cgipcheck.trace.log.php';
+} else { // other log files
+    $filename = Factory::getApplication()->getConfig()->get('log_path').'/'.$type;
 }
 $log = [];
 if (file_exists($filename)) {
@@ -39,7 +41,7 @@ if (file_exists($filename)) {
             $tab = explode("\t", $str);
             if ($type == 'ip') {
                 $str = $tab[0].'&#9;'.$tab[1].'&#9;'.$tab[3];
-            } 
+            }
             if (sizeof($tab) > 4) { // should not exist, but...
                 $str .= '&#9;'.$tab[4];
             }
@@ -59,8 +61,10 @@ if (file_exists($filename)) {
                 if (count($log) > 0) {
                     if ($type == 'ht') {
                         $file = 'cghtaccess.trace.php';
-                    } else {
+                    } elseif ($type == 'ip') {
                         $file = 'cgipcheck.trace.log.php';
+                    } else {
+                        $file = $type;
                     }
                     echo "<p style='font-size:15px'>".Text::sprintf('COM_CGSECURE_LOGFILE_DESC', $file)."</p>";
                     for ($i = 0;$i < count($log);$i++) {

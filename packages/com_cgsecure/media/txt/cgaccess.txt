@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.2.9--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.2.11--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -128,7 +128,7 @@ RewriteRule .* plugins/system/cgsecure/htaccess.php?e=6&t=e&m=%1___%2&sec=??secu
 RewriteRule ^(wp-admin|wp|wordpress|wp-content|wp-includes)($|/) plugins/system/cgsecure/htaccess.php?e=7&t=e&sec=??security?? [L]
 
 # Block temp files and other files extensions
-RewriteCond %{REQUEST_FILENAME} .*\.(phtm?l?|ash?x|aspx?|cfml?|cgi|pl|jsp|sql)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} .*\.(phtm?l?|ash?x|aspx?|cfml?|pl|jsp|sql)$ [NC,OR]
 RewriteCond %{REQUEST_FILENAME} .*\.(bak|config|dll|exe|sql|ini|log|sh|inc|dist)$ [NC,OR]
 RewriteCond %{REQUEST_FILENAME} .*\.(htaccess|htaccess_old|htpasswd)$ [NC]
 RewriteRule .* plugins/system/cgsecure/htaccess.php?e=7&t=e&m=%1&sec=??security?? [L]
@@ -174,7 +174,7 @@ RewriteCond %{QUERY_STRING} ^.*string\.fromcharcode.* [NC]
 RewriteRule .* plugins/system/cgsecure/htaccess.php?e=15&t=e&m=%1___%2&sec=??security?? [L]
 
 # Filter against shell attacks
-RewriteCond %{REQUEST_URI} .*((php|my)?shell|remview.*|phpremoteview.*|sshphp.*|pcom|nstview.*|c99|r57|webadmin.*|phpget.*|phpwriter.*|fileditor.*|locus7.*|storm7.*)\.(p?s?x?htm?l?|txt|aspx?|cfml?|cgi|pl|php[3-9]{0,1}|jsp?|sql|xml) [NC,OR]
+RewriteCond %{REQUEST_URI} .*((php|my)?shell|remview.*|phpremoteview.*|sshphp.*|pcom|nstview.*|c99|r57|webadmin.*|phpget.*|phpwriter.*|fileditor.*|locus7.*|storm7.*)\.(p?s?x?htm?l?|txt|aspx?|cfml?|pl|php[3-9]{0,1}|jsp?|sql|xml) [NC,OR]
 RewriteCond %{REQUEST_METHOD} (GET|POST) [NC]
 RewriteCond %{QUERY_STRING} ^(.*)([-_a-z]{1,15})=(chmod|chdir|mkdir|rmdir|whoami|uname|unzip|gunzip|grep|umask|telnet|ssh|ftp|mkmode|logname|edit_file|search_text|find_text|php_eval|download_file|ftp_file_down|ftp_file_up|ftp_brute|mail_file|mysql_dump|db_query)([^a-zA-Z0-9].+)*$ [NC,OR]
 RewriteCond %{QUERY_STRING} ^work_dir=.*$ [NC,OR]
@@ -201,7 +201,7 @@ RewriteRule "/\.|^\.(?!well-known/)" plugins/system/cgsecure/htaccess.php?e=17&t
 RewriteCond %{REMOTE_ADDR} !127.0.0.1
 RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC]
 RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)???site?? [NC]
-RewriteRule .* plugins/system/cgsecure/htaccess.php?e=18&t=w&m=%1___%2&sec=??security?? [L]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=18&t=e&m=%1___%2&sec=??security?? [L]
 
 #xss blocage  For instance, a parameter on the querystring is an url (http://...)
 RewriteCond %{REQUEST_METHOD} (GET|POST) [NC]
@@ -238,14 +238,14 @@ RewriteCond %{QUERY_STRING} \b(order(\s|%20)by(\s|%20)1--)\b [NC,OR]
 RewriteCond %{QUERY_STRING} \b(@unlink|assert\(|print_r\(|x00|xbshell)\b [NC,OR]
 RewriteCond %{QUERY_STRING} \b(100dollars|best-seo|blue\spill|ejaculat|mopub\.com) [NC,OR]
 RewriteCond %{QUERY_STRING} \b(pornhelm|semalt\.com|social-buttions|todaperfeita) [NC]
-RewriteRule .* plugins/system/cgsecure/htaccess.php?e=20&t=w&m=%1___%2&sec=??security?? [L]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=20&t=e&m=%1___%2&sec=??security?? [L]
 </IfModule>
 
 # 8G FIREWALL:[ROGUE PHP FILES]
 # https://m0n.co/8g-addon-rogue-php-files
 <IfModule mod_rewrite.c>
 RewriteCond %{REQUEST_URI} /(_0-load|00|00212|007|00x69|01|05623ecdddd|07|08_45_27_loggo|0803|0|0aa1883c|0byte|0day|0m|0wn3d|1|2|10|100|404|911|1050804k|a|b|d|g|k|abc|admin1|adminer|ajaxcommandshell|akismet|alf4|alfa|alfa2|alfa5|alfashell|alfx|alfa4|alfav4|amad|anasslost|anassgmr|ancvxia|ande|andre|andr3a|angel|angelwhitehat|angie|anonghost|anonghostshell|an0n)\.php [NC,OR]
-RewriteCond %{REQUEST_URI} /(an0nym0us|anoncol7|anongt|anonym0us|anonymous|anzost|ars|as|b374k|beez|black|bloodsecv4|bump|byp|byp4ss|bypas|bypass|c|c22|c99|c100|cgi|changeall|cmd|con|config|configuration|cp|cpanel|cpn|css|cyber|d0mains|d4rk|dam|db|disqus|dom|drm|dz|dz0|egy|egyshell|eval|exp|exploit|exploits|f0x|file|filemanager|fm|fox|foxx|func|fx|fx0|gaza|golge)\.php [NC,OR]
+RewriteCond %{REQUEST_URI} /(an0nym0us|anoncol7|anongt|anonym0us|anonymous|anzost|ars|as|b374k|beez|black|bloodsecv4|bump|byp|byp4ss|bypas|bypass|c|c22|c99|c100|changeall|cmd|con|config|configuration|cp|cpanel|cpn|css|cyber|d0mains|d4rk|dam|db|disqus|dom|drm|dz|dz0|egy|egyshell|eval|exp|exploit|exploits|f0x|file|filemanager|fm|fox|foxx|func|fx|fx0|gaza|golge)\.php [NC,OR]
 RewriteCond %{REQUEST_URI} /(h4ck|h4cked|h4ntu|h4x|h4x0r|hack|hax|index1|indoxploit|info|inj3ct0r|ironshell|isko|islam|j3|jackal|jacker|jaguar|ja|jaja|jajaja|jar|java|javacpl|killer|king|ksa|l3b|ls|m1n1|madspot|madspotshell|m4r0c|marvins|mini|minishell|modules|mysql|network|newshell|newup|nkr|offline|olux|pr1v|press-this|priv|priv8|r1z|r0k|r00t|r57|readme|root)\.php [NC,OR]
 RewriteCond %{REQUEST_URI} /(s|sa|sa2|sado|sh3ll|shel|shell|sm|smevk|sniper|sok|sql|sql-new|ss|sym|sym403|sym404|symbpass|syml1nk|symlink|symlinkbypass|syrian_shell|system|system_log|t00|think|tmp|up|uploader|uploads|uploadfile|uploadfile1|user|v4team|vuln)\.php [NC,OR]
 RewriteCond %{REQUEST_URI} /(w|w3br00t|webadmin|webr00t|webroot|whmcrack|whmcracker|whmcs|wp-|ws|ws0|wso|wsoshell|ws0shell|wso25|wsoshell|up|x|xa|xccc|xd|xx|xxx|zdz|zone-h)\.php [NC,OR]
@@ -273,7 +273,7 @@ RewriteRule .* plugins/system/cgsecure/htaccess.php?e=21&t=e&m=%1&sec=??security
 	RewriteCond %{REQUEST_URI} ^(/)(123|backup|bak|beta|bkp|default|demo|dev(new|old)?|new-?site|null|old|old_files|old1)(/)?$ [NC,OR]
 	RewriteCond %{REQUEST_URI} ^(/)(old-?site(back)?|old(web)?site(here)?|sites?|staging|undefined|wordpress([0-9]+)|wordpress-old)(/)?$ [NC,OR]
 	RewriteCond %{REQUEST_URI} (\(null\)|\{\$itemURL\}|cast\(0x|echo(.*)kae|etc/passwd|eval\(|null(.*)null|open_basedir|self/environ|\+union\+all\+select) [NC,OR]
-###### -> too much ? RewriteCond %{REQUEST_URI} (/)(db-?|j-?|my(sql)?-?|setup-?|web-?|wp-?)?(admin-?)?(setup-?)?(conf\b|conf(ig)?)(uration)?(\.?bak|\.inc)?(\.inc|\.old|\.php|\.txt) [NC,OR]
+    RewriteCond %{REQUEST_URI} (/)(db-?|j-?|my(sql)?-?|setup-?|web-?|wp-?)?(admin-?)?(setup-?)?(conf\b|conf(ig)?)(uration)?(\.?bak|\.inc)?(\.inc|\.old|\.php|\.txt) [NC,OR]
 	RewriteCond %{REQUEST_URI} (base64_(en|de)code|benchmark|curl_exec|e?chr|eval|function|fwrite|(f|p)open|html|leak|passthru|p?fsockopen|phpinfo)(.*)(\(|%28)(.*)(\)|%29) [NC,OR]
 	RewriteCond %{REQUEST_URI} (posix_(kill|mkfifo|setpgid|setsid|setuid)|(child|proc)_(close|get_status|nice|open|terminate)|(shell_)?exec|system)(.*)(\(|%28)(.*)(\)|%29) [NC,OR]
 	RewriteCond %{REQUEST_URI} (bkv74|cachedsimilar|core-stab|crgrvnkb|ctivrc|deadcode|deathshop|dkiz|e7xue|eqxafaj90zir|exploits|ffmkpcal|filellli7|(fox|sid)wso|gel4y|goog1es|gvqqpinc) [NC,OR]
@@ -281,7 +281,7 @@ RewriteRule .* plugins/system/cgsecure/htaccess.php?e=21&t=e&m=%1&sec=??security
 	RewriteCond %{REQUEST_URI} (handler_to_code|hax(0|o)r|hmei7|hnap1|home_url=|ibqyiove|icxbsx|indoxploi|jahat|jijle3|kcrew|keywordspy|laobiao|lock360|longdog|marijuan|mod_(aratic|ariimag)) [NC,OR]
 	RewriteCond %{REQUEST_URI} (mobiquo|muiebl|nessus|osbxamip|phpunit|priv8|qcmpecgy|r3vn330|racrew|raiz0|reportserver|r00t|respectmus|rom2823|roseleif|sh3ll|site((.){0,2})copier|sqlpatch|sux0r) [NC,OR]
 	RewriteCond %{REQUEST_URI} (sym403|telerik|uddatasql|utchiha|visualfrontend|w0rm|wangdafa|wpyii2|wsoyanzo|x5cv|xattack|xbaner|xertive|xiaolei|xltavrat|xorz|xsamxad|xsvip|xxxs?s?|zabbix|zebda) [NC,OR]
-	RewriteCond %{REQUEST_URI} (\.)(7z|ab4|ace|afm|alfa|as(h|m)x?|aspx?|aws|axd|bash|ba?k?|bat|bz2|cfg|cfml?|cgi|cms|conf\b|config|ctl|dat|db|dist|dll|eml|eng(ine)?|env|et2|exe|fec|fla|git(ignore)?)$ [NC,OR]
+	RewriteCond %{REQUEST_URI} (\.)(7z|ab4|ace|afm|alfa|as(h|m)x?|aspx?|aws|axd|bash|ba?k?|bat|bz2|cfg|cfml?|cms|conf\b|config|ctl|dat|db|dist|dll|eml|eng(ine)?|env|et2|exe|fec|fla|git(ignore)?)$ [NC,OR]
 	RewriteCond %{REQUEST_URI} (\.)(hg|idea|inc|index|ini|inv|jar|jspa?|lib|local|log|lqd|make|mbf|mdb|mmw|mny|mod(ule)?|msi|old|one|orig|out|passwd|pdb|php\.(php|suspect(ed)?)|php([^\/])|phtml?|pl|profiles?)$ [NC,OR]
 	RewriteCond %{REQUEST_URI} (\.)(psd|pst|ptdb|production|pwd|py|qbb|qdf|rar|rdf|remote|save|sdb|sql|sh|soa|svn|swf|swl|swo|swp|stx|tar|tax|tgz?|theme|tls|tmb|tmd|wok|wow|xsd|xtmpl|xz|ya?ml|za|zlib)$ [NC]
 

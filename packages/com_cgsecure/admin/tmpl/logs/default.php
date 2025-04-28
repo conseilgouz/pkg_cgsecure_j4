@@ -11,6 +11,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\Filesystem\Folder;
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
@@ -24,6 +25,8 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
 
+$wa->registerAndUseScript('securelogs', 'media/com_cgsecure/js/adminlog.js');
+
 $fileht = Factory::getApplication()->getConfig()->get('log_path').'/cghtaccess.trace.php';
 
 $fileip = Factory::getApplication()->getConfig()->get('log_path').'/cgipcheck.trace.log.php';
@@ -31,7 +34,11 @@ $fileip = Factory::getApplication()->getConfig()->get('log_path').'/cgipcheck.tr
 $linkViewHTlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component&type=ht';
 $linkViewIPlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component&type=ip';
 
-    
+$options = Folder::files(Factory::getApplication()->getConfig()->get('log_path'), '.', null, null, [], array('cghtaccess.trace.php','cgipcheck.trace.log.php','index.html','.htaccess'));
+
+
+// $options = [];
+$value = '';
 ?>
 <form action="<?php echo Route::_('index.php?option=com_cgsecure&view=logs');?>" method="post" name="adminForm" id="adminForm">
 <?php if (!empty($this->sidebar)) : ?>
@@ -73,8 +80,24 @@ $linkViewIPlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=compo
                     </div>
                 </div>
                 <?php } ?>
-                <!-- Fin de modal !-->
 
+                <div class="modal fade modal-xl"  id="viewlogoth" tabindex="-1" aria-labelledby="othlog" aria-hidden="true">
+                    <div class="modal-dialog h-75">
+                        <div class="modal-content h-100">
+                             <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                             </div>
+                             <div class="modal-body h-100">
+                                <iframe id="iframeModalWindowOTH" height="100%" src="" name="iframe_modal_OTH"></iframe>      
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin de modal !-->
+                <?php 
+                // other log files
+                echo Text::_('CGSECURE_OTHER_LOGS');
+                echo HTMLHelper::_('select.genericlist', $options, 'adLogs', ' class="adLogs chzn-done" data-chosen="done"', 'element', 'name', $value); ?>
 
 
     <div class="nr-main-header">
