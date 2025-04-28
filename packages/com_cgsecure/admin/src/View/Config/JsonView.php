@@ -76,10 +76,7 @@ class JsonView extends AbstractView
             } elseif ($access == 4) { // add AI bots
                 $msg = $this->addAIHTAccess();
             }
-        } elseif ($type == 'logs') {
-            $log = $input->get('adLogs');
-            $msg = 'index.php?option=com_cgsecure&view=viewlogs&tmpl=component&type='.$log;
-        }
+        } 
         File::delete($wait);
         $arr = [];
         $arr['retour'] = $msg;
