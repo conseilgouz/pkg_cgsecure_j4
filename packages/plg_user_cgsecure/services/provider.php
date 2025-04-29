@@ -33,8 +33,9 @@ return new class () implements ServiceProviderInterface {
         $container->set(
             PluginInterface::class,
             function (Container $container) {
+                $dispatcher = $container->get(DispatcherInterface::class);
                 $plugin = new Cgsecure(
-                    $container->get(DispatcherInterface::class),
+                    $dispatcher,
                     (array) PluginHelper::getPlugin('user', 'cgsecure')
                 );
                 $plugin->setApplication(Factory::getApplication());
