@@ -20,7 +20,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
     public $errtype = 'e'; // error : hacking
     public $cgsecure_params;
 
-    public function __construct(&$subject, $config)
+    public function __construct($subject, $config)
     {
         parent::__construct($subject, $config);
 
