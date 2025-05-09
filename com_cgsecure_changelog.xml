@@ -7,8 +7,12 @@
             <item>Update : 09/05/2025</item>
         </note>
         <fix>
+            <item>Display logs : excluded files cannot be in folder::files list as it uses them as wildcard</item>
             <item>Missing IPV6 field in config.xml</item>
         </fix>
+        <addition>
+            <item>htaccess : new parameter : block IP V6</item>
+        </addition>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>
