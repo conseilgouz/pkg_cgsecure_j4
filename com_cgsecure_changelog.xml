@@ -2,9 +2,23 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.2.15</version>
+        <note>
+            <item>Update : 09/05/2025</item>
+        </note>
+        <fix>
+            <item>Display logs : excluded files cannot be in folder::files list as it uses them as wildcard</item>
+        </fix>
+        <addition>
+            <item>htaccess : new parameter : block IP V6</item>
+        </addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.2.14</version>
         <note>
-            <item>Update : 29/04/2025</item>
+            <item>Update : 30/04/2025</item>
         </note>
         <fix>
             <item>Another way to remove notices on services/provider.php files, via construct function.</item>

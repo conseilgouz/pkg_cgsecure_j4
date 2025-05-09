@@ -31,6 +31,7 @@ class Cgipcheck
     private static $logging;
 
     private static $blockip;
+    private static $blockipv6;
     private static $latest_rejected;
     private static $latest_hacker;
     private static $params;
@@ -105,12 +106,14 @@ class Cgipcheck
         // $ip = '92.184.96.127'; // in abuseip confidence = 0
         // $ip = '54.36.148.179'; // in abuseip whitelist
         // $ip = '3.92.135.245'; // us hacker
+        // $ip = '2a00:f940:2:2:1:3:0:211'; // AI robots V6 Ip
         if (self::whiteList($ip)) {
             return true;
         }
         self::$logging = self::$params->logging == 1;
         self::$report = self::$params->report == 1;
         self::$blockip  = self::$params->blockip == 1;
+        self::$blockipv6  = self::$params->blockipv6 == 1;
         if (self::$logging) {
             Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::DEBUG, array(self::$caller));
         }
@@ -624,15 +627,16 @@ class Cgipcheck
     }
     private static function create_ips($list)
     {
+        self::$blockipv6  = isset(self::$params->blockipv6) && self::$params->blockipv6 == 1;
         $ret = "#------------------------CG SECURE IP LIST BEGIN---------------------". PHP_EOL;
         $ret .= "#Type serveur : ".$_SERVER['SERVER_SOFTWARE']. PHP_EOL;
         $ret .= "<IfModule mod_authz_core.c>".PHP_EOL;
         $ret .= "<RequireAll>". PHP_EOL;
         $ret .= "Require all granted". PHP_EOL;
         foreach ($list as $key => $ip) {
-            if (strpos($ip, ':') !== false) {
+            if ((strpos($ip, ':') !== false) && !self::$blockipv6) {// IPV6 : ignore it : bug in OVH/APACH
                 continue;
-            } // IPV6 : ignore it, blocked later : bug in OVH/APACH
+            }
             $ret .= "require not ip ".$ip.PHP_EOL;
         }
         $ret .= "</RequireAll>". PHP_EOL;

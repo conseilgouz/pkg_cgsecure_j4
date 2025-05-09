@@ -34,11 +34,17 @@ $fileip = Factory::getApplication()->getConfig()->get('log_path').'/cgipcheck.tr
 $linkViewHTlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component&type=ht';
 $linkViewIPlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component&type=ip';
 
-$options = Folder::files(Factory::getApplication()->getConfig()->get('log_path'), '.', null, null, [], array('cghtaccess.trace.php','cgipcheck.trace.log.php','index.html','.htaccess'));
+$options = Folder::files(Factory::getApplication()->getConfig()->get('log_path'), '.', null, null, [], array('index.html'));
 
-
-// $options = [];
 $value = '';
+// excluded files cannot be in folder::files as it uses them as wildcard
+$exclude = ['cghtaccess.trace.php','cgipcheck.trace.log.php','.htaccess'];
+foreach ($options as $key => $option) {
+    if (in_Array($option, $exclude)) {
+        unset($options[$key]);
+    }
+}
+
 ?>
 <form action="<?php echo Route::_('index.php?option=com_cgsecure&view=logs');?>" method="post" name="adminForm" id="adminForm">
 <?php if (!empty($this->sidebar)) : ?>
@@ -94,10 +100,10 @@ $value = '';
                     </div>
                 </div>
                 <!-- Fin de modal !-->
-                <?php 
+                <?php
                 // other log files
                 echo Text::_('CGSECURE_OTHER_LOGS');
-                echo HTMLHelper::_('select.genericlist', $options, 'adLogs', ' class="adLogs chzn-done" data-chosen="done"', 'element', 'name', $value); ?>
+echo HTMLHelper::_('select.genericlist', $options, 'adLogs', ' class="adLogs chzn-done" data-chosen="done"', 'element', 'name', $value); ?>
 
 
     <div class="nr-main-header">
