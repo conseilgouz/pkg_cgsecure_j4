@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="4.1" type="plugin" group="task" method="upgrade">
+	<name>PLG_TASK_CGSECURE</name>
+	<author>conseilgouz</author>
+	<creationDate>2025-05-10</creationDate>
+	<copyright>Copyright (C) 2025 ConseilGouz. All rights reserved.</copyright>
+	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
+	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
+	<authorUrl>www.conseilgouz.com</authorUrl>
+	<version>3.3.0</version>
+	<description>PLG_TASK_CGSECURE_DESC</description>
+	<namespace path="src">ConseilGouz\Plugin\Task\CGSecure</namespace>
+	<files>
+		<folder plugin="cgsecure">services</folder>
+		<folder>forms</folder>	
+		<folder>src</folder>	
+		<folder>services</folder>	
+	</files>
+    <languages>
+		<language tag="fr-FR">language/fr-FR/plg_task_cgsecure.ini</language>
+		<language tag="fr-FR">language/fr-FR/plg_task_cgsecure.sys.ini</language>
+		<language tag="en-GB">language/en-GB/plg_task_cgsecure.ini</language>
+		<language tag="en-GB">language/en-GB/plg_task_cgsecure.sys.ini</language>
+	</languages>
+</extension>

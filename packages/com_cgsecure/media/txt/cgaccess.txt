@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.2.11--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.3.0--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -110,9 +110,12 @@ RewriteRule administrator\/components\/com_acym\/acym\.php$ - [L]
 ## Disallow everything else
 RewriteRule  ^administrator/ plugins/system/cgsecure/htaccess.php?e=1&t=e&sec=??security?? [L]
 
-# common REMOTE_HOST/HTTP_REFERER # 7G FIREWALL v1.2 20190727 + site.ru
+# common REMOTE_HOST/HTTP_REFERER # 7G FIREWALL v1.2 20190727 + matomo referlist + site.ru
 RewriteCond %{REMOTE_HOST} (163data|amazonaws|colocrossing|crimea|g00g1e|justhost|kanagawa|loopia|masterhost|onlinehome|poneytel|sprintdatacenter|reverse.softlayer|safenet|ttnet|woodpecker|wowrack) [NC,OR]
-RewriteCond %{HTTP_REFERER} (semalt.com|todaperfeita|site.ru) [NC]
+#------From https://github.com/matomo-org/referrer-spam-list
+#------MATOMO
+#------END MATOMO
+RewriteCond %{HTTP_REFERER} (todaperfeita|site.ru) [NC]
 RewriteRule .* plugins/system/cgsecure/htaccess.php?e=5&t=e&m=%1___%2&sec=??security?? [L]
 
 # Block direct access to system files

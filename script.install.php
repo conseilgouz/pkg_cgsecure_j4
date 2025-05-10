@@ -13,13 +13,14 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Installer;
-use Joomla\CMS\Language\Text as JText;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Version;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
+use Joomla\Component\Scheduler\Administrator\Model\TaskModel;
 
 class PlgSystemCgsecureInstallerInstallerScript
 {
@@ -32,7 +33,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $previous_version        = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "3.2.11";
+    private $cgsecure_force_update_version = "3.3.0";
     private $security;
     private $config;
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
@@ -102,7 +103,8 @@ class PlgSystemCgsecureInstallerInstallerScript
             return false;
         }
         $this->postInstall();
-        Factory::getApplication()->enqueueMessage(JText::_('PKG_CGSECURE_XML_DESCRIPTION'), 'notice');
+        $this->check_cgsecure_task();
+        Factory::getApplication()->enqueueMessage(Text::_('PKG_CGSECURE_XML_DESCRIPTION'), 'notice');
 
         // Uninstall this installer
         $this->uninstallInstaller();
@@ -244,7 +246,7 @@ class PlgSystemCgsecureInstallerInstallerScript
             $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess.txt');
         }
         $this->config  = $this->getParams();
-        $specific = $this->config->specific;
+        $specific = isset($this->config->specific) && $this->config->specific;
         if ($specific) {
             $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$specific.PHP_EOL;
             $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
@@ -468,7 +470,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         $version = $j->getShortVersion();
         if (version_compare($version, $this->min_joomla_version, '<')) {
             Factory::getApplication()->enqueueMessage(
-                JText::sprintf(
+                Text::sprintf(
                     'NOT_COMPATIBLE_UPDATE',
                     '<strong>' . JVERSION . '</strong>',
                     '<strong>' . $this->min_joomla_version . '</strong>'
@@ -488,7 +490,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 
         if (version_compare(PHP_VERSION, $this->min_php_version, '<')) {
             Factory::getApplication()->enqueueMessage(
-                JText::sprintf(
+                Text::sprintf(
                     'NOT_COMPATIBLE_PHP',
                     '<strong>' . PHP_VERSION . '</strong>',
                     '<strong>' . $this->min_php_version . '</strong>'
@@ -541,13 +543,51 @@ class PlgSystemCgsecureInstallerInstallerScript
     {
         if (! $this->installPackage('library_cgsecure')
             || ! $this->installPackage('plg_system_cgsecure')) {
-            Factory::getApplication()->enqueueMessage(JText::_('ERROR_INSTALLATION_LIBRARY_FAILED'), 'error');
+            Factory::getApplication()->enqueueMessage(Text::_('ERROR_INSTALLATION_LIBRARY_FAILED'), 'error');
             return false;
         }
         $cachecontroller = Factory::getContainer()->get(CacheControllerFactoryInterface::class)->createCacheController();
         $cachecontroller->clean('_system');
         return true;
     }
+    private function check_cgsecure_task()
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select('id');
+        $query->from('#__scheduler_tasks');
+        $query->where('type = ' . $db->quote('cgsecure'));
+        $query->where('state = 1');
+        $query->setLimit(1);
+        $db->setQuery($query);
+        $found = $db->loadResult();
+        if ($found) {// Found in db => exit
+            return;
+        }
+        $task = new TaskModel(array('ignore_request' => true));
+        $table = $task->getTable();
+        $data = [];
+        $data['id']     = 0;
+        $data['title']  = 'CG Secure';
+        $data['type']   = 'cgsecure';
+        $data['state']  = 1; // activate
+        $data['execution_rules'] = ["rule-type" => "interval-days",
+                                    "interval-days" => "7",
+                                    "exec-day" => "1",
+                                    "exec-time" => "00:01"];
+        $data['cron_rules']      = ["type" => "interval",
+                                    "exp" => "P1D"];
+        $notif = ["success_mail" => "0","failure_mail" => "1","fatal_failure_mail" => "1","orphan_mail" => "1"];
+        $data['params'] = ["individual_log" => false,"log_file" => "","notifications" => $notif];
+        $data['note']   = Text::_('PLG_CGSECURE_CREATE_TASK_NOTE');
+        $lastExec = Factory::getDate('now');
+        $data['last_execution'] = null;
+        $data['next_execution'] = $lastExec->toSql();
+
+        $table->save($data);
+        Factory::getApplication()->enqueueMessage(Text::_('PLG_CGSECURE_CREATE_TASK_OK'), 'notice');
+    }
+    
     private function uninstallInstaller()
     {
         if (! is_dir(JPATH_PLUGINS . '/system/' . $this->installerName)) {

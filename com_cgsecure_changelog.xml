@@ -2,7 +2,19 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>3.2.16</version>
+		<version>3.3.0</version>
+        <note>
+            <item>Update : 10/05/2025</item>
+        </note>
+        <addition>
+            <item>htaccess : use Matomo referrers list</item>
+            <item>New task CG Secure to weekly update Matomo referrers list</item>
+        </addition>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>3.3.0</version>
         <note>
             <item>Update : 09/05/2025</item>
         </note>
