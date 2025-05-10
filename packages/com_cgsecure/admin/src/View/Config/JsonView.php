@@ -15,6 +15,8 @@ use Joomla\CMS\MVC\View\AbstractView;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Component\Scheduler\Administrator\Model\TaskModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 
@@ -67,6 +69,9 @@ class JsonView extends AbstractView
                 $msg .= '<br>'.$this->deleteIPSHTAccess();
             } elseif ($access == 1) {// add CG Secure lines to htaccess file
                 $msg = $this->addHTAccess();
+                if (strpos($msg, 'err : ') === false) {// no error : start update task
+                    $this->goCGSecureTask();
+                }
                 // add .htaccess in images, media, files, administrator directories
                 $this->protectdirs();
             } elseif ($access == 2) { // delete hackers IP
@@ -76,7 +81,7 @@ class JsonView extends AbstractView
             } elseif ($access == 4) { // add AI bots
                 $msg = $this->addAIHTAccess();
             }
-        } 
+        }
         File::delete($wait);
         $arr = [];
         $arr['retour'] = $msg;
@@ -151,6 +156,29 @@ class JsonView extends AbstractView
         } else {
             return 'err : '.Text::_('CGSECURE_ADD_AI_HTACCESS_ERROR');
         }
+    }
+    // start CG Secure Task to force update HTAccess File
+    private function goCGSecureTask()
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select('*');
+        $query->from('#__scheduler_tasks');
+        $query->where('type = ' . $db->quote('cgsecure'));
+        $query->where('state = 1');
+        $query->setLimit(1);
+        $db->setQuery($query);
+        $found = $db->loadAssoc();
+        if (!$found) {// not found in db => exit
+            return;
+        }
+        $task = new TaskModel(array('ignore_request' => true));
+        $table = $task->getTable();
+        $data = $found;
+        $nextExec = Factory::getDate('now');
+        $data['next_execution'] = $nextExec->toSql();
+        $table->save($data);
+        return true;
     }
     // add CG Secure information from .htaccess file
     private function addHTAccess()
