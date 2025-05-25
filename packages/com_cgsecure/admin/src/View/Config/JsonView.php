@@ -80,6 +80,14 @@ class JsonView extends AbstractView
                 $msg = $this->deleteAIHTAccess();
             } elseif ($access == 4) { // add AI bots
                 $msg = $this->addAIHTAccess();
+            } elseif ($access == 5) { // add hackers IP
+                $this->config  = $this->getParams();
+                $blockipv6  = isset($this->config->blockipv6) && $this->config->blockipv6 == 1;
+                $msg = $this->addIPSHTAccess($blockipv6);
+            } elseif ($access == 6) { // delete hackers IP V6
+                $msg = $this->addIPSV6HTAccess(false);
+            } elseif ($access == 7) { // add hackers IP
+                $msg = $this->addIPSV6HTAccess(true);
             }
         }
         File::delete($wait);
@@ -107,6 +115,78 @@ class JsonView extends AbstractView
             return 'err : '.Text::_('CGSECURE_DEL_HTACCESS_ERROR');
         }
     }
+    // add CG Secure information in .htaccess file
+    private function addIPSHTAccess($v6 = false)
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_noip($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+        $cgFile = '';
+        $ips = $this->get_htaccess_List();
+        $rejips = $this->create_ips($ips, $v6);
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips)) {
+            return Text::_('CGSECURE_DEL_IP_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_DEL_IP_HTACCESS_ERROR');
+        }
+    }
+    // add IP V6 information in .htaccess file
+    private function addIPSV6HTAccess($v6 = true)
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_noip($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+        $cgFile = '';
+        $ips = $this->get_htaccess_List();
+        $rejips = $this->create_ips($ips, $v6);
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips)) {
+            return Text::_('CGSECURE_DEL_IP_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_DEL_IP_HTACCESS_ERROR');
+        }
+    }
+    // Get HTAccess Rejected IPs list
+    private function get_htaccess_List()
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $where = " errtype LIKE 'e'";
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('ip'))
+                ->from($db->quoteName('#__cg_rejected_ip'))
+                ->where($where)
+                ->order('ip ASC');
+        $db->setQuery($query);
+        try {
+            $list = $db->loadColumn();
+        } catch (\RuntimeException $e) {
+            return array();
+        }
+        return $list;
+    }
+    private function create_ips($list, $v6 = false)
+    {
+        $blockipv6  = isset($this->config->blockipv6) && $this->config->blockipv6 == 1;
+        $ret = "#------------------------CG SECURE IP LIST BEGIN---------------------". PHP_EOL;
+        $ret .= "#Type serveur : ".$_SERVER['SERVER_SOFTWARE']. PHP_EOL;
+        $ret .= "<IfModule mod_authz_core.c>".PHP_EOL;
+        $ret .= "<RequireAll>". PHP_EOL;
+        $ret .= "Require all granted". PHP_EOL;
+        foreach ($list as $key => $ip) {
+            if ((strpos($ip, ':') !== false) && !$v6) {// IPV6 : ignore it : bug in OVH/APACH
+                continue;
+            }
+            $ret .= "require not ip ".$ip.PHP_EOL;
+        }
+        $ret .= "</RequireAll>". PHP_EOL;
+        $ret .= "</IfModule>".PHP_EOL;
+        $ret .= '#------------------------CG SECURE IP LIST END--------------------'. PHP_EOL;
+        return $ret;
+    }
+
     // delete CG Secure information in .htaccess file
     private function deleteIPSHTAccess()
     {
@@ -206,8 +286,8 @@ class JsonView extends AbstractView
         }
         $this->config  = $this->getParams();
         $specific = "";
-        if (isset($this->config->specific) && $specific) {
-            $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$specific.PHP_EOL;
+        if (isset($this->config->specific) && $this->config->specific) {
+            $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$this->config->specific.PHP_EOL;
             $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
         }
         $ia = "";

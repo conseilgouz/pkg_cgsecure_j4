@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.3.1</version>
+        <note>
+            <item>Update : 25/05/2025</item>
+        </note>
+        <fix>
+            <item>config htaccess : add specific code, block or not V6 IP</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.3.0</version>
         <note>
             <item>Update : 10/05/2025</item>
@@ -14,7 +25,7 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>3.3.0</version>
+		<version>3.2.16</version>
         <note>
             <item>Update : 09/05/2025</item>
         </note>

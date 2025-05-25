@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function(){
     htaccess0 = document.querySelector('input[id="jform_htaccess0"]');
     htaccess1 = document.querySelector('input[id="jform_htaccess1"]');
     blockip0 = document.querySelector('input[id="jform_blockip0"]');
+    blockip1 = document.querySelector('input[id="jform_blockip1"]');
+    blockipv60 = document.querySelector('input[id="jform_blockipv60"]');
+    blockipv61 = document.querySelector('input[id="jform_blockipv61"]');
     blockai0 = document.querySelector('input[id="jform_blockai0"]');
     blockai1 = document.querySelector('input[id="jform_blockai1"]');
     ['click', 'mouseup', 'touchstart'].forEach(type => {    
@@ -43,6 +46,18 @@ document.addEventListener('DOMContentLoaded', function(){
         blockip0.addEventListener(type,function(){ // delete IPs
             security = document.querySelector('input[id="jform_security"]');
             htaccess(2,security.value);
+        })
+        blockip1.addEventListener(type,function(){ // add IPs
+            security = document.querySelector('input[id="jform_security"]');
+            htaccess(5,security.value);
+        })
+        blockipv60.addEventListener(type,function(){ // delete IPs V6
+            security = document.querySelector('input[id="jform_security"]');
+            htaccess(6,security.value);
+        })
+        blockipv61.addEventListener(type,function(){ // add IPs V6
+            security = document.querySelector('input[id="jform_security"]');
+            htaccess(7,security.value);
         })
         blockai0.addEventListener(type,function(){ // delete AI Bots
             security = document.querySelector('input[id="jform_security"]');
