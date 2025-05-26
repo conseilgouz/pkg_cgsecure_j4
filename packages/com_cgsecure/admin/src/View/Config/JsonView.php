@@ -279,7 +279,10 @@ class JsonView extends AbstractView
             return 'err : '.Text::_('CGSECURE_SAVE_HTACCESS_ERROR');
         }
         $current = $this->read_current($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        $rejips = $this->get_current_ips($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+
+        $ips = $this->get_htaccess_List();
+        $rejips = $this->create_ips($ips);
+
         if (file_exists(JPATH_ROOT.self::CGPATH .'/txt/custom.txt')) { // custom file exists : use it
             $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/custom.txt');
         } else { // no custom file : use cgaccess.txt file

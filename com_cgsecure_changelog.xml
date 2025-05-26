@@ -8,6 +8,7 @@
         </note>
         <fix>
             <item>config htaccess : add specific code, block or not V6 IP</item>
+            <item>config htaccess : recreate ips list on HTAccess rebuild</item>
         </fix>
         <addition>
             <item>Logs : new add IP page</item>
