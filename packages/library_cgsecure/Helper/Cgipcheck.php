@@ -434,7 +434,7 @@ class Cgipcheck
         }
     }
     // curl request function
-    private static function abuseIPDBrequest($path, $method, $data)
+    public static function abuseIPDBrequest($path, $method, $data)
     {
         $key = self::$params->api_key;
         if ($key == '') {
