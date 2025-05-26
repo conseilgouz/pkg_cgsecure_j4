@@ -39,7 +39,6 @@ class HtmlView extends BaseHtmlView
             Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
             return false;
         }
-        // $app = Factory::getApplication();
         $model       = $this->getModel();
 
         $this->form    = $model->getForm();
@@ -47,7 +46,6 @@ class HtmlView extends BaseHtmlView
 
         // Set the toolbar
         $this->addToolBar();
-        // $this->sidebar = HtmlSidebar::render();
         // Display the template
         parent::display($tpl);
     }

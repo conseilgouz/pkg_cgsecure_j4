@@ -40,6 +40,9 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar()
     {
         ToolBarHelper::title(Text::_('COM_CGSECURE_LOGS'), 'logs');
+        if ($this->canDo->get('core.create')) {
+            ToolBarHelper::addNew('ip.add');
+        }
         if ($this->canDo->get('core.delete')) {
             ToolBarHelper::deleteList('COM_CGSECURE_DELETE', 'logs.delete');
         }

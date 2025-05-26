@@ -27,6 +27,7 @@ class JsonView extends AbstractView
 {
     protected $app;
     protected $security;
+    protected $config;
     public const SERVER_CONFIG_FILE_NONE = '';
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
     public const SERVER_CONFIG_FILE_ADMIN_HTACCESS = 'administrator/.htaccess';
@@ -169,7 +170,7 @@ class JsonView extends AbstractView
     }
     private function create_ips($list, $v6 = false)
     {
-        $blockipv6  = isset($this->config->blockipv6) && $this->config->blockipv6 == 1;
+        $this->config  = $this->getParams();
         $ret = "#------------------------CG SECURE IP LIST BEGIN---------------------". PHP_EOL;
         $ret .= "#Type serveur : ".$_SERVER['SERVER_SOFTWARE']. PHP_EOL;
         $ret .= "<IfModule mod_authz_core.c>".PHP_EOL;

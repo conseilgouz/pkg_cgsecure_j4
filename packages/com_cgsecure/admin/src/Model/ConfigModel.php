@@ -35,8 +35,6 @@ class ConfigModel extends AdminModel
      */
     protected function preprocessForm(Form $form, $data, $group = 'content')
     {
-        $form->addRulePath(__DIR__ . '/forms/rules');
-
         parent::preprocessForm($form, $data, $group);
     }
 

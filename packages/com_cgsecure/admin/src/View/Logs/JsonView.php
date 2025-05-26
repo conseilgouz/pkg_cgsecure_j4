@@ -47,6 +47,8 @@ class JsonView extends AbstractView
         if ($type == 'logs') {
             $log = $input->get('adLogs');
             $msg = 'index.php?option=com_cgsecure&view=viewlogs&tmpl=component&type='.$log;
+        } else {
+            die(Text::_('JINVALID_MESSAGE'));
         }
         $arr['retour'] = $msg;
         echo new JsonResponse($arr);

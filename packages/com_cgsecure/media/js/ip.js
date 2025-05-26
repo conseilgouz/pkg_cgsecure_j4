@@ -22,3 +22,34 @@
 		if ($html.trim() == '') document.getElementById("jform_country").value = $lang;
 	});
 }
+// check IP address 
+document.addEventListener('DOMContentLoaded', function(){
+    check = document.querySelector('#jform_checkip0'); 
+    ['click', 'mouseup', 'touchstart'].forEach(type => {
+        check.addEventListener(type, function(){
+            checkip();
+        })
+    })
+})
+function checkip() {
+	var token = document.querySelector("#token").getAttribute("name");
+    ip = document.querySelector('#jform_ip').value;
+    var url = "?"+token+"=1&option=com_cgsecure&tmpl=component&view=ip&type=check&ip="+ip+"&format=json";
+	Joomla.request({
+		method : 'POST',
+		url : url,
+		onSuccess: function(data, xhr) {
+            var result = JSON.parse(data);
+            if (result.data.error) {
+               res = result.data.error;
+            } else {
+                res = result.data.retour;
+            }
+            document.querySelector('#result').innerHTML = res;
+            document.querySelector('#result').value = res;
+            document.querySelector('#result').style.display = 'block';
+            document.querySelector('#result').style.width = '50em';
+		},
+		error: function(message) {console.log(message.responseText);}
+	});	
+}

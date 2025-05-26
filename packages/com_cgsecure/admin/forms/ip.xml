@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<config>         
+		<inlinehelp button="show"/>     
+	</config>
+
+	<fieldset name="gene_tab" label="CG_SECURE_TAB"
+        addruleprefix="ConseilGouz\Component\CGSecure\Administrator\Rule">
+		<field name="id" type="hidden" default="0"
+			readonly="true" class="readonly"
+			label="JGLOBAL_FIELD_ID_LABEL" 	description ="JGLOBAL_FIELD_ID_DESC" />
+		<field name="ip" type="text"
+			label="CG_SECURE_IP" 
+			description ="CG_SECURE_IP_DESC" 
+			required="true" 
+            validate="ip"         />
+		<field name="checkip" type="radio"
+			label="CG_SECURE_CHECKIP" 
+			description ="CG_SECURE_CHECKIP_DESC" 
+            class="btn-group btn-group-yesno" default="1">
+        >
+            <option value="1">CG_SECURE_GOCHECK</option>
+        </field>
+	</fieldset>
+</form>
+
+			
