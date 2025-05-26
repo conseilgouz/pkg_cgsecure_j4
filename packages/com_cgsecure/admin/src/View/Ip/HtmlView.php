@@ -58,7 +58,6 @@ class HtmlView extends BaseHtmlView {
 
 		// If not checked out, can save the item.
 		if ($canDo->get('core.edit')) {
-			ToolBarHelper::apply('ip.apply');
 			ToolBarHelper::save('ip.save');
 		}
 		ToolBarHelper::cancel('ip.cancel', 'JTOOLBAR_CLOSE');

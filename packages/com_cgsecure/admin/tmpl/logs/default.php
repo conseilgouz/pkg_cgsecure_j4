@@ -44,6 +44,8 @@ foreach ($options as $key => $option) {
         unset($options[$key]);
     }
 }
+$table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
+$params = json_decode($table->getSecureParams()->params);
 
 ?>
 <form action="<?php echo Route::_('index.php?option=com_cgsecure&view=logs');?>" method="post" name="adminForm" id="adminForm">
@@ -180,6 +182,8 @@ for ($i = 0; $i < $n; $i++) {
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+	<input type="hidden" id="logshtaccess" value="<?php echo $params->htaccess;?>" />
+    <input type="hidden" id="logsblockip" value="<?php echo $params->blockip;?>" />
 	<?php echo HTMLHelper::_('form.token'); ?>
 </div>
 </div>

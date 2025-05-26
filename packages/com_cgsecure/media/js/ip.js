@@ -26,9 +26,11 @@
 document.addEventListener('DOMContentLoaded', function(){
     check = document.querySelector('#jform_checkip0'); 
     ['click', 'mouseup', 'touchstart'].forEach(type => {
-        check.addEventListener(type, function(){
-            checkip();
-        })
+        if (check) {
+            check.addEventListener(type, function(){
+                checkip();
+            })
+        }
     })
 })
 function checkip() {
