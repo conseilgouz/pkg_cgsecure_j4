@@ -9,6 +9,10 @@
         <fix>
             <item>Logs : recreate htaccess button : missing securitty field</item>
         </fix>
+        <addition>
+            <item>htaccess : prevent hotlinking</item>
+            <item>htaccess : use mod_expires</item>
+        </addition>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>

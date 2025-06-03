@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.3.0--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.3.4--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -45,6 +45,89 @@ ServerSignature Off
    AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript
  </IfModule>
 </IfModule>
+
+<IfModule mod_rewrite.c>
+ # Prevent hotlinking (http://www.htaccesstools.com/hotlink-protection/)
+ RewriteEngine On
+ RewriteCond %{REMOTE_ADDR} !127.0.0.1
+ RewriteCond %{HTTP_REFERER} !^$
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?127.0.0.1 [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?localhost [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?::1 [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?%{HTTP_HOST} [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.com [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.be [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.fr [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?bing.com [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?facebook.com [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?yahoo.com [NC]
+ RewriteRule \.(jpg|jpeg|png|gif|webp)$ - [NC,F,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+   # Keep the connection alive (not really related to expirations but really increase download speed
+   Header set Connection keep-alive
+</IfModule>
+
+<IfModule mod_expires.c>
+
+   ExpiresActive On
+
+   # Default expiration: 1 hour after request
+   ExpiresDefault "now plus 1 hour"
+
+   # CSS and JS expiration
+   ExpiresByType text/css "access 1 month"
+   ExpiresByType text/javascript "access 1 month"
+   ExpiresByType application/javascript "access 1 month"
+   ExpiresByType application/x-javascript "access 1 month"
+
+   # htc files  (css3pie)
+   ExpiresByType text/x-component         "access 1 month"
+
+   # rss feed
+   ExpiresByType application/rss+xml       "access 4 hour"
+
+   # webfonts
+   ExpiresByType font/truetype             "access 1 year"
+   ExpiresByType font/opentype             "access 1 year"
+   ExpiresByType application/x-font-woff   "access 1 year"
+   ExpiresByType image/svg+xml             "access 1 year"
+   ExpiresByType application/vnd.ms-fontobject "access 1 year"
+   ExpiresByType application/x-font-ttf    "access 1 year"
+
+   # Image files expiration
+   AddType image/vnd.microsoft.icon .cur
+   ExpiresByType image/svg+xml "access 1 month"
+   ExpiresByType image/gif "access 1 month"
+   ExpiresByType image/jpg "access 1 month"
+   ExpiresByType image/jpeg "access 1 month"
+   ExpiresByType image/png "access 1 month"
+   ExpiresByType image/webp "access 1 month"
+   ExpiresByType image/vnd.microsoft.icon "access 1 year"
+   ExpiresByType image/x-icon "access 1 year"
+   ExpiresByType image/ico "access 1 year"
+   ExpiresByType image/icon "access 1 year"
+   ExpiresByType text/ico "access 1 year"
+   ExpiresByType application/ico "access 1 year"
+
+   # Flash
+   ExpiresByType application/x-shockwave-flash "access plus 2 months"
+   ExpiresByType image/swf "access plus 2592000 seconds"
+
+   # Files
+   ExpiresByType application/pdf "access 1 week"
+   ExpiresByType application/x-gzip "access 1 month"
+
+</IfModule>
+
+# Perhaps the MIME type of SWF is incorrect, in this case, the FileMatch will do the job
+<IfModule mod_headers.c>
+   <FilesMatch "\.(swf)$">
+      Header set Expires "access plus 2592000 seconds"
+   </FilesMatch>
+</IfModule>
+
 <IfModule mod_setenvif.c>
 # Block bad user agents 
 SetEnvIfNoCase ^User-Agent$ .*(aesop_com_spiderman|ahrefs|ahrefsbot|alexibot|amazonbot|backweb|bandit|batchftp|bigfoot|bytespider).* HTTP_STAYOUT
