@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.3.5--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.3.6--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -54,7 +54,7 @@ ServerSignature Off
  RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?127.0.0.1 [NC]
  RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?localhost [NC]
  RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?::1 [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?%{HTTP_HOST} [NC]
+ RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)???site?? [NC]
  RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.com [NC]
  RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.be [NC]
  RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.fr [NC]
