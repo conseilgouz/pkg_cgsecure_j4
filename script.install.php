@@ -33,7 +33,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $previous_version        = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "3.3.4";
+    private $cgsecure_force_update_version = "3.3.5";
     private $security;
     private $config;
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
@@ -248,7 +248,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         $this->config  = $this->getParams();
         $specific = isset($this->config->specific) && $this->config->specific;
         if ($specific) {
-            $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$specific.PHP_EOL;
+            $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$this->config->specific.PHP_EOL;
             $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
         }
 
@@ -587,7 +587,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         $table->save($data);
         Factory::getApplication()->enqueueMessage(Text::_('PLG_CGSECURE_CREATE_TASK_OK'), 'notice');
     }
-    
+
     private function uninstallInstaller()
     {
         if (! is_dir(JPATH_PLUGINS . '/system/' . $this->installerName)) {
