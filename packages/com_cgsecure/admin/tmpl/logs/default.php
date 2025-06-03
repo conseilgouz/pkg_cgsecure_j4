@@ -182,6 +182,7 @@ for ($i = 0; $i < $n; $i++) {
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+    <input type="hidden" name="security"  value="<?php echo $params->security; ?>"/>
 	<input type="hidden" id="logshtaccess" value="<?php echo $params->htaccess;?>" />
     <input type="hidden" id="logsblockip" value="<?php echo $params->blockip;?>" />
 	<?php echo HTMLHelper::_('form.token'); ?>
