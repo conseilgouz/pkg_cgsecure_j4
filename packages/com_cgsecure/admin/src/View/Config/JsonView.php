@@ -92,7 +92,7 @@ class JsonView extends AbstractView
             } elseif ($access == 8) { // delete hotlink block
                 $msg = $this->deleteHotlinkHTAccess();
             } elseif ($access == 9) { // add hotlink block
-                $msg = $this->addHtolinkHTAccess();
+                $msg = $this->addHotlinkHTAccess();
             }
         }
         File::delete($wait);
@@ -658,12 +658,12 @@ class JsonView extends AbstractView
         }
         return $outBuffer;
     }
-    private function merge_file($file, $current, $cgFile, $rejips, $specific = '', $ai = '')
+    private function merge_file($file, $current, $cgFile, $rejips, $specific = '', $ai = '',$hotlink = '')
     {
         $pathToFile  = $file;
         if (file_exists($pathToFile)) {
             if (is_readable($pathToFile)) {
-                $records = $rejips.$specific.$cgFile.$ai.$current; // pour éviter les conflits, on se met devant....
+                $records = $rejips.$specific.$cgFile.$ai.$hotlink.$current; // pour éviter les conflits, on se met devant....
                 // Write the htaccess using the Frameworks File Class
                 $bool = File::write($pathToFile, $records);
                 if ($bool) {

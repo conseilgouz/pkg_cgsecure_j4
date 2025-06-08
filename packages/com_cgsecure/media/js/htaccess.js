@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function(){
             security = document.querySelector('input[id="jform_security"]');
             htaccess(8,security.value);
         })
-        blockhotlink2.addEventListener(type,function(){ // add  hotlink block
+        blockhotlink1.addEventListener(type,function(){ // add  hotlink block
             security = document.querySelector('input[id="jform_security"]');
             htaccess(9,security.value);
         })
