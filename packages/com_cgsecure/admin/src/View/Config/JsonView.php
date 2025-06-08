@@ -338,9 +338,9 @@ class JsonView extends AbstractView
             $ia = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
         }
         if (isset($this->config->blockhotlink) && $this->config->blockhotlink) {
-            $ia = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
+            $hotlink = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
         }
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific, $ia)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific, $ia,$hotlink)) {
             return Text::_('CGSECURE_ADD_HTACCESS');
         }
         // Error : restore saved version
