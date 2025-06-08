@@ -512,6 +512,14 @@ class JsonView extends AbstractView
                 $cgLines = false;
                 continue;
             }
+            if ($line === '#------------------------CG SECURE HOTLINK BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE HOTLINK END---------------------') {
+                $cgLines = false;
+                continue;
+            }
             if ($cgLines) {
                 // When we are between our makers all content should be removed
                 continue;
