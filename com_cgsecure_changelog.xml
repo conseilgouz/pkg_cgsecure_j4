@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.3.7</version>
+        <note>
+            <item>Update : 08/06/2025</item>
+        </note>
+        <change>
+             <item>htaccess : new parameter block or not hotlinking</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.3.6</version>
         <note>
             <item>Update : 03/06/2025</item>

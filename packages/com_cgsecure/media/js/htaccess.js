@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function(){
     blockipv61 = document.querySelector('input[id="jform_blockipv61"]');
     blockai0 = document.querySelector('input[id="jform_blockai0"]');
     blockai1 = document.querySelector('input[id="jform_blockai1"]');
+    blockhotlink0 = document.querySelector('input[id="jform_blockhotlink0"]');
+    blockhotlink1 = document.querySelector('input[id="jform_blockhotlink1"]');
     ['click', 'mouseup', 'touchstart'].forEach(type => {    
         htaccess0.addEventListener(type, function(){
             security = document.querySelector('input[id="jform_security"]').value;
@@ -63,9 +65,17 @@ document.addEventListener('DOMContentLoaded', function(){
             security = document.querySelector('input[id="jform_security"]');
             htaccess(3,security.value);
         })
-        blockai1.addEventListener(type,function(){ // delete AI Bots
+        blockai1.addEventListener(type,function(){ // add  AI Bots
             security = document.querySelector('input[id="jform_security"]');
             htaccess(4,security.value);
+        })
+        blockhotlink0.addEventListener(type,function(){ // delete hotlink block
+            security = document.querySelector('input[id="jform_security"]');
+            htaccess(8,security.value);
+        })
+        blockhotlink2.addEventListener(type,function(){ // add  hotlink block
+            security = document.querySelector('input[id="jform_security"]');
+            htaccess(9,security.value);
         })
 	})
     multi = document.querySelector('input[id="jform_multisite"]')

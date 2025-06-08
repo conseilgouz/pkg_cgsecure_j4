@@ -89,6 +89,10 @@ class JsonView extends AbstractView
                 $msg = $this->addIPSV6HTAccess(false);
             } elseif ($access == 7) { // add hackers IP
                 $msg = $this->addIPSV6HTAccess(true);
+            } elseif ($access == 8) { // delete hotlink block
+                $msg = $this->deleteHotlinkHTAccess();
+            } elseif ($access == 9) { // add hotlink block
+                $msg = $this->addHtolinkHTAccess();
             }
         }
         File::delete($wait);
@@ -238,6 +242,41 @@ class JsonView extends AbstractView
             return 'err : '.Text::_('CGSECURE_ADD_AI_HTACCESS_ERROR');
         }
     }
+    // delete CG Secure information in .htaccess file
+    private function deleteHotlinkHTAccess()
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_nohotlink($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+        $cgFile = '';
+        $rejips = '';
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '')) {
+            return Text::_('CGSECURE_DEL_HOTLINK_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_DEL_HOTLINK_HTACCESS_ERROR');
+        }
+    }
+    // delete CG Secure information in .htaccess file
+    private function addHotlinkHTAccess()
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_nohotlink($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+        $cgFile = '';
+        $rejips = '';
+        $this->config  = $this->getParams();
+        $hotlink = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '', $hotlink)) {
+            return Text::_('CGSECURE_ADD_HOTLINK_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_ADD_HOTLINK_HTACCESS_ERROR');
+        }
+    }
+    
     // start CG Secure Task to force update HTAccess File
     private function goCGSecureTask()
     {
@@ -297,6 +336,9 @@ class JsonView extends AbstractView
         $ia = "";
         if (isset($this->config->blockai) && $this->config->blockai) {
             $ia = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
+        }
+        if (isset($this->config->blockhotlink) && $this->config->blockhotlink) {
+            $ia = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
         }
         if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific, $ia)) {
             return Text::_('CGSECURE_ADD_HTACCESS');
@@ -544,6 +586,32 @@ class JsonView extends AbstractView
                 continue;
             }
             if ($line === '#------------------------CG SECURE IA BOTS END---------------------') {
+                $cgLines = false;
+                continue;
+            }
+            if ($cgLines) {
+                // When we are between our makers all content should be removed
+                continue;
+            }
+            $outBuffer .= $line . PHP_EOL;
+        }
+        return $outBuffer;
+    }
+        // read current .htaccess file and remove hotlink lines
+    private function read_current_nohotlink($afile)
+    {
+        $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
+        $outBuffer = '';
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return '';
+        }
+        $cgLines = false;
+        foreach ($readBuffer as $id => $line) {
+            if ($line === '#------------------------CG SECURE HOTLINK BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE HOTLINK END---------------------') {
                 $cgLines = false;
                 continue;
             }

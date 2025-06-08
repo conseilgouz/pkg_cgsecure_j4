@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.3.6--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.3.7--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -44,24 +44,6 @@ ServerSignature Off
  <IfModule mod_filter.c>
    AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript
  </IfModule>
-</IfModule>
-
-<IfModule mod_rewrite.c>
- # Prevent hotlinking (http://www.htaccesstools.com/hotlink-protection/)
- RewriteEngine On
- RewriteCond %{REMOTE_ADDR} !127.0.0.1
- RewriteCond %{HTTP_REFERER} !^$
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?127.0.0.1 [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?localhost [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?::1 [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)???site?? [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.com [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.be [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.fr [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?bing.com [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?facebook.com [NC]
- RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?yahoo.com [NC]
- RewriteRule \.(jpg|jpeg|png|gif|webp)$ - [NC,F,L]
 </IfModule>
 
 <IfModule mod_headers.c>
