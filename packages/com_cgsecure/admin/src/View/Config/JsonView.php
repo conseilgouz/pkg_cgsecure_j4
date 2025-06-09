@@ -337,6 +337,7 @@ class JsonView extends AbstractView
         if (isset($this->config->blockai) && $this->config->blockai) {
             $ia = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
         }
+        $hotlink = "";
         if (isset($this->config->blockhotlink) && $this->config->blockhotlink) {
             $hotlink = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
         }
