@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.3.10</version>
+        <note>
+            <item>Update : 23/06/2025</item>
+        </note>
+        <fix>
+             <item>add cache in administrator directories list to allow medias access</item>
+             <item>allow akeeba backup pro access</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.3.9</version>
         <note>
             <item>Update : 09/06/2025</item>

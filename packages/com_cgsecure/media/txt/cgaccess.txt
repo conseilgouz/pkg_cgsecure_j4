@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.3.7--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.3.10--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -166,8 +166,8 @@ RewriteRule ^administrator/?$ - [L]
 ## Allow the index.php file
 RewriteRule ^administrator/index\.(php|html?)$ - [L]
 ## Allow specific static media types in vetted folders
-RewriteRule ^administrator/(components|modules|templates)/.*\.(jpe|jpg|jpeg|jp2|jpe2|png|gif|bmp|css|js|swf|html|mpg|mp3|mpeg|mp4|avi|wav|ogg|ogv|xls|xlsx|doc|docx|ppt|pptx|zip|rar|pdf|xps|txt|7z|svg|odt|ods|odp|flv|mov|htm|ttf|woff|woff2|eot|JPG|JPEG|PNG|GIF|CSS|JS|TTF|WOFF|WOFF2|EOT|ico|ICO)$ - [L]
-RewriteRule administrator\/components\/(com_joomlaupdate|com_akeeba|com_admintools)\/(restore|extract)\.php$ - [L]
+RewriteRule ^administrator/(components|modules|templates|cache)/.*\.(jpe|jpg|jpeg|jp2|jpe2|png|gif|bmp|css|js|swf|html|mpg|mp3|mpeg|mp4|avi|wav|ogg|ogv|xls|xlsx|doc|docx|ppt|pptx|zip|rar|pdf|xps|txt|7z|svg|odt|ods|odp|flv|mov|htm|ttf|woff|woff2|eot|JPG|JPEG|PNG|GIF|CSS|JS|TTF|WOFF|WOFF2|EOT|ico|ICO)$ - [L]
+RewriteRule administrator\/components\/(com_joomlaupdate|com_akeeba|com_akeebabackup|com_admintools)\/(restore|extract)\.php$ - [L]
 ## Joomla! Update (core feature) — Joomla version 4.0.4 et ulterieures
 RewriteRule administrator\/components\/com_joomlaupdate\/extract\.php$ - [L]
 ##  allow Acy Mailing component calls
@@ -221,6 +221,7 @@ RewriteCond %{QUERY_STRING} ^.*(<|>|'|%0A|%0D|%25|%27|%3C|%3E|%00).* [NC,OR]
 RewriteCond %{QUERY_STRING} ^.*((\/\*)?\*\/).* [NC,OR]
 RewriteCond %{QUERY_STRING} ^.*\|\|.* [NC]
 RewriteCond %{QUERY_STRING} !option=com_akeeba(.*)$ [NC]   # exception for Akeeba backup
+RewriteCond %{QUERY_STRING} !option=com_akeebabackup(.*)$ [NC]   # exception for Akeeba backup pro
 ## CG Secure 2.1.5 : 12 - allow Acy Mailing component calls
 RewriteCond %{QUERY_STRING} !option=com_acym(.*)$ [NC]   # exception for acymailing
 RewriteRule .* plugins/system/cgsecure/htaccess.php?e=12&t=e&m=%1___%2&sec=??security?? [L]
@@ -275,6 +276,7 @@ RewriteRule .* plugins/system/cgsecure/htaccess.php?e=18&t=e&m=%1___%2&sec=??sec
 RewriteCond %{REQUEST_METHOD} (GET|POST) [NC]
 RewriteCond %{REMOTE_ADDR} !127.0.0.1
 RewriteCond %{QUERY_STRING} !option=com_akeeba&view=backup(.*)$ [NC]
+RewriteCond %{QUERY_STRING} !option=com_akeebabackup&view=backup(.*)$ [NC]
 RewriteCond %{QUERY_STRING} !(.*)https?(://|%3A%2F%2F)(www\.)???site??(.*)$ [NC]   
 RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)(p|%70|%50)(s|%73|%53)(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
 RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)(p|%70|%50)(s|%73|%53)%3a(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
