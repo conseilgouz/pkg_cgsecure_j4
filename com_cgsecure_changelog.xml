@@ -2,7 +2,7 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>3.3.10</version>
+		<version>3.4.0</version>
         <note>
             <item>Update : 23/06/2025</item>
         </note>
