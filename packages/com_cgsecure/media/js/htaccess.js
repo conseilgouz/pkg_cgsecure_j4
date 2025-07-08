@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 $security = Math.random();                     // create a random value
                 security.value = $security;
             } else { // already exists
-                $security = $security.value;
+                $security = security.value;
             }
             htaccess(1,$security); // create htaccess
         })
@@ -84,6 +84,11 @@ document.addEventListener('DOMContentLoaded', function(){
 function htaccess(access,security) {
 	var token = document.querySelector("#token").getAttribute("name");
     if (cgsecureinprogress) return;
+    var cgmodal = document.getElementById('cgsecure_modal');
+    if (cgmodal) {
+        cgmodal.classList.add('show');
+        cgmodal.style.display = 'block';
+    }
     reload = document.querySelector('#reload');
     reload.style.display = "none";
     cgsecureinprogress = true;
@@ -96,9 +101,19 @@ function htaccess(access,security) {
             res = result.data.retour;
             console.log('res : '+res);
             document.querySelector('#result_wd').innerHTML = res;
-            Joomla.submitbutton('config.apply'); // force save config.
+            cgsecureinprogress = false;
+            reload.style.display = "block";
+            if (cgmodal) {
+                cgmodal.classList.remove('show');
+                cgmodal.style.display = 'none';
+            }
+           //  Joomla.submitbutton('config.apply'); // force save config.
 		},
-		error: function(message) {console.log(message.responseText);cgsecureinprogress = false;}
+		error: function(message) {
+            console.log(message.responseText);
+            cgsecureinprogress = false;
+            if (cgmodal) cgmodal.classList.remove('show');
+        }
 	});	
 }
 removeClass = function (el, cl) {

@@ -58,3 +58,18 @@ echo HTMLHelper::_('uitab.endTabSet');
         </div>
     </div>
 </div>
+<div class="modal fade" id="cgsecure_modal" tabindex="-1" aria-hidden="true" style="display:none;top:40%;left:45%;width:auto";
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p style="text-align: center"><?php echo Text::_('CGSECURE_REBUILDING');?></p>
+        <div class="loader-ellips" style="margin-left:2em;position:fixed">
+            <span class="loader-ellips__dot"></span>
+            <span class="loader-ellips__dot"></span>
+            <span class="loader-ellips__dot"></span>
+            <span class="loader-ellips__dot"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

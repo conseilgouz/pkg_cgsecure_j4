@@ -108,6 +108,22 @@ class ConfigTable extends Table implements VersionableTableInterface
         $this->resaparams = $result;
         return $this->resaparams;
     }
+    /**
+     * update Params record
+     * @return unknown
+     */
+    public function updateSecureParams($params)
+    {
+
+        $db    = $this->_db;
+        $table = $this->_tbl;
+        $key   = 'config';
+
+        $data = new \stdClass();
+        $data->name   = $key;
+        $data->params = $params;
+        return $db->updateObject($table, $data, 'name');
+    }
     public function getKeyName($multiple = false)
     {
         return 'name';

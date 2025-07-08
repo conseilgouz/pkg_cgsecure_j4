@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.4.2</version>
+        <note>
+            <item>Update : 08/07/2025</item>
+        </note>
+        <change>
+             <item>Use AJAX when updating HTAccess parameters</item>
+             <item>Use Ultimate AI Block List v1.5 20250603</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.4.1</version>
         <note>
             <item>Update : 23/06/2025</item>

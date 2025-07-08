@@ -8,6 +8,7 @@ var timeout;
 document.addEventListener('DOMContentLoaded', function(){
     bad0 = document.querySelector('input[id="jform_blockbad0"]');
     bad1 = document.querySelector('input[id="jform_blockbad1"]');
+    
     ['click', 'mouseup', 'touchstart'].forEach(type => {    
         bad0.addEventListener(type,function(){
             badrobots(0,0); // delete badrobots check 
@@ -18,6 +19,13 @@ document.addEventListener('DOMContentLoaded', function(){
     })
 });
 function badrobots(access,security) {
+    if (cgsecureinprogress) return;
+    cgsecureinprogress = true;
+    var cgmodal = document.getElementById('cgsecure_modal');
+    if (cgmodal) {
+        cgmodal.classList.add('show');
+        cgmodal.style.display = 'block';
+    }
 	var token = document.querySelector("#token").getAttribute("name");
     url = '?'+token+'=1&option=com_cgsecure&task=display&type=robots&access='+access+'&security='+security+'&format=json';
 	Joomla.request({
@@ -29,8 +37,18 @@ function badrobots(access,security) {
             console.log('res : '+res);
             bad = document.querySelector('#result_bad_wd');
             bad.innerHTML = res;
-            Joomla.submitbutton('config.apply'); // force save config.
+            cgsecureinprogress = false;
+            if (cgmodal) {
+                cgmodal.classList.remove('show');
+                cgmodal.style.display = 'none';
+            }
+            
+            // Joomla.submitbutton('config.apply'); // force save config.
 		},
-		error: function(message) {console.log(message.responseText)}
+		error: function(message) {
+            console.log(message.responseText);
+            cgsecureinprogress = false;
+            if (cgmodal) cgmodal.classList.remove('show');
+        }
 	});	
 }

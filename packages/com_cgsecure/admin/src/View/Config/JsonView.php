@@ -58,18 +58,29 @@ class JsonView extends AbstractView
         }
         $msg = 'wait...';
         File::write($wait, $msg);
+        $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
+        $this->config  = $this->getParams();
         if ($type == 'robots') {
             if ($access == 0) { // delete CG Secure lines from robots.txt file and delete cg_robots dir
                 $msg = $this->delRobots();
             } elseif ($access == 1) {// add CG Secure lines to robots.txt and create cg_robots dir
                 $msg = $this->addRobots();
             }
+            $this->config->blockbad = $access;
+            $table->updateSecureParams(json_encode($this->config));
         } elseif ($type == 'htaccess') {
+            $this->config  = $this->getParams();
             if ($access == 0) { // delete CG Secure lines from htaccess file
                 $msg = $this->delHTAccess();
                 $msg .= '<br>'.$this->deleteIPSHTAccess();
+                $this->config->htaccess = 0;
+                $this->config->blockip = 0;
+                $this->config->blockipv6 = 0;
+                $this->config->blockai = 0;
+                $this->config->blockhotlink = 0;
             } elseif ($access == 1) {// add CG Secure lines to htaccess file
                 $msg = $this->addHTAccess();
+                $this->config->htaccess = 1;
                 if (strpos($msg, 'err : ') === false) {// no error : start update task
                     $this->goCGSecureTask();
                 }
@@ -77,23 +88,32 @@ class JsonView extends AbstractView
                 $this->protectdirs();
             } elseif ($access == 2) { // delete hackers IP
                 $msg = $this->deleteIPSHTAccess();
+                $this->config->blockip = 0;
             } elseif ($access == 3) { // delete AI bots
                 $msg = $this->deleteAIHTAccess();
+                $this->config->blockai = 0;
             } elseif ($access == 4) { // add AI bots
                 $msg = $this->addAIHTAccess();
+                $this->config->blockai = 1;
             } elseif ($access == 5) { // add hackers IP
                 $this->config  = $this->getParams();
                 $blockipv6  = isset($this->config->blockipv6) && $this->config->blockipv6 == 1;
                 $msg = $this->addIPSHTAccess($blockipv6);
+                $this->config->blockip = 1;
             } elseif ($access == 6) { // delete hackers IP V6
                 $msg = $this->addIPSV6HTAccess(false);
+                $this->config->blockipv6 = 0;
             } elseif ($access == 7) { // add hackers IP
                 $msg = $this->addIPSV6HTAccess(true);
+                $this->config->blockipv6 = 1;
             } elseif ($access == 8) { // delete hotlink block
                 $msg = $this->deleteHotlinkHTAccess();
+                $this->config->blockhotlink = 0;
             } elseif ($access == 9) { // add hotlink block
                 $msg = $this->addHotlinkHTAccess();
+                $this->config->blockhotlink = 1;
             }
+            $table->updateSecureParams(json_encode($this->config));
         }
         File::delete($wait);
         $arr = [];
@@ -276,7 +296,7 @@ class JsonView extends AbstractView
             return 'err : '.Text::_('CGSECURE_ADD_HOTLINK_HTACCESS_ERROR');
         }
     }
-    
+
     // start CG Secure Task to force update HTAccess File
     private function goCGSecureTask()
     {
@@ -341,7 +361,7 @@ class JsonView extends AbstractView
         if (isset($this->config->blockhotlink) && $this->config->blockhotlink) {
             $hotlink = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
         }
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific, $ia,$hotlink)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific, $ia, $hotlink)) {
             return Text::_('CGSECURE_ADD_HTACCESS');
         }
         // Error : restore saved version
@@ -606,7 +626,7 @@ class JsonView extends AbstractView
         }
         return $outBuffer;
     }
-        // read current .htaccess file and remove hotlink lines
+    // read current .htaccess file and remove hotlink lines
     private function read_current_nohotlink($afile)
     {
         $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
@@ -667,7 +687,7 @@ class JsonView extends AbstractView
         }
         return $outBuffer;
     }
-    private function merge_file($file, $current, $cgFile, $rejips, $specific = '', $ai = '',$hotlink = '')
+    private function merge_file($file, $current, $cgFile, $rejips, $specific = '', $ai = '', $hotlink = '')
     {
         $pathToFile  = $file;
         if (file_exists($pathToFile)) {
