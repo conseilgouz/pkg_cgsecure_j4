@@ -406,7 +406,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         $params = json_decode($params->params);
         return $params;
     }
-    private function merge_file($file, $current, $cgFile, $cgAI $rejips, $specific)
+    private function merge_file($file, $current, $cgFile, $cgAI, $rejips, $specific)
     {
         $pathToFile  = $file;
         if (file_exists($pathToFile)) {
