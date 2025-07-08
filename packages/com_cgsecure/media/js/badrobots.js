@@ -21,10 +21,12 @@ document.addEventListener('DOMContentLoaded', function(){
 function badrobots(access,security) {
     if (cgsecureinprogress) return;
     cgsecureinprogress = true;
+    var appconfig = document.querySelector('.nr-app-config');
     var cgmodal = document.getElementById('cgsecure_modal');
     if (cgmodal) {
         cgmodal.classList.add('show');
         cgmodal.style.display = 'block';
+        appconfig.style.pointerEvents = "none";
     }
 	var token = document.querySelector("#token").getAttribute("name");
     url = '?'+token+'=1&option=com_cgsecure&task=display&type=robots&access='+access+'&security='+security+'&format=json';
@@ -41,6 +43,7 @@ function badrobots(access,security) {
             if (cgmodal) {
                 cgmodal.classList.remove('show');
                 cgmodal.style.display = 'none';
+                appconfig.style.pointerEvents = "all";
             }
             
             // Joomla.submitbutton('config.apply'); // force save config.
@@ -49,6 +52,7 @@ function badrobots(access,security) {
             console.log(message.responseText);
             cgsecureinprogress = false;
             if (cgmodal) cgmodal.classList.remove('show');
+            appconfig.style.pointerEvents = "all";
         }
 	});	
 }

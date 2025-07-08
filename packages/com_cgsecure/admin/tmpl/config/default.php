@@ -63,7 +63,7 @@ echo HTMLHelper::_('uitab.endTabSet');
     <div class="modal-content">
       <div class="modal-body">
         <p style="text-align: center"><?php echo Text::_('CGSECURE_REBUILDING');?></p>
-        <div class="loader-ellips" style="margin-left:2em;position:fixed">
+        <div class="loader-ellips" style="margin-left:3em;position:fixed">
             <span class="loader-ellips__dot"></span>
             <span class="loader-ellips__dot"></span>
             <span class="loader-ellips__dot"></span>

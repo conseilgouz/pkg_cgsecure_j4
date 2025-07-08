@@ -84,10 +84,12 @@ document.addEventListener('DOMContentLoaded', function(){
 function htaccess(access,security) {
 	var token = document.querySelector("#token").getAttribute("name");
     if (cgsecureinprogress) return;
+    var appconfig = document.querySelector('.nr-app-config');
     var cgmodal = document.getElementById('cgsecure_modal');
     if (cgmodal) {
         cgmodal.classList.add('show');
         cgmodal.style.display = 'block';
+        appconfig.style.pointerEvents = "none";
     }
     reload = document.querySelector('#reload');
     reload.style.display = "none";
@@ -106,6 +108,7 @@ function htaccess(access,security) {
             if (cgmodal) {
                 cgmodal.classList.remove('show');
                 cgmodal.style.display = 'none';
+                appconfig.style.pointerEvents = "all";
             }
            //  Joomla.submitbutton('config.apply'); // force save config.
 		},
@@ -113,6 +116,7 @@ function htaccess(access,security) {
             console.log(message.responseText);
             cgsecureinprogress = false;
             if (cgmodal) cgmodal.classList.remove('show');
+            appconfig.style.pointerEvents = "all";
         }
 	});	
 }
