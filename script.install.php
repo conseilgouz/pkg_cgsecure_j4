@@ -245,6 +245,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         } else { // no custom file : use cgaccess.txt file
             $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess.txt');
         }
+        $cgAI = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
         $this->config  = $this->getParams();
         $specific = isset($this->config->specific) && $this->config->specific;
         if ($specific) {
@@ -252,7 +253,7 @@ class PlgSystemCgsecureInstallerInstallerScript
             $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
         }
 
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile,$cgAI, $rejips, $specific)) {
             return; // everything OK => exit
         }
         Factory::getApplication()->enqueueMessage('CGSECURE : Error during insert');
@@ -297,11 +298,19 @@ class PlgSystemCgsecureInstallerInstallerScript
                 $cgLines = false;
                 continue;
             }
-            if ($line === '#------------------------CG SECURE BAD ROBOTS BEGIN---------------------') {
+            if ($line === '#------------------------CG SECURE IP LIST BEGIN---------------------') {
                 $cgLines = true;
                 continue;
             }
-            if ($line === '#------------------------CG SECURE BAD ROBOTS END---------------------') {
+            if ($line === '#------------------------CG SECURE IP LIST END--------------------') {
+                $cgLines = false;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE IA BOTS BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE IA BOTS END---------------------') {
                 $cgLines = false;
                 continue;
             }
@@ -397,13 +406,13 @@ class PlgSystemCgsecureInstallerInstallerScript
         $params = json_decode($params->params);
         return $params;
     }
-    private function merge_file($file, $current, $cgFile, $rejips, $specific)
+    private function merge_file($file, $current, $cgFile, $cgAI $rejips, $specific)
     {
         $pathToFile  = $file;
         if (file_exists($pathToFile)) {
             copy($pathToFile, $pathToFile.'.wait');
             if (is_readable($pathToFile)) {
-                $records = $rejips.$specific.$cgFile.$current; // pour éviter les conflits, on se met devant....
+                $records = $rejips.$specific.$cgFile.$cgAI.$current; // pour éviter les conflits, on se met devant....
                 // Write the htaccess using the Frameworks File Class
                 $bool = File::write($pathToFile, $records);
                 if ($bool) {
