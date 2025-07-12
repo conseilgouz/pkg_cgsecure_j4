@@ -41,7 +41,8 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
      */
     public static function getSubscribedEvents(): array
     {
-        return ['onAfterDispatch' => 'onAfterDispatch'];
+        return ['onAfterDispatch' => 'onAfterDispatch',
+                'onBeforeRender' => 'onBeforeRender' ];
     }
     
     public function onAfterDispatch($event)
@@ -103,5 +104,31 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                         'secure' => $secure,
                         'httponly' => false
             ]);
+    }
+    public function onBeforeRender($event)
+    {
+        $mainframe 	= $this->getApplication();
+        $user 		= $this->getApplication()->getIdentity();
+        $session	= $this->getApplication()->getSession();
+        if ($session->get('cgsecure')) {// already checked
+            return;
+        } 
+        if ($mainframe->isClient('administrator') || !$user->guest) {
+            return;
+        }
+        
+        if (!$this->cgsecure_params->blockbad) { 
+            return;
+        }        
+        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $script = "document.addEventListener('DOMContentLoaded', function() {
+                    var link = document.createElement('a');
+                    link.rel = 'nofollow';
+                    link.style.display = 'none';
+                    link.href= '".URI::base()."cg_no_robot';
+                    link.title='Do NOT follow this link or you will be banned from the site!';
+                    document.body.appendChild(link);
+                    })";
+       $wa->addInlineScript($script);
     }
 }
