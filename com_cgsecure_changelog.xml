@@ -7,7 +7,7 @@
             <item>Update : 12/07/2025</item>
         </note>
         <fix>
-             <item>cg_no_robot : add cg_no_robot hidden link on every page</item>
+             <item>cg_no_robot : add hidden link on every page</item>
         </fix>
 	</changelog>
 	<changelog>

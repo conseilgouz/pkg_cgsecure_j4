@@ -119,14 +119,14 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         
         if (!$this->cgsecure_params->blockbad) { 
             return;
-        }        
+        }
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
         $script = "document.addEventListener('DOMContentLoaded', function() {
                     var link = document.createElement('a');
                     link.rel = 'nofollow';
                     link.style.display = 'none';
                     link.href= '".URI::base()."cg_no_robot';
-                    link.title='Do NOT follow this link or you will be banned from the site!';
+                    link.innerHTML='Do NOT follow this link or you will be banned from the site!';
                     document.body.appendChild(link);
                     })";
        $wa->addInlineScript($script);
