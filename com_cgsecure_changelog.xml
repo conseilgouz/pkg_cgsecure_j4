@@ -2,6 +2,21 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.4.5</version>
+        <note>
+            <item>Update : 12/07/2025</item>
+        </note>
+        <addition>
+             <item>Add view bad bots log button in logs view</item>
+        </addition>
+        <change>
+             <item>Add bot name in Block AI</item>
+             <item>Add bot name in cg_no_robot</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.4.4</version>
         <note>
             <item>Update : 12/07/2025</item>

@@ -31,14 +31,17 @@ $fileht = Factory::getApplication()->getConfig()->get('log_path').'/cghtaccess.t
 
 $fileip = Factory::getApplication()->getConfig()->get('log_path').'/cgipcheck.trace.log.php';
 
+$filebad = Factory::getApplication()->getConfig()->get('log_path').'/cgbadrobots.trace.php';
+
 $linkViewHTlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component&type=ht';
 $linkViewIPlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component&type=ip';
+$linkViewBADlog = 'index.php?option=com_cgsecure&amp;view=viewlogs&amp;tmpl=component&type=bad';
 
 $options = Folder::files(Factory::getApplication()->getConfig()->get('log_path'), '.', null, null, [], array('index.html'));
 
 $value = '';
 // excluded files cannot be in folder::files as it uses them as wildcard
-$exclude = ['cghtaccess.trace.php','cgipcheck.trace.log.php','.htaccess'];
+$exclude = ['cghtaccess.trace.php','cgipcheck.trace.log.php','cgbadrobots.trace.log.php','.htaccess'];
 foreach ($options as $key => $option) {
     if (in_Array($option, $exclude)) {
         unset($options[$key]);
@@ -87,7 +90,22 @@ $params = json_decode($table->getSecureParams()->params);
                         </div>
                     </div>
                 </div>
-                <?php } ?>
+                <?php }
+                if (file_exists($filebad)) { ?>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewlogbad"><?php echo Text::_('COM_CGSECURE_BADLOGS_BUTTON'); ?></button>
+                <div class="modal fade modal-xl"  id="viewlogbad" tabindex="-1" aria-labelledby="logip" aria-hidden="true">
+                    <div class="modal-dialog h-75">
+                        <div class="modal-content h-100">
+                             <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                             </div>
+                             <div class="modal-body h-100">
+                                <iframe id="iframeModalWindowBAD" height="100%" src="<?php echo $linkViewBADlog; ?>" name="iframe_modal_BAD"></iframe>      
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <?php }                ?>
 
                 <div class="modal fade modal-xl"  id="viewlogoth" tabindex="-1" aria-labelledby="othlog" aria-hidden="true">
                     <div class="modal-dialog h-75">

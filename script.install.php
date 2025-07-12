@@ -33,7 +33,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $previous_version        = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "3.4.2";
+    private $cgsecure_force_update_version = "3.4.5";
     private $security;
     private $config;
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';

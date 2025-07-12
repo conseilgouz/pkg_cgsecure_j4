@@ -19,6 +19,6 @@
 	RewriteCond %{HTTP_USER_AGENT} (VelenPublicWebCrawler|Vidnami\ AI|Webzio|Whisper|WordAI|Wordtune|WormsGTP|WPBot|Writecream|WriterZen|Writescope|Writesonic|xAI|xBot|YaML|YouBot|Zero\ GTP|Zerochat|Zhipu|Zimm) [NC,OR]
 # restore removed block from v1.4
 	RewriteCond %{HTTP_USER_AGENT} (Applebot|BingAI|Bingbot-chat|Google?Bard?AI|Google-CloudVertexBot|Google-Extended|GoogleOther) [NC]
-    RewriteRule .* plugins/system/cgsecure/htaccess.php?e=88&t=e&m=%1&sec=??security?? [L]    
+    RewriteRule .* plugins/system/cgsecure/htaccess.php?e=88&t=e&m=%1___%2&sec=??security?? [L]    
 </IfModule>
 #------------------------CG SECURE IA BOTS END---------------------

@@ -24,6 +24,8 @@ if ($type == 'ht') {
     $filename = Factory::getApplication()->getConfig()->get('log_path').'/cghtaccess.trace.php';
 } elseif ($type == 'ip') {
     $filename = Factory::getApplication()->getConfig()->get('log_path').'/cgipcheck.trace.log.php';
+} elseif ($type == 'bad') {
+    $filename = Factory::getApplication()->getConfig()->get('log_path').'/cgbadrobots.trace.php';
 } else { // other log files
     $filename = Factory::getApplication()->getConfig()->get('log_path').'/'.$type;
 }

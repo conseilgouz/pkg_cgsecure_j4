@@ -125,7 +125,7 @@ $err = $prefixe.$errtype.'-'.$err;
 Cgipcheck::block_hacker($myname, $err, $errtype, $ip);
 if ($cgsecure_params->logging_bad == 1) {
     Log::addLogger(array('text_file' => 'cgbadrobots.trace.php'), Log::DEBUG, array('CGBadRobots'));
-    Log::add($ip.' : '.$err, Log::DEBUG, 'CGBadRobots');
+    Log::add($ip.' : '.$err, Log::DEBUG, 'CGBadRobots : '.$ua);
 }
 // CG Secure report to AbuseIP and reject it unsing htaccess file (if errortype = e)
 $report = $cgsecure_params->report == 1;
