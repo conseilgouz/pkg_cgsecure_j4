@@ -2,6 +2,20 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.4.7</version>
+        <note>
+            <item>Update : 14/07/2025</item>
+        </note>
+        <addition>
+             <item>Block darknet market spam</item>
+        </addition>
+        <fix>
+            <item>cg_no_robot : handle null HTTP_USER_AGENT</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.4.6</version>
         <note>
             <item>Update : 12/07/2025</item>

@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.4.5--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.4.7--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
 #
@@ -356,5 +356,13 @@ RewriteRule .* plugins/system/cgsecure/htaccess.php?e=21&t=e&m=%1&sec=??security
 	RewriteCond %{REQUEST_URI} (\.)(psd|pst|ptdb|production|pwd|py|qbb|qdf|rar|rdf|remote|save|sdb|sql|sh|soa|svn|swf|swl|swo|swp|stx|tar|tax|tgz?|theme|tls|tmb|tmd|wok|wow|xsd|xtmpl|xz|ya?ml|za|zlib)$ [NC]
 
     RewriteRule .* plugins/system/cgsecure/htaccess.php?e=22&t=e&m=%1&sec=??security?? [L]
+</IfModule>
+
+# block darknet market spam
+# https://perishablepress.com/block-darknet-market-spam/
+<IfModule mod_rewrite.c>
+	RewriteCond %{REQUEST_METHOD} POST [NC]
+	RewriteCond %{REQUEST_URI} (dark(\s)net|dark(\s)web|dark(\s)market|darkmarket|darknet|drug(\s)store) [NC]
+    RewriteRule .* plugins/system/cgsecure/htaccess.php?e=23&t=e&m=%1&sec=??security?? [L]
 </IfModule>
 #------------------------CG SECURE HTACCESS END--------------------

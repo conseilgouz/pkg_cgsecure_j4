@@ -41,7 +41,7 @@ $options = Folder::files(Factory::getApplication()->getConfig()->get('log_path')
 
 $value = '';
 // excluded files cannot be in folder::files as it uses them as wildcard
-$exclude = ['cghtaccess.trace.php','cgipcheck.trace.log.php','cgbadrobots.trace.log.php','.htaccess'];
+$exclude = ['cghtaccess.trace.php','cgipcheck.trace.log.php','cgbadrobots.trace.php','.htaccess'];
 foreach ($options as $key => $option) {
     if (in_Array($option, $exclude)) {
         unset($options[$key]);

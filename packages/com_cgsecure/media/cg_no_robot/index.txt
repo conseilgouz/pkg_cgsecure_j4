@@ -74,7 +74,7 @@ if (cgsecure_ip_whiteList($cgsecure_params, $ip)) {
 if (Cgipcheck::getLatest_ips($ip)) {
     die('Restricted access');
 } // already blocked : die
-$ua = isset($_SERVER['HTTP_USER_AGENT']) ? blackhole_sanitize($_SERVER['HTTP_USER_AGENT']) : null;
+$ua = isset($_SERVER['HTTP_USER_AGENT']) ? blackhole_sanitize($_SERVER['HTTP_USER_AGENT']) : '';
 
 if (blackhole_whitelist($ua)) {
     die('Nothing to see here');
