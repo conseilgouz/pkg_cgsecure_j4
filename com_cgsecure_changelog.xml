@@ -2,7 +2,7 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>3.4.7</version>
+		<version>3.4.6</version>
         <note>
             <item>Update : 14/07/2025</item>
         </note>
@@ -10,18 +10,8 @@
              <item>Block darknet market spam</item>
         </addition>
         <fix>
+            <item>Missing button GB translation for COM_CGSECURE_BADLOGS_BUTTON</item>
             <item>cg_no_robot : handle null HTTP_USER_AGENT</item>
-        </fix>
-	</changelog>
-	<changelog>
-		<element>com_cgsecure</element>
-		<type>package</type>
-		<version>3.4.6</version>
-        <note>
-            <item>Update : 12/07/2025</item>
-        </note>
-        <fix>
-             <item>Missing button GB translation for COM_CGSECURE_BADLOGS_BUTTON</item>
         </fix>
 	</changelog>
 	<changelog>
