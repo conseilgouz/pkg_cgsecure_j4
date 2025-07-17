@@ -16,7 +16,7 @@ use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\UserFactoryAwareTrait;
 use Joomla\Event\SubscriberInterface;
-use ConseilGouz\CGSecure\Helper\Cgipcheck;
+use ConseilGouz\CGSecure\Cgipcheck;
 
 final class Cgsecure extends CMSPlugin implements SubscriberInterface
 {

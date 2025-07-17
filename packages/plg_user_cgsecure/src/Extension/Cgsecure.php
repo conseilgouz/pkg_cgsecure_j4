@@ -12,7 +12,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\Event\SubscriberInterface;
-use ConseilGouz\CGSecure\Helper\Cgipcheck;
+use ConseilGouz\CGSecure\Cgipcheck;
 
 final class Cgsecure extends CMSPlugin implements SubscriberInterface
 {

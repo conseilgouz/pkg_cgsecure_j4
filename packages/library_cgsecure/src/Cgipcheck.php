@@ -9,7 +9,7 @@
 **/
 // No direct access.
 
-namespace ConseilGouz\CGSecure\Helper;
+namespace ConseilGouz\CGSecure;
 
 defined('_JEXEC') or die();
 

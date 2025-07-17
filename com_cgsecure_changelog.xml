@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.5.0</version>
+        <note>
+            <item>Update : 17/07/2025</item>
+        </note>
+        <change>
+             <item>CGSecure Library  move it to src folder</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.4.7</version>
         <note>
             <item>Update : 14/07/2025</item>

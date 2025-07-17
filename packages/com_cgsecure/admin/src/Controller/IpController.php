@@ -15,7 +15,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
-use ConseilGouz\CGSecure\Helper\Cgipcheck;
+use ConseilGouz\CGSecure\Cgipcheck;
 
 class IpController extends FormController
 {

@@ -15,7 +15,7 @@ use Joomla\CMS\MVC\View\AbstractView;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseInterface;
-use ConseilGouz\CGSecure\Helper\Cgipcheck;
+use ConseilGouz\CGSecure\Cgipcheck;
 
 /**
  * Config View

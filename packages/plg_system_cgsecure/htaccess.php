@@ -9,7 +9,7 @@
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use ConseilGouz\CGSecure\Helper\Cgipcheck;
+use ConseilGouz\CGSecure\Cgipcheck;
 
 const _JEXEC = 1;
 
@@ -64,7 +64,7 @@ if (($_SERVER['REMOTE_ADDR'] == '::1') ||  ($_SERVER['REMOTE_ADDR'] == '127.0.0.
 //$ip = '218.92.0.11'; // test
 $myname = 'CGSecureHTAccess';
 // namespace does not work on cli
-$helperFile = JPATH_SITE . '/libraries/cgsecure/Helper/Cgipcheck.php';
+$helperFile = JPATH_SITE . '/libraries/cgsecure/src/Cgipcheck.php';
 if (is_file($helperFile)) {
     include_once $helperFile;
 }
