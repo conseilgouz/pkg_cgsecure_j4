@@ -15,6 +15,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Version;
 use Joomla\Database\DatabaseInterface;
@@ -144,6 +145,27 @@ class PlgSystemCgsecureInstallerInstallerScript
 				WHERE '.$db->qn("type").' LIKE "plugin" AND '.$db->qn("folder").' LIKE "system"  AND '.$db->qn("element").' LIKE "cgsecure")');
         $db->setQuery($query);
         $db->execute();
+        
+        // get previous versions parameters
+        $plugin = PluginHelper::getPlugin('content', 'phocacheckip');
+        if ($plugin) { // PhocaIp conflict
+            $conditions = array(
+                $db->qn('type') . ' = ' . $db->q('plugin'),
+                $db->qn('element') . ' = ' . $db->quote('phocacheckip')
+            );
+            $fields = array($db->qn('enabled') . ' = 0');
+            $query = $db->getQuery(true);
+            $query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
+            $db->setQuery($query);
+            try {
+                $db->execute();
+            }
+            catch (RuntimeException $e) {
+                Log::add('unable to enable plugin phocacheckip', Log::ERROR, 'jerror');
+            
+            }
+            Factory::getApplication()->enqueueMessage('CGSECURE : Phocacheckip plugin disabled : please update it');
+        }
         // remove obsolete file
         $this->delete([
             JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.php',
