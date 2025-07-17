@@ -164,7 +164,7 @@ class PlgSystemCgsecureInstallerInstallerScript
                 Log::add('unable to enable plugin phocacheckip', Log::ERROR, 'jerror');
             
             }
-            Factory::getApplication()->enqueueMessage('CGSECURE : Phocacheckip plugin disabled : please update it');
+            Factory::getApplication()->enqueueMessage('CGSECURE : Phocacheckip plugin disabled : please update it','warning');
         }
         // remove obsolete file
         $this->delete([
