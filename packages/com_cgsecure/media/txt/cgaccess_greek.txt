@@ -1,0 +1,8 @@
+#------------------------CG SECURE GREEK BEGIN---------------------
+
+# Block messages containing greek/coptic characters
+
+RewriteEngine On
+RewriteCond %{REQUEST_URI} [\x{0370}-\x{03FF}] [NC]
+RewriteRule .* plugins/system/cgsecure/htaccess.php?e=51&t=e&m=%1&sec=??security?? [L]
+#------------------------CG SECURE GREEK END---------------------
