@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.5.1</version>
+        <note>
+            <item>Update : 17/07/2025</item>
+        </note>
+        <fix>
+             <item>CGSecure Library : restore Helper folder in src (for plugins update), wiil be removed in next version</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.5.0</version>
         <note>
             <item>Update : 17/07/2025</item>
@@ -9,9 +20,6 @@
         <change>
              <item>CGSecure Library  move it to src folder</item>
         </change>
-        <fix>
-             <item>CGSecure Library : do not remove Helper folder, wiil be done in next version</item>
-        </fix>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>
