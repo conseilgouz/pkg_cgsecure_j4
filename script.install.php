@@ -169,7 +169,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         // remove obsolete file
         $this->delete([
             JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.php',
-            JPATH_ROOT . '/libraries/cgsecure/Helper'
+            // JPATH_ROOT . '/libraries/cgsecure/Helper' // leave Helper directory to give time to update all cg secure plugins
         ]);
 
         // replace index.php file in cg_no_robot dir by new version
