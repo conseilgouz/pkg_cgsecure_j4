@@ -7,7 +7,7 @@
 	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<version>3.5.1</version>
+	<version>3.5.0</version>
 	<description>PLG_AUTH_COUNTRY_XML_DESCRIPTION</description>
     <namespace path="src">Conseilgouz\Plugin\Authentication\CGSecure</namespace>
 	<files>
