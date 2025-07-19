@@ -34,7 +34,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $previous_version        = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "3.4.7";
+    private $cgsecure_force_update_version = "3.5.2";
     private $security;
     private $config;
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
@@ -146,9 +146,9 @@ class PlgSystemCgsecureInstallerInstallerScript
         $db->setQuery($query);
         $db->execute();
         
-        // get previous versions parameters
-        $plugin = PluginHelper::getPlugin('content', 'phocacheckip');
-        if ($plugin) { // PhocaIp conflict
+        // check Phoca CheckIP version
+        $phoca = $this->passMinimumPhocaCheckipVersion();
+        if (!$phoca) { // PhocaIp conflict
             $conditions = array(
                 $db->qn('type') . ' = ' . $db->q('plugin'),
                 $db->qn('element') . ' = ' . $db->quote('phocacheckip')
@@ -169,7 +169,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         // remove obsolete file
         $this->delete([
             JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.php',
-            // JPATH_ROOT . '/libraries/cgsecure/Helper' // leave Helper directory to give time to update all cg secure plugins
+            JPATH_ROOT . '/libraries/cgsecure/Helper' 
         ]);
 
         // replace index.php file in cg_no_robot dir by new version
@@ -248,6 +248,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     // Begin update HTACCESS -----------------------------------------------
     private function forceHTAccess()
     {
+        $this->config  = $this->getParams();
         $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
         if (!$serverConfigFile) { // no .htaccess file : copy default htaccess.txt as .htaccess
             $source = JPATH_ROOT.self::CGPATH .'/txt/htaccess.txt';
@@ -269,15 +270,39 @@ class PlgSystemCgsecureInstallerInstallerScript
         } else { // no custom file : use cgaccess.txt file
             $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess.txt');
         }
-        $cgAI = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
-        $this->config  = $this->getParams();
+        $ai = isset($this->config->blockai) && $this->config->blockai;
+        if ($ai) {
+            $ai = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
+        } else {
+            $ai = "";
+        }
+        $hotlink = isset($this->config->blockhotlink) && $this->config->blockhotlink;
+        if ($hotlink) {
+            $hotlink = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
+        } else {
+            $hotlink = "";
+        }
+        $cyrillic = isset($this->config->blockcyrillic) && $this->config->blockcyrillic;
+        if ($cyrillic) {
+            $cyrillic = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cyrillic.txt');
+        } else {
+            $cyrillic = "";
+        }
+        $greek = isset($this->config->blockgreek) && $this->config->blockgreek;
+        if ($greek) {
+            $greek = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_greek.txt');
+        } else {
+            $greek = "";
+        }
         $specific = isset($this->config->specific) && $this->config->specific;
         if ($specific) {
             $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$this->config->specific.PHP_EOL;
             $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
+        } else {
+            $specific = "";
         }
 
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile,$cgAI, $rejips, $specific)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $rejips.$specific.$cgFile.$ai.$hotlink.$cyrillic.$greek.$current)) {
             return; // everything OK => exit
         }
         Factory::getApplication()->enqueueMessage('CGSECURE : Error during insert');
@@ -343,6 +368,30 @@ class PlgSystemCgsecureInstallerInstallerScript
                 continue;
             }
             if ($line === '#------------------------CG SECURE SPECIFIC CODE END------------------------') {
+                $cgLines = false;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE HOTLINK BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE HOTLINK END---------------------') {
+                $cgLines = false;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE CYRILLIC BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE CYRILLIC END---------------------') {
+                $cgLines = false;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE GREEK BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE GREEK END---------------------') {
                 $cgLines = false;
                 continue;
             }
@@ -430,13 +479,13 @@ class PlgSystemCgsecureInstallerInstallerScript
         $params = json_decode($params->params);
         return $params;
     }
-    private function merge_file($file, $current, $cgFile, $cgAI, $rejips, $specific)
+    private function merge_file($file, $current)
     {
         $pathToFile  = $file;
         if (file_exists($pathToFile)) {
             copy($pathToFile, $pathToFile.'.wait');
             if (is_readable($pathToFile)) {
-                $records = $rejips.$specific.$cgFile.$cgAI.$current; // pour éviter les conflits, on se met devant....
+                $records = $current; // pour éviter les conflits, on se met devant....
                 // Write the htaccess using the Frameworks File Class
                 $bool = File::write($pathToFile, $records);
                 if ($bool) {
@@ -536,6 +585,28 @@ class PlgSystemCgsecureInstallerInstallerScript
 
         return true;
     }
+    
+    // Check if Phocacheckip version passes minimum requirement
+    private function passMinimumPhocaCheckipVersion()
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select('manifest_cache');
+        $query->from($db->quoteName('#__extensions'));
+        $query->where('element = "phocacheckip"');
+        $query->where('type = "plugin"');
+        $db->setQuery($query);
+        $res = $db->loadResult();
+        if (!$res) { // no phoca checkip plugin
+            return true;
+        }
+        $manifest = json_decode($res, true);
+        if ($manifest['version'] < '3.5.0') {
+            return false;
+        }
+        return true;
+    }
+
     private function installPackages()
     {
         $packages = Folder::folders($this->dir . '/packages');

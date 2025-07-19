@@ -78,6 +78,8 @@ class JsonView extends AbstractView
                 $this->config->blockipv6 = 0;
                 $this->config->blockai = 0;
                 $this->config->blockhotlink = 0;
+                $this->config->blockcyrillic = 0;
+                $this->config->blockgreek = 0;
             } elseif ($access == 1) {// add CG Secure lines to htaccess file
                 $msg = $this->addHTAccess();
                 $this->config->htaccess = 1;
@@ -112,6 +114,18 @@ class JsonView extends AbstractView
             } elseif ($access == 9) { // add hotlink block
                 $msg = $this->addHotlinkHTAccess();
                 $this->config->blockhotlink = 1;
+            } elseif ($access == 10) { // delete cyrillic block
+                $msg = $this->deletecyrillickHTAccess();
+                $this->config->blockcyrillic = 0;
+            } elseif ($access == 11) { // add cyrillic block
+                $msg = $this->addcyrillicHTAccess();
+                $this->config->blockcyrillic = 1;
+            } elseif ($access == 12) { // delete greek block
+                $msg = $this->deletegreekHTAccess();
+                $this->config->blockgreek = 0;
+            } elseif ($access == 13) { // add greek block
+                $msg = $this->addgreekHTAccess();
+                $this->config->blockgreek = 1;
             }
             $table->updateSecureParams(json_encode($this->config));
         }
@@ -132,9 +146,7 @@ class JsonView extends AbstractView
             File::delete($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
             return "";
         }
-        $cgFile = '';
-        $rejips = '';
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current)) {
             return Text::_('CGSECURE_DEL_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_DEL_HTACCESS_ERROR');
@@ -147,11 +159,10 @@ class JsonView extends AbstractView
         if (!$serverConfigFile) { // no .htaccess file
             return Text::_('CGSECURE_NO_HTACCESS');
         }
-        $current = $this->read_current_noip($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        $cgFile = '';
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'IP LIST');
         $ips = $this->get_htaccess_List();
         $rejips = $this->create_ips($ips, $v6);
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $rejips.$current)) {
             return Text::_('CGSECURE_DEL_IP_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_DEL_IP_HTACCESS_ERROR');
@@ -164,11 +175,10 @@ class JsonView extends AbstractView
         if (!$serverConfigFile) { // no .htaccess file
             return Text::_('CGSECURE_NO_HTACCESS');
         }
-        $current = $this->read_current_noip($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        $cgFile = '';
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'IP LIST');
         $ips = $this->get_htaccess_List();
         $rejips = $this->create_ips($ips, $v6);
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $rejips.$current)) {
             return Text::_('CGSECURE_DEL_IP_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_DEL_IP_HTACCESS_ERROR');
@@ -219,10 +229,8 @@ class JsonView extends AbstractView
         if (!$serverConfigFile) { // no .htaccess file
             return Text::_('CGSECURE_NO_HTACCESS');
         }
-        $current = $this->read_current_noip($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        $cgFile = '';
-        $rejips = '';
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips)) {
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'IP LIST');
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current)) {
             return Text::_('CGSECURE_DEL_IP_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_DEL_IP_HTACCESS_ERROR');
@@ -235,10 +243,8 @@ class JsonView extends AbstractView
         if (!$serverConfigFile) { // no .htaccess file
             return Text::_('CGSECURE_NO_HTACCESS');
         }
-        $current = $this->read_current_noai($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        $cgFile = '';
-        $rejips = '';
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '')) {
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'IA BOTS');
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current)) {
             return Text::_('CGSECURE_DEL_AI_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_DEL_AI_HTACCESS_ERROR');
@@ -251,12 +257,10 @@ class JsonView extends AbstractView
         if (!$serverConfigFile) { // no .htaccess file
             return Text::_('CGSECURE_NO_HTACCESS');
         }
-        $current = $this->read_current_noai($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        $cgFile = '';
-        $rejips = '';
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'IA BOTS');
         $this->config  = $this->getParams();
         $ia = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '', $ia)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current.$ia)) {
             return Text::_('CGSECURE_ADD_AI_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_ADD_AI_HTACCESS_ERROR');
@@ -269,10 +273,8 @@ class JsonView extends AbstractView
         if (!$serverConfigFile) { // no .htaccess file
             return Text::_('CGSECURE_NO_HTACCESS');
         }
-        $current = $this->read_current_nohotlink($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        $cgFile = '';
-        $rejips = '';
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '')) {
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'HOTLINK');
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current)) {
             return Text::_('CGSECURE_DEL_HOTLINK_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_DEL_HOTLINK_HTACCESS_ERROR');
@@ -285,18 +287,75 @@ class JsonView extends AbstractView
         if (!$serverConfigFile) { // no .htaccess file
             return Text::_('CGSECURE_NO_HTACCESS');
         }
-        $current = $this->read_current_nohotlink($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        $cgFile = '';
-        $rejips = '';
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'HOTLINK');
         $this->config  = $this->getParams();
         $hotlink = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '', $hotlink)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current.$hotlink)) {
             return Text::_('CGSECURE_ADD_HOTLINK_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_ADD_HOTLINK_HTACCESS_ERROR');
         }
     }
-
+    // delete CG Secure information in .htaccess file
+    private function deleteCyrillicHTAccess()
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'CYRILLIC');
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current)) {
+            return Text::_('CGSECURE_DEL_CYRILLIC_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_DEL_CYRILLIC_HTACCESS_ERROR');
+        }
+    }
+    // delete CG Secure information in .htaccess file
+    private function addCyrillicHTAccess()
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'CYRILLIC');
+        $this->config  = $this->getParams();
+        $cyrillic = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cyrillic.txt');
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current.$cyrillic)) {
+            return Text::_('CGSECURE_ADD_CYRILLIC_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_ADD_CYRILLIC_HTACCESS_ERROR');
+        }
+    }
+    // delete CG Secure information in .htaccess file
+    private function deleteGreekHTAccess()
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'GREEK');
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current)) {
+            return Text::_('CGSECURE_DEL_GREEK_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_DEL_GREEK_HTACCESS_ERROR');
+        }
+    }
+    // delete CG Secure information in .htaccess file
+    private function addGreekHTAccess()
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_notype($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS),'GREEK');
+        $this->config  = $this->getParams();
+        $greek = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_greek.txt');
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current.$greek)) {
+            return Text::_('CGSECURE_ADD_CYRILLIC_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_ADD_CYRILLIC_HTACCESS_ERROR');
+        }
+    }
     // start CG Secure Task to force update HTAccess File
     private function goCGSecureTask()
     {
@@ -361,7 +420,15 @@ class JsonView extends AbstractView
         if (isset($this->config->blockhotlink) && $this->config->blockhotlink) {
             $hotlink = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
         }
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific, $ia, $hotlink)) {
+        $cyrillic = "";
+        if (isset($this->config->blockcyrillic) && $this->config->blockcyrillic) {
+            $cyrillic = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cyrillic.txt');
+        }
+        $greek = "";
+        if (isset($this->config->blockgreek) && $this->config->blockgreek) {
+            $greek = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_greek.txt');
+        }
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $specific.$rejips.$cgFile.$ia.$hotlink.$cyrillic.$greek.$current)) {
             return Text::_('CGSECURE_ADD_HTACCESS');
         }
         // Error : restore saved version
@@ -433,7 +500,7 @@ class JsonView extends AbstractView
         }
         $current = $this->read_current($this->getServerConfigFilePath($filename));
         $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgrobots.txt');
-        if (!$this->merge_file($this->getServerConfigFilePath($filename), $current, $cgFile, '')) {
+        if (!$this->merge_file($this->getServerConfigFilePath($filename), $current.$cgFile)) {
             return 'err : '.Text::_('CGSECURE_ADD_ROBOTS_INSERT_ERROR');
         }
         // copy cg_no_robot folder to root*
@@ -469,9 +536,7 @@ class JsonView extends AbstractView
             return Text::_('CGSECURE_NO_ROBOTS');
         }
         $current = $this->read_current($this->getServerConfigFilePath($filename));
-        $cgFile = '';
-        $rejips = '';
-        if (!$this->merge_file($this->getServerConfigFilePath($filename), $current, $cgFile, $rejips)) {
+        if (!$this->merge_file($this->getServerConfigFilePath($filename), $current)) {
             return  'err : '.Text::_('CGSECURE_DEL_ROBOTS_ERROR');
         }
         $dest = JPATH_ROOT.'/cg_no_robot';
@@ -541,6 +606,22 @@ class JsonView extends AbstractView
                 $cgLines = false;
                 continue;
             }
+            if ($line === '#------------------------CG SECURE CYRILLIC BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE CYRILLIC END---------------------') {
+                $cgLines = false;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE GREEK BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE GREEK END---------------------') {
+                $cgLines = false;
+                continue;
+            }
             if ($cgLines) {
                 // When we are between our makers all content should be removed
                 continue;
@@ -574,8 +655,8 @@ class JsonView extends AbstractView
         }
         return $outBuffer;
     }
-    // read current .htaccess file and remove IP lines
-    private function read_current_noip($afile)
+    // read current .htaccess file and remove type's lines
+    private function read_current_notype($afile,$type)
     {
         $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
         $outBuffer = '';
@@ -584,63 +665,11 @@ class JsonView extends AbstractView
         }
         $cgLines = false;
         foreach ($readBuffer as $id => $line) {
-            if ($line === '#------------------------CG SECURE IP LIST BEGIN---------------------') {
+            if ($line === '#------------------------CG SECURE '.$type.' BEGIN---------------------') {
                 $cgLines = true;
                 continue;
             }
-            if ($line === '#------------------------CG SECURE IP LIST END--------------------') {
-                $cgLines = false;
-                continue;
-            }
-            if ($cgLines) {
-                // When we are between our makers all content should be removed
-                continue;
-            }
-            $outBuffer .= $line . PHP_EOL;
-        }
-        return $outBuffer;
-    }
-    // read current .htaccess file and remove AI lines
-    private function read_current_noai($afile)
-    {
-        $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
-        $outBuffer = '';
-        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
-            return '';
-        }
-        $cgLines = false;
-        foreach ($readBuffer as $id => $line) {
-            if ($line === '#------------------------CG SECURE IA BOTS BEGIN---------------------') {
-                $cgLines = true;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE IA BOTS END---------------------') {
-                $cgLines = false;
-                continue;
-            }
-            if ($cgLines) {
-                // When we are between our makers all content should be removed
-                continue;
-            }
-            $outBuffer .= $line . PHP_EOL;
-        }
-        return $outBuffer;
-    }
-    // read current .htaccess file and remove hotlink lines
-    private function read_current_nohotlink($afile)
-    {
-        $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
-        $outBuffer = '';
-        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
-            return '';
-        }
-        $cgLines = false;
-        foreach ($readBuffer as $id => $line) {
-            if ($line === '#------------------------CG SECURE HOTLINK BEGIN---------------------') {
-                $cgLines = true;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE HOTLINK END---------------------') {
+            if ($line === '#------------------------CG SECURE '.$type.' END--------------------') {
                 $cgLines = false;
                 continue;
             }
@@ -687,12 +716,13 @@ class JsonView extends AbstractView
         }
         return $outBuffer;
     }
-    private function merge_file($file, $current, $cgFile, $rejips, $specific = '', $ai = '', $hotlink = '')
+    private function merge_file($file, $current)
     {
         $pathToFile  = $file;
         if (file_exists($pathToFile)) {
             if (is_readable($pathToFile)) {
-                $records = $rejips.$specific.$cgFile.$ai.$hotlink.$current; // pour éviter les conflits, on se met devant....
+                // $specific.$rejips.$cgFile.$ia.$hotlink.$cyrillic.$greek.$current
+                $records = $current; 
                 // Write the htaccess using the Frameworks File Class
                 $bool = File::write($pathToFile, $records);
                 if ($bool) {
