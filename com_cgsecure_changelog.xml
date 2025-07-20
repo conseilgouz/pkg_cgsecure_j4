@@ -2,20 +2,6 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>3.5.2</version>
-        <note>
-            <item>Update : 19/07/2025</item>
-        </note>
-        <addition>
-             <item>New parameters : block message with cyrillic/greek/coptic characters</item>
-        </addition>
-        <change>
-             <item>HTAccess updates : refactor config Jsonview.php file</item>
-        </change>
-	</changelog>
-	<changelog>
-		<element>com_cgsecure</element>
-		<type>package</type>
 		<version>3.5.1</version>
         <note>
             <item>Update : 18/07/2025</item>
