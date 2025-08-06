@@ -17,10 +17,6 @@ document.addEventListener('DOMContentLoaded', function(){
     blockai1 = document.querySelector('input[id="jform_blockai1"]');
     blockhotlink0 = document.querySelector('input[id="jform_blockhotlink0"]');
     blockhotlink1 = document.querySelector('input[id="jform_blockhotlink1"]');
-    blockcyrillic0 = document.querySelector('input[id="jform_blockcyrillic0"]');
-    blockcyrillic1 = document.querySelector('input[id="jform_blockcyrillic1"]');
-    blockgreek0 = document.querySelector('input[id="jform_blockgreek0"]');
-    blockgreek1 = document.querySelector('input[id="jform_blockgreek1"]');
     ['click', 'mouseup', 'touchstart'].forEach(type => {    
         htaccess0.addEventListener(type, function(){
             security = document.querySelector('input[id="jform_security"]').value;
@@ -80,22 +76,6 @@ document.addEventListener('DOMContentLoaded', function(){
         blockhotlink1.addEventListener(type,function(){ // add  hotlink block
             security = document.querySelector('input[id="jform_security"]');
             htaccess(9,security.value);
-        })
-        blockcyrillic0.addEventListener(type,function(){ // delete cyrillic block
-            security = document.querySelector('input[id="jform_security"]');
-            htaccess(10,security.value);
-        })
-        blockcyrillic1.addEventListener(type,function(){ // add  cyrillic block
-            security = document.querySelector('input[id="jform_security"]');
-            htaccess(11,security.value);
-        })
-        blockgreek0.addEventListener(type,function(){ // delete greek block
-            security = document.querySelector('input[id="jform_security"]');
-            htaccess(12,security.value);
-        })
-        blockgreek1.addEventListener(type,function(){ // add  greek block
-            security = document.querySelector('input[id="jform_security"]');
-            htaccess(13,security.value);
         })
 	})
     multi = document.querySelector('input[id="jform_multisite"]')
