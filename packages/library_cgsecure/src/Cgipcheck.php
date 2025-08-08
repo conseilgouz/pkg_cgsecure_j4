@@ -356,8 +356,11 @@ class Cgipcheck
                 Log::addLogger(array('text_file' => 'cgcontact.trace.php'), Log::DEBUG, array(self::$caller));
                 Log::add(self::$message.$onelang, Log::DEBUG, self::$caller);
             }
-            if (self::$params->contactaction == 'block') {
+            if (self::$params->contactaction == 'reject') {
                 self::redir_out();
+            } elseif (self::$params->contactaction == 'block') {
+                $msg = Text::sprintf('CGSECURE_BAD_LANGUAGE_CODE', $onelang);
+                Factory::getApplication()->enqueueMessage($msg);
             }
             return false; // Wrong language found
         }

@@ -11,6 +11,7 @@ namespace Conseilgouz\Plugin\Contact\CGSecure\Extension;
 // No direct access.
 defined('_JEXEC') or die();
 use Joomla\CMS\Event\Contact\SubmitContactEvent;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\Event\SubscriberInterface;
 use ConseilGouz\CGSecure\Cgipcheck;
@@ -62,6 +63,8 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
             if ($this->cgsecure_params->contactaction == "spam") { // add spam in title
                 $data['contact_subject'] = '[---spam---]  '.$data['contact_subject'];
                 $event->updateData($data);
+            } else if ($this->cgsecure_params->contactaction == "block") { // display error message
+                return false;
             }
         }
     }
