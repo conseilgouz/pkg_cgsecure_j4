@@ -145,7 +145,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 				WHERE '.$db->qn("type").' LIKE "plugin" AND '.$db->qn("folder").' LIKE "system"  AND '.$db->qn("element").' LIKE "cgsecure")');
         $db->setQuery($query);
         $db->execute();
-        
+
         // get previous versions parameters
         $plugin = PluginHelper::getPlugin('content', 'phocacheckip');
         if ($plugin) { // PhocaIp conflict
@@ -159,12 +159,11 @@ class PlgSystemCgsecureInstallerInstallerScript
             $db->setQuery($query);
             try {
                 $db->execute();
-            }
-            catch (RuntimeException $e) {
+            } catch (RuntimeException $e) {
                 Log::add('unable to enable plugin phocacheckip', Log::ERROR, 'jerror');
-            
+
             }
-            Factory::getApplication()->enqueueMessage('CGSECURE : Phocacheckip plugin has been disabled : please update it','warning');
+            Factory::getApplication()->enqueueMessage('CGSECURE : Phocacheckip plugin has been disabled : please update it', 'warning');
         }
         // remove obsolete file
         $this->delete([
@@ -277,7 +276,7 @@ class PlgSystemCgsecureInstallerInstallerScript
             $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
         }
 
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile,$cgAI, $rejips, $specific)) {
+        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $cgAI, $rejips, $specific)) {
             return; // everything OK => exit
         }
         Factory::getApplication()->enqueueMessage('CGSECURE : Error during insert');
@@ -563,8 +562,63 @@ class PlgSystemCgsecureInstallerInstallerScript
         } catch (RuntimeException $e) {
             Log::add('unable to enable Plugins CGSecure', Log::ERROR, 'jerror');
         }
+        $this->pluginsOrder();
         //@todo : check plugins order : cg secure contact plugin must be first.
         return true;
+    }
+    private function pluginsOrder()
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select('extension_id,element,ordering');
+        $query->from('#__extensions');
+        $query->where('type = ' . $db->quote('plugin'));
+        $query->where('folder = '. $db->quote('contact'));
+        $db->setQuery($query);
+        $plugins = $db->loadObjectList();
+        if (count($plugins) == 1) {// only one => exit
+            return;
+        }
+        $ok = false;
+        foreach ($plugins as $plugin) {
+            if (($plugin->element == 'cgsecure') && ($plugin->ordering == 1)) {
+                $ok = true;
+                break;
+            }
+        }
+        if ($ok) { // already first
+            return;
+        }
+        // rearrange plugins order : add 1 to all ordering
+        $conditions = array(
+            $db->qn('type') . ' = ' . $db->q('plugin'),
+            $db->qn('folder') . ' = ' . $db->quote('contact')
+        );
+        $fields = array($db->qn('ordering') . ' = 1+'.$db->qn('ordering'));
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
+        $db->setQuery($query);
+        try {
+            $db->execute();
+        } catch (RuntimeException $e) {
+            Log::add('unable to add 1 Contact Plugins order', Log::ERROR, 'jerror');
+        }
+        // set cgsecure plugin ordering to 1
+        $conditions = array(
+            $db->qn('type') . ' = ' . $db->q('plugin'),
+            $db->qn('folder') . ' = ' . $db->quote('contact'),
+            $db->qn('element') . ' = ' . $db->quote('cgsecure'),
+        );
+        $fields = array($db->qn('ordering') . ' = 1');
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
+        $db->setQuery($query);
+        try {
+            $db->execute();
+        } catch (RuntimeException $e) {
+            Log::add('unable to set Contact CGSecure Plugins order to 1', Log::ERROR, 'jerror');
+        }
+
     }
     private function installPackage($package)
     {
