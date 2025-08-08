@@ -20,7 +20,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
-use ConseilGouz\CGSecure\LanguageDetection\Language;
+use ConseilGouz\CGSecure\LanguageDetection\Language as LanguageDetect;
 
 class Cgipcheck
 {
@@ -327,7 +327,6 @@ class Cgipcheck
     // check message language
     public static function check_language($plugin, $contact, $message)
     {
-        $plugin->loadLanguage();
         self::$caller = $plugin->myname;
         self::$message = $plugin->mymessage;
         self::$logging = self::$params->logging_contact == 1;
@@ -339,7 +338,7 @@ class Cgipcheck
         } else {
             return true; // don't check language
         }
-        $ld = new Language();
+        $ld = new LanguageDetect();
         $ret = $ld->detect($message)->bestResults();
         $found = false;
         $onelang = "";

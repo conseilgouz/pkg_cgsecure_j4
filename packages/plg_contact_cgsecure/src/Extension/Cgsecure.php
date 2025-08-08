@@ -61,7 +61,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         }
         if (isset($this->cgsecure_params->contactaction)) {
             if ($this->cgsecure_params->contactaction == "spam") { // add spam in title
-                $data['contact_subject'] = '[---spam---]  '.$data['contact_subject'];
+                $data['contact_subject'] = '[---SPAM---]  '.$data['contact_subject'];
                 $event->updateData($data);
             } elseif ($this->cgsecure_params->contactaction == "block") { // display error message
                 // @todo : Joomla 5 specific
