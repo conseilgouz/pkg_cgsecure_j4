@@ -360,7 +360,8 @@ class Cgipcheck
                 self::redir_out();
             } elseif (self::$params->contactaction == 'block') {
                 $msg = Text::sprintf('CGSECURE_BAD_LANGUAGE_CODE', $onelang);
-                Factory::getApplication()->enqueueMessage($msg);
+                Factory::getApplication()->enqueueMessage($msg, 'error');
+                self::redir_out();
             }
             return false; // Wrong language found
         }

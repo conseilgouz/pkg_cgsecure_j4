@@ -64,7 +64,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                 $data['contact_subject'] = '[---spam---]  '.$data['contact_subject'];
                 $event->updateData($data);
             } else if ($this->cgsecure_params->contactaction == "block") { // display error message
-                return false;
+                die();
             }
         }
     }
