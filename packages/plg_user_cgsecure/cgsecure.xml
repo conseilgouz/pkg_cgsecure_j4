@@ -2,12 +2,12 @@
 <extension version="4.0" type="plugin" group="user" method="upgrade">
 	<name>CG_COUNTRY</name>
 	<author>ConseilGouz</author>
-	<creationDate>2025-07-18</creationDate>
+	<creationDate>2025-08-09</creationDate>
 	<copyright>(C)2025 ConseilGouz. All rights reserved.</copyright>
 	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<version>3.5.1</version>
+	<version>3.6.0</version>
 	<description>CG_COUNTRY_XML_DESCRIPTION</description>
     <namespace path="src">Conseilgouz\Plugin\User\CGSecure</namespace>
 	<files>

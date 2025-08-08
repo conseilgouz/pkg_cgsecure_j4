@@ -20,6 +20,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
+use ConseilGouz\CGSecure\LanguageDetection\Language;
 
 class Cgipcheck
 {
@@ -322,6 +323,40 @@ class Cgipcheck
             return true;
         }
         return false;
+    }
+    // check message language
+    public static function check_language($plugin, $contact, $message)
+    {
+        $plugin->loadLanguage();
+        self::$caller = $plugin->myname;
+        self::$message = $plugin->mymessage;
+        self::$logging = self::$params->logging == 1;
+        if (isset(self::$params->country)) {
+            $countries = self::$params->country;
+            $pays_autorise = explode(',', $countries);
+        } else {
+            return; // don't check language
+        }
+        $ld = new Language();
+        $ret = $ld->detect($message)->bestResults();
+        $found = false;
+        $onelang = "";
+        foreach ($ret as $country => $score) {
+            if (in_array(strtoupper($country), $pays_autorise)) {
+                $found = true;
+            }
+            if (!$onelang) {// store first one
+                $onelang = $country;
+            }
+        }
+        if (!$found) {
+            if (self::$logging) {
+                Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::DEBUG, array(self::$caller));
+                Log::add(self::$message.$onelang, Log::DEBUG, self::$caller);
+            }
+            self::redir_out();
+        }
+
     }
     // Report hacking blocked by htaccess
     public static function report_hacker($plugin, $message, $errtype, $ip)

@@ -1,8 +1,0 @@
-#------------------------CG SECURE CYRILLIC BEGIN---------------------
-
-# Block messages containing cyrillic characters
-
-RewriteEngine On
-RewriteCond %{REQUEST_URI} [\x{0400}-\x{04FF}] [NC]
-RewriteRule .* plugins/system/cgsecure/htaccess.php?e=50&t=e&m=%1&sec=??security?? [L]
-#------------------------CG SECURE CYRILLIC END---------------------
