@@ -43,13 +43,26 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
     // Check IP on prepare Forms
     public function submitContact(SubmitContactEvent $event) // ($contact, $data)
     {
-        $contact = $event[0];
-        $data = $event[1];
+        if (!isset($this->cgsecure_params->checkcontact) ||
+            ($this->cgsecure_params->checkcontact == 0)) {
+            return;
+        }
+        $contact = $event->getContact();
+        $data = $event->getData();
         $message = $data['contact_message'];
         $prefixe = $_SERVER['SERVER_NAME'];
         $prefixe = substr(str_replace('www.', '', $prefixe), 0, 2);
         $this->mymessage = $prefixe.$this->errtype.'-'.$this->mymessage;
 
-        Cgipcheck::check_language($this, $contact, $message);
+        $ret = Cgipcheck::check_language($this, $contact, $message);
+        if ($ret) { // ok
+            return true;
+        }
+        if (isset($this->cgsecure_params->contactaction)) {
+            if ($this->cgsecure_params->contactaction == "spam") { // add spam in title
+                $data['contact_subject'] = '[---spam---]  '.$data['contact_subject'];
+                $event->updateData($data);
+            }
+        }
     }
 }

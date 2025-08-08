@@ -330,19 +330,21 @@ class Cgipcheck
         $plugin->loadLanguage();
         self::$caller = $plugin->myname;
         self::$message = $plugin->mymessage;
-        self::$logging = self::$params->logging == 1;
-        if (isset(self::$params->country)) {
-            $countries = self::$params->country;
-            $pays_autorise = explode(',', $countries);
+        self::$logging = self::$params->logging_contact == 1;
+        if (isset(self::$params->contactcountry)) {
+            if (!count(self::$params->contactcountry)) {
+                return true;
+            }
+            $pays_autorise = self::$params->contactcountry;
         } else {
-            return; // don't check language
+            return true; // don't check language
         }
         $ld = new Language();
         $ret = $ld->detect($message)->bestResults();
         $found = false;
         $onelang = "";
         foreach ($ret as $country => $score) {
-            if (in_array(strtoupper($country), $pays_autorise)) {
+            if (in_array($country, $pays_autorise)) {
                 $found = true;
             }
             if (!$onelang) {// store first one
@@ -351,12 +353,15 @@ class Cgipcheck
         }
         if (!$found) {
             if (self::$logging) {
-                Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::DEBUG, array(self::$caller));
+                Log::addLogger(array('text_file' => 'cgcontact.trace.php'), Log::DEBUG, array(self::$caller));
                 Log::add(self::$message.$onelang, Log::DEBUG, self::$caller);
             }
-            self::redir_out();
+            if (self::$params->contactaction == 'block') {
+                self::redir_out();
+            }
+            return false; // Wrong language found
         }
-
+        return true; // everything is OK
     }
     // Report hacking blocked by htaccess
     public static function report_hacker($plugin, $message, $errtype, $ip)

@@ -101,5 +101,21 @@
 			<option value="1">JYES</option>
 		</field>
 	</fieldset>
+    <fieldset name="contact" label="CGSECURE_CONTACT" description="CGSECURE_CONTACT_DESC">
+		<field name="notecontact" type="note" label="CGSECURE_CONTACT_NOTE" description="CGSECURE_CONTACT_NOTE_DESC" />
+		<field name="checkcontact" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="CGSECURE_CHECKCONTACT" description="CGSECURE_CHECKCONTACT_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field showon="checkcontact:1"  name="contactcountry" type="folderlist" default="" label="CGSECURE_CONTACT_COUNTRY" description="CGSECURE_CONTACT_COUNTRY_DESC" directory="libraries/cgsecure/src/LanguageDetection/resources" multiple="true" layout="joomla.form.field.list-fancy-select" hide_default="true"/>
+		<field showon="checkcontact:1" name="contactaction" type="button" layout="joomla.form.field.radio.switcher" default="spam" label="CGSECURE_CONTACT_ACTION" description="CGSECURE_CONTACT_ACTION_DESC">
+			<option value="spam">CGSECURE_CONTACTSPAM</option>
+			<option value="block">CGSECURE_CONTACTBLOCK</option>
+		</field>
+		<field showon="checkcontact:1" name="logging_contact" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="CGSECURE_CONTACT_LOGGING" description="CGSECURE_CONTACT_LOGGING_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+	</fieldset>
 	
 </form>

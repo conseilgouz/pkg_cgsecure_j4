@@ -563,7 +563,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         } catch (RuntimeException $e) {
             Log::add('unable to enable Plugins CGSecure', Log::ERROR, 'jerror');
         }
-
+        //@todo : check plugins order : cg secure contact plugin must be first.
         return true;
     }
     private function installPackage($package)

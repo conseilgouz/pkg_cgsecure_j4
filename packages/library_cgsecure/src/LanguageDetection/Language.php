@@ -29,7 +29,7 @@ class Language extends NgramParser
     {
         if (empty($dirname))
         {
-            $dirname = __DIR__ . '/../resources/*/*.php';
+            $dirname = __DIR__ . '/resources/*/*.php';
         }
         else if (!\is_dir($dirname) || !\is_readable($dirname))
         {
