@@ -37,12 +37,14 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $cgsecure_force_update_version = "3.6.0";
     private $security;
     private $config;
+    private $db;
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
     public const SERVER_CONFIG_FILE_NONE = '';
     public const CGPATH = '/media/com_cgsecure';
     public function __construct()
     {
         $this->dir = __DIR__;
+        $this->db = Factory::getContainer()->get(DatabaseInterface::class);
     }
 
     public function preflight($route, $installer)
@@ -115,7 +117,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private function postInstall()
     {
         // remove obsolete update sites
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->db;
         $query = $db->getQuery(true)
             ->delete('#__update_sites')
             ->where($db->quoteName('location') . ' like "%432473037d.url-de-test.ws/%"');
@@ -148,22 +150,32 @@ class PlgSystemCgsecureInstallerInstallerScript
 
         // get previous versions parameters
         $plugin = PluginHelper::getPlugin('content', 'phocacheckip');
-        if ($plugin) { // PhocaIp conflict
+        if ($plugin) { // PhocaIp possible conflict
             $conditions = array(
                 $db->qn('type') . ' = ' . $db->q('plugin'),
                 $db->qn('element') . ' = ' . $db->quote('phocacheckip')
             );
-            $fields = array($db->qn('enabled') . ' = 0');
-            $query = $db->getQuery(true);
-            $query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
+            $query = $db->getQuery(true)
+                    ->select('manifest_cache')
+                    ->from($db->quoteName('#__extensions'))
+                    ->where($conditions);
             $db->setQuery($query);
-            try {
-                $db->execute();
-            } catch (RuntimeException $e) {
-                Log::add('unable to enable plugin phocacheckip', Log::ERROR, 'jerror');
-
+            $manif = $db->loadObject();
+            if ($manif) {
+                $manifest = json_decode($manif->manifest_cache);
+                if ($manifest->version < '3.5.0') { // conflict : disable plugin
+                    $fields = array($db->qn('enabled') . ' = 0');
+                    $query = $db->getQuery(true);
+                    $query->update($db->quoteName('#__extensions'))->set($fields)->where($conditions);
+                    $db->setQuery($query);
+                    try {
+                        $db->execute();
+                    } catch (RuntimeException $e) {
+                        Log::add('unable to enable plugin phocacheckip', Log::ERROR, 'jerror');
+                    }
+                    Factory::getApplication()->enqueueMessage('CGSECURE : Phocacheckip plugin has been disabled : please update it', 'warning');
+                }
             }
-            Factory::getApplication()->enqueueMessage('CGSECURE : Phocacheckip plugin has been disabled : please update it', 'warning');
         }
         // remove obsolete file
         $this->delete([
@@ -416,7 +428,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     }
     private function getParams()
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->db;
         $query = $db->getQuery(true);
         $query->select('*')
         ->from($db->quoteName('#__cgsecure_config'));
@@ -547,7 +559,7 @@ class PlgSystemCgsecureInstallerInstallerScript
             }
         }
         // enable plugins
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->db;
         $conditions = array(
             $db->qn('type') . ' = ' . $db->q('plugin'),
             $db->qn('element') . ' = ' . $db->quote('cgsecure')
@@ -568,7 +580,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     }
     private function pluginsOrder()
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->db;
         $query = $db->getQuery(true);
         $query->select('extension_id,element,ordering');
         $query->from('#__extensions');
@@ -623,6 +635,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private function installPackage($package)
     {
         $tmpInstaller = new Installer();
+        $tmpInstaller->setDatabase($this->db);
         $installed = $tmpInstaller->install($this->dir . '/packages/' . $package);
         return $installed;
     }
@@ -639,7 +652,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     }
     private function check_cgsecure_task()
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->db;
         $query = $db->getQuery(true);
         $query->select('id');
         $query->from('#__scheduler_tasks');
@@ -684,7 +697,7 @@ class PlgSystemCgsecureInstallerInstallerScript
             JPATH_PLUGINS . '/system/' . $this->installerName . '/language',
             JPATH_PLUGINS . '/system/' . $this->installerName,
         ]);
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = $this->db;
         $query = $db->getQuery(true)
             ->delete('#__extensions')
             ->where($db->quoteName('element') . ' = ' . $db->quote($this->installerName))

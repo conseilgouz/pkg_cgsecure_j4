@@ -2,12 +2,12 @@
 <extension version="4.1" type="plugin" group="task" method="upgrade">
 	<name>PLG_TASK_CGSECURE</name>
 	<author>conseilgouz</author>
-	<creationDate>2025-08-09</creationDate>
+	<creationDate>2025-08-18</creationDate>
 	<copyright>Copyright (C) 2025 ConseilGouz. All rights reserved.</copyright>
 	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<version>3.6.0</version>
+	<version>3.6.1</version>
 	<description>PLG_TASK_CGSECURE_DESC</description>
 	<namespace path="src">ConseilGouz\Plugin\Task\CGSecure</namespace>
 	<files>
