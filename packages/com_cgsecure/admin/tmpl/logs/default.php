@@ -23,7 +23,8 @@ $user		= Factory::getApplication()->getIdentity();
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
-    ->useScript('form.validate');
+    ->useScript('form.validate')
+    ->useScript('list-view');
 
 $wa->registerAndUseScript('securelogs', 'media/com_cgsecure/js/adminlog.js');
 

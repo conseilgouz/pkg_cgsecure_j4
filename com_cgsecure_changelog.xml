@@ -2,6 +2,20 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.6.2</version>
+        <note>
+            <item>Update : 24/08/2025</item>
+        </note>
+        <fix>
+            <item>Joomla 6 : getApplication()->input removed</item>
+            <item>Joomla 6 : getDbo() removed</item>
+            <item>Joomla 6 : list-view not loaded</item>
+            <item>Field Version : use webassets</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.6.1</version>
         <note>
             <item>Update : 18/08/2025</item>

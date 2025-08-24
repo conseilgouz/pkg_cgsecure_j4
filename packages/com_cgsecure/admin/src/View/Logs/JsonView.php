@@ -41,7 +41,7 @@ class JsonView extends AbstractView
         Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
         // Check for errors.
         $this->app = Factory::getApplication();
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $type = $input->get('type');
         $msg = "";
         if ($type == 'logs') {

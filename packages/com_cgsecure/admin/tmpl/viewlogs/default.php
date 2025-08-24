@@ -15,9 +15,10 @@ use Joomla\CMS\Router\Route;
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
-    ->useScript('form.validate');
+    ->useScript('form.validate')
+    ->useScript('list-view');
 
-$input = Factory::getApplication()->input;
+$input = Factory::getApplication()->getInput();
 $type = $input->get('type', 'ip');
 
 if ($type == 'ht') {

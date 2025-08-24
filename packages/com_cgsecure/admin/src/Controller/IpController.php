@@ -81,10 +81,10 @@ class IpController extends FormController
         // Initialise variables.
         $app = Factory::getApplication();
         $model = $this->getModel('ip');
-        $data = $app->input->getVar('jform', array(), 'post', 'array');
+        $data = $app->getInput()->getVar('jform', array(), 'post', 'array');
         $task = $this->getTask();
         $context = 'com_cgsecure.edit.ip';
-        $recordId = $app->input->getInt('id');
+        $recordId = $app->getInput()->getInt('id');
 
         if (!$this->checkEditId($context, $recordId)) {
             // Somehow the person just went to the form and saved it - we don't allow that.

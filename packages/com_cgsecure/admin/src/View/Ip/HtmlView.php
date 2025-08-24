@@ -46,7 +46,7 @@ class HtmlView extends BaseHtmlView {
      */
     protected function addToolbar() {
         $state = $this->get('State');
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $canDo = ContentHelper::getActions('com_cgsecure');
 
 		$user		= Factory::getApplication()->getIdentity();
