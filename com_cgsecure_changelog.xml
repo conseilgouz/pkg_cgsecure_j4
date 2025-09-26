@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.6.4</version>
+        <note>
+            <item>Update : 26/09/2025</item>
+        </note>
+        <change>
+             <item>Block AI : Ultimate AI Block List v1.7 20250924</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.6.3</version>
         <note>
             <item>Update : 21/09/2025</item>
