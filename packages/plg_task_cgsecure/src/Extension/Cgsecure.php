@@ -70,19 +70,24 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
     {
         $lang = Factory::getApplication()->getLanguage();
         $lang->load('plg_task_automsg');
+        $this->checkMatomo();  // Update Matomo spammers list
+        $this->checkAI();      // update perishablepress AI list 
+        return TaskStatus::OK;
+    }
+    private function checkMatomo()
+    {
         $file = JPATH_ROOT . '/media/com_cgsecure/txt/spammers.txt';
         if (!@copy('https://raw.githubusercontent.com/matomo-org/referrer-spam-list/refs/heads/master/spammers.txt', $file)) {
             $errors = error_get_last();
             return TaskStatus::OK;
         }
         $hash = hash_file('sha256', $file);
-        if (!$this->checkHTAccess($hash)) {
-            $this->storeHTAccess($hash);
+        if (!$this->checkHTAccessMatomo($hash)) {
+            $this->storeHTAccessMatomo($hash);
         }
-        return TaskStatus::OK;
     }
     // same hash : no need to update
-    private function checkHTAccess($hash)
+    private function checkHTAccessMatomo($hash)
     {
         $htaccess = $this->getServerConfigFilePath('.htaccess');
         $readBuffer = file($htaccess, FILE_IGNORE_NEW_LINES);
@@ -99,7 +104,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         return $currenthash == $hash;
     }
 
-    private function storeHTAccess($hash)
+    private function storeHTAccessMatomo($hash)
     {
         $wait = self::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
         if (file_exists($wait)) {//
@@ -146,6 +151,109 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
             $outBuffer .= $line . PHP_EOL;
         }
         return $outBuffer;
+    }
+    private function checkAI()
+    {
+        $file = JPATH_ROOT . '/media/com_cgsecure/txt/cgaccess_ai.txt';
+        if (!@copy('https://raw.githubusercontent.com/conseilgouz/pkg_cgsecure_j4/master/packages/com_cgsecure/media/txt/cgaccess_ai.txt', $file)) {
+            $errors = error_get_last();
+            return TaskStatus::OK;
+        }
+        $version = $this->getAIVersion($file); // ligne de version du fichier AI
+        if (!$version) {
+            return;
+        } // pas de version ??????
+        if (!$this->checkHTAccessAI($version)) {
+            $this->storeHTAccessAI();
+        }
+    }
+    private function getAIVersion($file)
+    {
+        $readBuffer = file($file, FILE_IGNORE_NEW_LINES);
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return false;
+        }
+        $version = '';
+        foreach ($readBuffer as $id => $line) {
+            if (substr($line, 0, 24) === '# Ultimate AI Block List') {
+                $version = $line;
+                break;
+            }
+        }
+        return $version;
+    }
+    // same version : no need to update
+    private function checkHTAccessAI($version)
+    {
+        $htaccess = $this->getServerConfigFilePath('.htaccess');
+        $readBuffer = file($htaccess, FILE_IGNORE_NEW_LINES);
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return false;
+        }
+        $currentversion = '';
+        foreach ($readBuffer as $id => $line) {
+            if (substr($line, 0, 24) === '# Ultimate AI Block List') {
+                $currentversion = $line;
+                break;
+            }
+        }
+        return $currentversion == $version;
+    }
+    private function storeHTAccessAI()
+    {
+        $wait = self::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
+        if (file_exists($wait)) {//
+            return;
+        }
+        $msg = 'wait...';
+        File::write($wait, $msg);
+        $serverConfigFile = $this->getServerConfigFilePath('.htaccess');
+        if (!$serverConfigFile) { // no .htaccess file
+            return;
+        }
+        $ai = $this->getServerConfigFilePath('media/com_cgsecure/txt/cgaccess_ai.txt');
+        $current = $this->replace_AI($this->getServerConfigFilePath('.htaccess'), $ai);
+        $this->store_file($this->getServerConfigFilePath('.htaccess'), $current);
+        File::delete($wait);
+    }
+    // read current .htaccess file and remove CG lines
+    private function replace_AI($htaccess, $ai)
+    {
+        $readBuffer = file($htaccess, FILE_IGNORE_NEW_LINES);
+        $outBuffer = '';
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return '';
+        }
+        $cgLines = false;
+        foreach ($readBuffer as $id => $line) {
+            if ($line === '#------------------------CG SECURE IA BOTS BEGIN---------------------') {
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------------------------CG SECURE IA BOTS END---------------------') {
+                $outBuffer .= $this->mergeAI($ai);
+                $cgLines = false;
+                continue;
+            }
+            if ($cgLines) {
+                // When we are between our makers all content should be removed
+                continue;
+            }
+            $outBuffer .= $line . PHP_EOL;
+        }
+        return $outBuffer;
+    }
+    private function mergeAI($ai)
+    {
+        $readBuffer = file($ai, FILE_IGNORE_NEW_LINES);
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return '';
+        }
+        $buffer = "";
+        foreach ($readBuffer as $id => $line) {
+            $buffer .= $line. PHP_EOL;
+        }
+        return $buffer;
     }
     private function merge($buffer, $matomo)
     {
