@@ -752,8 +752,15 @@ class PlgSystemCgsecureInstallerInstallerScript
             ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
         $db->setQuery($query);
         $db->execute();
-        $cachecontroller = Factory::getContainer()->get(CacheControllerFactoryInterface::class)->createCacheController();
-        $cachecontroller->clean('_system');
+        // nettoyage du cache
+        $cacheModel = Factory::getApplication()->bootComponent('com_cache')->getMVCFactory()->createModel('Cache', 'Administrator', ['ignore_request' => true]);
+        $cache = $cacheModel->getCache() ??null;
+        if ($cache) {
+            foreach ($cache->getAll() as $group) {
+                $cache->clean($group->group);
+            }
+            $app->enqueueMessage('<p>Clear Cache done.</p>');
+        }
     }
 
     public function delete($files = [])
