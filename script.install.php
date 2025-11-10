@@ -759,7 +759,7 @@ class PlgSystemCgsecureInstallerInstallerScript
             foreach ($cache->getAll() as $group) {
                 $cache->clean($group->group);
             }
-            Factory::getApplication()->enqueueMessage('<p>Clear Cache done.</p>');
+            Factory::getApplication()->enqueueMessage('<p>Cache cleared.</p>');
         }
     }
 
