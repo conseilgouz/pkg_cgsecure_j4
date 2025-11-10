@@ -1,6 +1,6 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.6.4--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.6.6--------------------
 # CG Secure blocks and reports hacking attempts
-# from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/ and AESecure.
+# from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/, https://perishablepress.com/8g-firewall and AESecure.
 #
 # redirect errors/warnings to cgsecure/htaccess.php
 # e = error number
@@ -108,50 +108,6 @@ ServerSignature Off
    <FilesMatch "\.(swf)$">
       Header set Expires "access plus 2592000 seconds"
    </FilesMatch>
-</IfModule>
-
-<IfModule mod_setenvif.c>
-# Block bad user agents 
-SetEnvIfNoCase ^User-Agent$ .*(aesop_com_spiderman|ahrefs|ahrefsbot|alexibot|amazonbot|backweb|bandit|batchftp|bigfoot|bytespider).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(black.?hole|blackwidow|blowfish|botalot|bot.?mailto:craftbot@yahoo.com|buddy|builtbottough|bullseye).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(cheesebot|cherrypicker|chinaclaw|collector|copier|copyrightcheck).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(cosmos|crescent|curl|custo|da|diibot|disco|dittospyder|download.?demon|dragonfly).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(drip|easydl|ebingbong|ecatch|eirgrabber|emailcollector|emailsiphon).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(emailwolf|erocrawler|exabot|express.?webpictures|extractorpro|eyenetie|filehound|flashget|flunky).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(frontpage|getright|getweb|go.?zilla|go-ahead-got-it|gotit|grabnet).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(grafula|harvest|hloader|hmview|httplib|httrack|humanlinks|ilsebot|image.?stripper).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(image.?sucker|infonavirobot|infotekies|intelliseek|interget|iria|jennybot|jetcar).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(joc|justview|jyxobot|kenjin|keyword|larbin|leechftp|lexibot|lftp|libweb).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(likse|linkscan|linkwalker|lnspiderguy|lwp|magnet|mag-net|markwatch).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(mata.?hari|memo|microsoft.?url|midown.?tool|miixpc|mirror|missigua).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(mister.?pix|mj12bot|moget|mozilla.?newt|nameprotect|navroad|backdoorbot|nearsite).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(net.?vampire|netants|netcraft|netmechanic|netspider|nextgensearchbot).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(attach|nicerspro|nimblecrawler|npbot|octopus|offline.?explorer).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(offline.?navigator|openfind|outfoxbot|pagegrabber|papa|pavuk).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(pcbrowser|php.?version.?tracker|pockey|propowerbot|prowebwalker).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(psbot|pump|queryn|recorder|realdownload|reaper|reget|rogerbot|true_robot).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(repomonkey|rma|internetseer|sitesnagger|siphon|slysearch|smartdownload).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(snake|snapbot|snoopy|sogou|spacebison|spankbot|spanner|sqworm|superbot).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(superhttp|surfbot|asterias|suzuran|szukacz|takeout|teleport).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(telesoft|the.?intraformant|thenomad|tighttwatbot|titan|urldispatcher).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(turingos|turnitinbot|urly.?warning|vacuum|vci|voideye|webauto|webcopier|webfetch|whacker).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(webgo.?is|webleacher|webreaper|websauger|webstripper|webwhacker|webzip|widow|wisenutbot|wwwoffle|xaldon|zeus|zyborg|anonymouse).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(zip|emaile|enhancer|fetch|go.?is|auto|bandit|clip|master|reaper|sauger|site.?quester|whack).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures).* HTTP_STAYOUT
- # update from 8G-Firewall 1.4
- SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|pycurl|scan|oppo\sa33|(c99|php|web)shell|site((.){0,2})copier).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(acapbot|acoonbot|attackbot|awario|backdor|becomebot|binlar|blekkobot|blex|bullseye|bunnys|butterfly|careerbot|casper|censysinspect).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(checkpriv|cherrypick|choppy|claudebot|cmsworld|copernic|crawlergo|datacha|(\b)demon(\b)|diavol|discobot).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(dotbot|dotnetdotcom|dumbot|econtext|eolasbot|eventures|feedfinder|flaming|flicky|foobot|fuck).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(gigabot|gozilla|heritrix|httracks?|icarus6j|imagesiftbot|jetbot|jikespider|kmccrew|liebaofast).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(lwp-download|majestic|masscan|mauibot|miner|mechanize|morfeus|moveoverbot|mozlila|nbot|nikto|nominet|nutch).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(petalbot|planetwork|postrank|proximic|purebot|queryseeker|radian6|radiation|remoteview|scooter|seekerspid).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(semalt|siclab|sindice|sistrix|sitebot|siteexplorer|skygrid|sosospider|spbot|sqlmap|stackrambler|surftbot).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(sux0r|suzukacz|true_robots|turnit|vampire|vikspider|webvac|webviewer).* HTTP_STAYOUT
- SetEnvIfNoCase ^User-Agent$ .*(winhttp|woxbot|xxxyy|yamanalab|yioopbot|youda|zmeu|zune).* HTTP_STAYOUT
- Order Deny,Allow
- Allow from All
- Deny from env=HTTP_STAYOUT
 </IfModule>
 
 #####
@@ -364,5 +320,25 @@ RewriteRule .* plugins/system/cgsecure/htaccess.php?e=21&t=e&m=%1&sec=??security
 	RewriteCond %{REQUEST_METHOD} POST [NC]
 	RewriteCond %{REQUEST_URI} (dark(\s)net|dark(\s)web|dark(\s)market|darkmarket|darknet|drug(\s)store) [NC]
     RewriteRule .* plugins/system/cgsecure/htaccess.php?e=23&t=e&m=%1&sec=??security?? [L]
+</IfModule>
+
+# Block bad user agents from 8G FIREWALL v1.5 20250927
+# https://perishablepress.com/8g-firewall/
+<IfModule mod_rewrite.c>
+	RewriteCond %{HTTP_USER_AGENT} ([a-z0-9]{2000,}) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (&lt;|%0a|%0d|%27|%3c|%3e|%00|0x00|\\\x22|\\\") [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (ahrefs|archiver|curl|libwww-perl|pycurl|scan) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (oppo\sa33|(c99|php|web)shell|site((.){0,2})copier) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (base64_decode|bin/bash|disconnect|eval|unserializ) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (acapbot|acoonbot|alexibot|antbot|asterias|attackbot|awario|babbar|backdor|barkrowler|becomebot|binlar|bitsightbot|blackwidow|blekkobot|blex|blowfish|bullseye|bunnys|butterfly|bytespider|careerbot|casper|censysinspect) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (checkpriv|cheesebot|cherrypick|chinaclaw|choppy|claudebot|clshttp|cmsworld|commoncrawl|copernic|copyrightcheck|cosmos|crawlergo|crescent|criteo|datacha|dataforseo|(\b)demon(\b)|diavol|discobot|dittospyder) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (dotbot|dotnetdotcom|dumbot|econtext|emailcollector|emailsiphon|emailwolf|eolasbot|eventures|extract|eyenetie|feedfinder|flaming|flashget|flicky|foobot|fuck) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (g00g1e|getright|gigabot|go-ahead-got|go-http-client|gozilla|grabnet|grafula|harvest|heritrix|hrankbot|httracks?|icarus6j|imagesiftbot|intelx|jetbot|jetcar|jikespider|kmccrew|leechftp|libweb|liebaofast) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (linkscan|linkwalker|lwp-download|majestic|masscan|mauibot|miner|mechanize|mj12bot|morfeus|moveoverbot|mozlila|netmechanic|netspider|nicerspro|nikto|ninja|nominet|nutch) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (octopus|pagegrabber|petalbot|planetwork|postrank|proximic|purebot|queryn|queryseeker|radian6|radiation|realdownload|remoteview|rogerbot|scan|scooter|scrapy|seekerspid) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (semalt|seokicks|seznambot|siclab|sindice|sistrix|sitebot|siteexplorer|sitesnagger|skygrid|smartdownload|snoopy|sosospider|spankbot|spbot|sqlmap|stackrambler|stripper|sucker|surftbot) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (sux0r|suzukacz|suzuran|takeout|teleport|telesoft|true_robots|turingos|turnit|tweetmemebot|vampire|vikspider|voideye|webleacher|webreaper|webstripper|webvac|webviewer|webwhacker|wellknownbot) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (winhttp|wwwoffle|woxbot|xaldon|xxxyy|yamanalab|yioopbot|yisouspider|youda|zeus|zmeu|zoominfobot|zune|zyborg) [NC]
+    RewriteRule .* plugins/system/cgsecure/htaccess.php?e=24&t=e&m=%1___%2&sec=??security?? [L]
 </IfModule>
 #------------------------CG SECURE HTACCESS END--------------------

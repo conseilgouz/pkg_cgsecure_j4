@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.6.6</version>
+        <note>
+            <item>Update : 10/11/2025</item>
+        </note>
+        <change>
+             <item>Use HTTP_USER_AGENT from 8g-firewall instead of SetEnvIfNoCase</item>
+             <item>Lib ConseilGouz version 1.1.0</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.6.5</version>
         <note>
             <item>Update : 26/09/2025</item>
