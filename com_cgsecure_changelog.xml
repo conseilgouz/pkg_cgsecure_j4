@@ -7,7 +7,6 @@
             <item>Update : 17/11/2025</item>
         </note>
         <fix>
-             <item>AI : remove FacebookExternalHit from list</item>
              <item>en-GB : missing error 24 translation</item>
              <item>htaccess : 8G : accept the word demo</item>
         </fix>
