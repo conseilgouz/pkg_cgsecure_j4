@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.6.6--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.6.8--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/, https://perishablepress.com/8g-firewall and AESecure.
 #

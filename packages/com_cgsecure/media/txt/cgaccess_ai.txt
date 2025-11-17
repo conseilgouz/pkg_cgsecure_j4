@@ -1,7 +1,7 @@
 #------------------------CG SECURE IA BOTS BEGIN---------------------
 # Ultimate AI Block List v1.7 20250924
 # from https://perishablepress.com/ultimate-ai-block-list/
-
+# CG Secure : remove  facebookexternalhit (CG Secure v 3.6.8)
 <IfModule mod_rewrite.c>
 
 	RewriteEngine On
@@ -12,7 +12,7 @@
 	RewriteCond %{HTTP_USER_AGENT} (BabyAGI|BabyCatAGI|BardBot|Basic\ RAG|Bedrock|Big\ Sur|Bigsur|Botsonic|Brightbot|Browser\ MCP\ Agent|Browser\ Use|Bytebot|ByteDance|Bytespider|CarynAI|CatBoost|CC-Crawler|CCBot|Chai|Character) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (Charstar\ AI|Chatbot|ChatGLM|Chatsonic|ChatUser|Chinchilla|Claude|ClearScope|Clearview|Cognitive\ AI|Cohere|Common\ Crawl|CommonCrawl|Content\ Harmony|Content\ King|Content\ Optimizer|Content\ Samurai|ContentAtScale|ContentBot|Contentedge) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (ContentShake|Conversion\ AI|Copilot|CopyAI|Copymatic|Copyscape|CoreWeave|Corrective\ RAG|Cotoyogi|CRAB|Crawl4AI|CrawlQ\ AI|Crawlspace|Crew\ AI|CrewAI|Crushon\ AI|DALL-E|DarkBard|DataFor|DataProvider) [NC,OR]
-	RewriteCond %{HTTP_USER_AGENT} (Datenbank\ Crawler|DeepAI|Deep\ AI|DeepL|DeepMind|Deep\ Research|DeepResearch|DeepSeek|Devin|Diffbot|Doubao\ AI|DuckAssistBot|DuckDuckGo\ Chat|DuckDuckGo-Enhanced|Echobot|Echobox|Elixir|FacebookBot|FacebookExternalHit|Factset) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (Datenbank\ Crawler|DeepAI|Deep\ AI|DeepL|DeepMind|Deep\ Research|DeepResearch|DeepSeek|Devin|Diffbot|Doubao\ AI|DuckAssistBot|DuckDuckGo\ Chat|DuckDuckGo-Enhanced|Echobot|Echobox|Elixir|FacebookBot|Factset) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (Falcon|FIRE-1|Firebase|Firecrawl|Flux|Flyriver|Frase\ AI|FriendlyCrawler|Gato|Gemini|Gemma|Gen\ AI|GenAI|Generative|Genspark|Gentoo-chat|Ghostwriter|GigaChat|GLM|GodMode) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (Goose|GPT|Grammarly|Grendizer|Grok|GT\ Bot|GTBot|GTP|Hemingway\ Editor|Hetzner|Hugging|Hunyuan|Hybrid\ Search\ RAG|Hypotenuse\ AI|iAsk|ICC-Crawler|ImageGen|ImagesiftBot|img2dataset|imgproxy) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (INK\ Editor|INKforall|Instructor|IntelliSeek|Inferkit|ISSCyberRiskCrawler|Janitor\ AI|Jasper|Jenni\ AI|Julius\ AI|Kafkai|Kaggle|Kangaroo|Keyword\ Density\ AI|Kimi|Knowledge|KomoBot|Kruti|LangChain|Le\ Chat) [NC,OR]
