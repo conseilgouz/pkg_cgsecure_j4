@@ -61,6 +61,7 @@ $params = json_decode($table->getSecureParams()->params);
 <?php else : ?>
 	<div id="j-main-container">
 <?php endif;?>
+        <div id="logs">
                 <!-- Modal !-->
                 <?php if (file_exists($fileht)) { ?>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewloght"><?php echo Text::_('COM_CGSECURE_HTLOGS_BUTTON'); ?></button>
@@ -124,13 +125,21 @@ $params = json_decode($table->getSecureParams()->params);
                 <?php
                 // other log files
                 echo Text::_('CGSECURE_OTHER_LOGS');
-echo HTMLHelper::_('select.genericlist', $options, 'adLogs', ' class="adLogs chzn-done" data-chosen="done"', 'element', 'name', $value); ?>
+                echo HTMLHelper::_('select.genericlist', $options, 'adLogs', ' class="adLogs chzn-done" data-chosen="done"', 'element', 'name', $value); 
+    ?>
 
+	<div class="filter-search btn-group mb-1 float-end">
+		<label for="filter_search" class="element-invisible"><?php echo Text::_('JSEARCH_FILTER_LABEL'); ?></label>  
+		<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" placeholder= "IP Search" title="<?php echo 'IP Search'; ?>" />
+        <button type="submit" class="btn btn-primary hasTooltip ms-2"><?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+		<button type="button" class="btn btn-primary hasTooltip ms-2" onclick="document.getElementById('filter_search').value='';this.form.submit();"><?php echo Text::_('JSEARCH_FILTER_CLEAR'); ?></button>
+	</div>
+    </div>
+	<div style="clear:both"> </div>
 
     <div class="nr-main-header">
         <h2><?php echo Text::_('CGSECURE_LOGS'); ?></h2>
         <p><?php echo Text::_('CGSECURE_LOGS_DESC'); ?></p>
-    </div>
 
 	<table class="table table-striped">
 	<thead>

@@ -6,6 +6,9 @@
         <note>
             <item>Update : 17/11/2025</item>
         </note>
+        <addition>
+            <item>Add IP search in Logs view</item>
+        </addition>
         <fix>
              <item>en-GB : missing error 24 translation</item>
              <item>htaccess : 8G : accept the word demo</item>
