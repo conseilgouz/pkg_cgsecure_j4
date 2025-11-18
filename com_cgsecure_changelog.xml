@@ -12,6 +12,8 @@
         <fix>
              <item>en-GB : missing error 24 translation</item>
              <item>htaccess : 8G : accept the word demo</item>
+             <item>de-activate cg secure : delete .htaccess from protected folders : admin, files, images, media</item>
+             <item>htaccess in admin : invalid key</item>
         </fix>
 	</changelog>
 	<changelog>

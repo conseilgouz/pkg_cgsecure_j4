@@ -260,12 +260,16 @@ class PlgSystemCgsecureInstallerInstallerScript
         }
         // administrator : block protected directories
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt';
-        $f = JPATH_ROOT . '/administrator/.htaccess';
-        if (!@file_exists($f)) { // .htaccess in images dir
-            $dest   = JPATH_ROOT.'/administrator/.htaccess';
-            if (!copy($source, $dest)) {
+        $dest   = JPATH_ROOT.'/administrator/.htaccess';
+        if (!@file_exists($dest)) { // no .htaccess in admin dir
+            if (!copy($source, $dest)) { // copy it
                 Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
             }
+        }
+        $current = $this->read_current($dest);
+        $cgFile = $this->read_cgfile($source); // latest version of admin htaccess file
+        if (!$this->merge_file($dest, $current, $cgFile, '')) {
+            return 'err : '.Text::_('CGSECURE_ADD_ADMIN_INSERT_ERROR');
         }
     }
     // Begin update HTACCESS -----------------------------------------------

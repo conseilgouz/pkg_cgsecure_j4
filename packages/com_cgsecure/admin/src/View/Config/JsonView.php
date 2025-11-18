@@ -78,6 +78,9 @@ class JsonView extends AbstractView
                 $this->config->blockipv6 = 0;
                 $this->config->blockai = 0;
                 $this->config->blockhotlink = 0;
+               // remove cg secure infos from .htaccess in images, media, files, administrator directories
+                $this->unprotectdirs();
+
             } elseif ($access == 1) {// add CG Secure lines to htaccess file
                 $msg = $this->addHTAccess();
                 $this->config->htaccess = 1;
@@ -400,16 +403,42 @@ class JsonView extends AbstractView
                 return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
             }
         }
-        if (file_exists(JPATH_ROOT.'/administrator/.htaccess')) {
-            return; // .htaccess already present in administrator directory
-        }
-        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt';
         $dest = JPATH_ROOT.'/administrator/.htaccess';
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt';
+        if (!is_file($dest)) {
+            copy($source, $dest);
+        }
+        $current = $this->read_current($dest);
+        $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt');
+        if (!$this->merge_file($dest, $current, $cgFile, '')) {
+            return 'err : '.Text::_('CGSECURE_ADD_ADMIN_INSERT_ERROR');
+        }
+    }
+    // remove CG Secure information in .htaccess from images, media, files, administrator directories
+    private function unprotectdirs()
+    {
+        $dest = JPATH_ROOT.'/images/.htaccess';
         if (is_file($dest)) {
             File::delete($dest);
         }
-        if (!copy($source, $dest)) {
-            return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
+        $dest = JPATH_ROOT.'/media/.htaccess';
+        if (is_file($dest)) {
+            File::delete($dest);
+        }
+        if (is_dir(JPATH_ROOT.'/files')) {// Joomla 5.3.0 : new directory
+            $dest = JPATH_ROOT.'/files/.htaccess';
+            if (is_file($dest)) {
+                File::delete($dest);
+            }
+        }
+        $dest = JPATH_ROOT.'/administrator/.htaccess';
+        if (is_file($dest)) {
+            $current = $this->read_current($dest);
+            if (!$current) {// empty : remove it
+                File::delete($dest);
+            } else { // not empty : save it without CG SSecure infos
+                $this->merge_file($dest, $current, '', '');
+            }
         }
     }
     // add Bad robots blocking
