@@ -268,7 +268,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         }
         $current = $this->read_current($dest);
         $cgFile = $this->read_cgfile($source); // latest version of admin htaccess file
-        if (!$this->merge_file($dest, $current, $cgFile, '')) {
+        if (!$this->merge_file($dest, $current, $cgFile, '','' ,'')) {
             return 'err : '.Text::_('CGSECURE_ADD_ADMIN_INSERT_ERROR');
         }
     }
