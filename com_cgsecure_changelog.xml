@@ -14,6 +14,7 @@
              <item>htaccess : 8G : accept the word demo</item>
              <item>de-activate cg secure : delete .htaccess from protected folders : admin, files, images, media</item>
              <item>htaccess in admin : invalid key</item>
+             <item>htaccess : remove too restrictive 8G</item>
         </fix>
 	</changelog>
 	<changelog>
