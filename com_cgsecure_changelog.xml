@@ -16,6 +16,9 @@
              <item>htaccess in admin : invalid key</item>
              <item>htaccess : remove too restrictive 8G</item>
         </fix>
+        <change>
+             <item>Use SetEnvIfNoCase instead of HTTP_USER_AGENT from 8g-firewall (too many rejectd IP)</item>
+        </change>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>
