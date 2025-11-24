@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.7.0</version>
+        <note>
+            <item>Update : 24/11/2025</item>
+        </note>
+        <fix>
+             <item>htaccess AI : reject user agent starting with FacebookExternalHit</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.6.9</version>
         <note>
             <item>Update : 17/11/2025</item>

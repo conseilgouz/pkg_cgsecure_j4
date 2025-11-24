@@ -4,14 +4,15 @@
 <IfModule mod_rewrite.c>
 
 	RewriteEngine On
-
+    # start with FacebookExternalHit => AI, else link to imessage : https://deviceandbrowserinfo.com/learning_zone/articles/facebookexternalhit
+    RewriteCond %{HTTP_USER_AGENT} ^(FacebookExternalHit) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (\.ai|-ai|_ai|ai\.|ai-|ai_|ai=|AddSearchBot|Agentic|AgentQL|Agent\ 3|Agent\ API|AI\ Agent|AI\ Article\ Writer|AI\ Chat|AI\ Content\ Detector|AI\ Detection|AI\ Dungeon|AI\ Journalist|AI\ Legion) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (AI\ RAG|AI\ Search|AI\ SEO\ Crawler|AI\ Training|AI\ Web|AI\ Writer|AI2|AIBot|aiHitBot|AIMatrix|AISearch|AITraining|Alexa|Alice\ Yandex|AliGenie|AliyunSec|Alpha\ AI|AlphaAI|Amazon|Amelia) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (AndersPinkBot|AndiBot|Anonymous\ AI|Anthropic|AnyPicker|Anyword|Applebot|Aria\ AI|Aria\ Browse|Articoolo|Ask\ AI|AutoGen|AutoGLM|Automated\ Writer|AutoML|Autonomous\ RAG|AwarioRssBot|AwarioSmartBot|AWS\ Trainium|Azure) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (BabyAGI|BabyCatAGI|BardBot|Basic\ RAG|Bedrock|Big\ Sur|Bigsur|Botsonic|Brightbot|Browser\ MCP\ Agent|Browser\ Use|Bytebot|ByteDance|Bytespider|CarynAI|CatBoost|CC-Crawler|CCBot|Chai|Character) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (Charstar\ AI|Chatbot|ChatGLM|Chatsonic|ChatUser|Chinchilla|Claude|ClearScope|Clearview|Cognitive\ AI|Cohere|Common\ Crawl|CommonCrawl|Content\ Harmony|Content\ King|Content\ Optimizer|Content\ Samurai|ContentAtScale|ContentBot|Contentedge) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (ContentShake|Conversion\ AI|Copilot|CopyAI|Copymatic|Copyscape|CoreWeave|Corrective\ RAG|Cotoyogi|CRAB|Crawl4AI|CrawlQ\ AI|Crawlspace|Crew\ AI|CrewAI|Crushon\ AI|DALL-E|DarkBard|DataFor|DataProvider) [NC,OR]
-	RewriteCond %{HTTP_USER_AGENT} (Datenbank\ Crawler|DeepAI|Deep\ AI|DeepL|DeepMind|Deep\ Research|DeepResearch|DeepSeek|Devin|Diffbot|Doubao\ AI|DuckAssistBot|DuckDuckGo\ Chat|DuckDuckGo-Enhanced|Echobot|Echobox|Elixir|FacebookBot|FacebookExternalHit|Factset) [NC,OR]
+	RewriteCond %{HTTP_USER_AGENT} (Datenbank\ Crawler|DeepAI|Deep\ AI|DeepL|DeepMind|Deep\ Research|DeepResearch|DeepSeek|Devin|Diffbot|Doubao\ AI|DuckAssistBot|DuckDuckGo\ Chat|DuckDuckGo-Enhanced|Echobot|Echobox|Elixir|FacebookBot|Factset) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (Falcon|FIRE-1|Firebase|Firecrawl|Flux|Flyriver|Frase\ AI|FriendlyCrawler|Gato|Gemini|Gemma|Gen\ AI|GenAI|Generative|Genspark|Gentoo-chat|Ghostwriter|GigaChat|GLM|GodMode) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (Goose|GPT|Grammarly|Grendizer|Grok|GT\ Bot|GTBot|GTP|Hemingway\ Editor|Hetzner|Hugging|Hunyuan|Hybrid\ Search\ RAG|Hypotenuse\ AI|iAsk|ICC-Crawler|ImageGen|ImagesiftBot|img2dataset|imgproxy) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (INK\ Editor|INKforall|Instructor|IntelliSeek|Inferkit|ISSCyberRiskCrawler|Janitor\ AI|Jasper|Jenni\ AI|Julius\ AI|Kafkai|Kaggle|Kangaroo|Keyword\ Density\ AI|Kimi|Knowledge|KomoBot|Kruti|LangChain|Le\ Chat) [NC,OR]
