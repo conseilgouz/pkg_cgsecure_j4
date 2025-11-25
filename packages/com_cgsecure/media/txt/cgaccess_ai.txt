@@ -4,7 +4,7 @@
 <IfModule mod_rewrite.c>
 
 	RewriteEngine On
-    # start with FacebookExternalHit => AI, else link to imessage : https://deviceandbrowserinfo.com/learning_zone/articles/facebookexternalhit
+    # 3.7.1 : start with FacebookExternalHit => AI, else link to imessage : https://deviceandbrowserinfo.com/learning_zone/articles/facebookexternalhit
     RewriteCond %{HTTP_USER_AGENT} ^(FacebookExternalHit) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (\.ai|-ai|_ai|ai\.|ai-|ai_|ai=|AddSearchBot|Agentic|AgentQL|Agent\ 3|Agent\ API|AI\ Agent|AI\ Article\ Writer|AI\ Chat|AI\ Content\ Detector|AI\ Detection|AI\ Dungeon|AI\ Journalist|AI\ Legion) [NC,OR]
 	RewriteCond %{HTTP_USER_AGENT} (AI\ RAG|AI\ Search|AI\ SEO\ Crawler|AI\ Training|AI\ Web|AI\ Writer|AI2|AIBot|aiHitBot|AIMatrix|AISearch|AITraining|Alexa|Alice\ Yandex|AliGenie|AliyunSec|Alpha\ AI|AlphaAI|Amazon|Amelia) [NC,OR]
