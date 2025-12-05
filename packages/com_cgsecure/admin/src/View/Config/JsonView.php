@@ -770,7 +770,6 @@ class JsonView extends AbstractView
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             curl_exec($curl);
             $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            curl_close($curl);
             if ($responseCode == 500) {
                 return false;
             }

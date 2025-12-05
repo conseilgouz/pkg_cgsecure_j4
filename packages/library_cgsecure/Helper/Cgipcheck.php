@@ -443,7 +443,6 @@ class Cgipcheck
             'Key: ' .$key ,
         ]);
         $result = curl_exec($ch);
-        curl_close($ch);
         return json_decode($result);
     }
     /* report IP to AbuseIPDB */
@@ -529,7 +528,6 @@ class Cgipcheck
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_URL, $url);
             $response = curl_exec($curl);
-            curl_close($curl);
             return $response;
         } catch (\RuntimeException $e) {
             return null;
@@ -685,7 +683,6 @@ class Cgipcheck
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             curl_exec($curl);
             $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            curl_close($curl);
             if ($responseCode == 500) {
                 return false;
             }
