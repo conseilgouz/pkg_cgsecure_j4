@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.7.2</version>
+        <note>
+            <item>Update : 05/12/2025</item>
+        </note>
+        <fix>
+             <item>Task : check AI version only if required</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.7.1</version>
         <note>
             <item>Update : 25/11/2025</item>

@@ -19,6 +19,7 @@ use Joomla\Component\Scheduler\Administrator\Traits\TaskPluginTrait;
 use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Event\SubscriberInterface;
 use Joomla\Filesystem\File;
+use ConseilGouz\CGSecure\Cgipcheck;
 
 final class Cgsecure extends CMSPlugin implements SubscriberInterface
 {
@@ -71,7 +72,10 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         $lang = Factory::getApplication()->getLanguage();
         $lang->load('plg_task_automsg');
         $this->checkMatomo();  // Update Matomo spammers list
-        $this->checkAI();      // update perishablepress AI list 
+        $cgsecure_params = Cgipcheck::getParams();
+        if ($cgsecure_params->blockai) { // blocking AI ?
+            $this->checkAI();      // update perishablepress AI list 
+        }
         return TaskStatus::OK;
     }
     private function checkMatomo()
