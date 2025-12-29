@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.7.3</version>
+        <note>
+            <item>Update : 01/01/2026</item>
+        </note>
+        <fix>
+            <item>Admin : suppress new IP notices, null date on new IP</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.7.2</version>
         <note>
             <item>Update : 05/12/2025</item>

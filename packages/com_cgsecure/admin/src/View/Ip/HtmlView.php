@@ -2,7 +2,7 @@
 /**
  * @component     CG Secure
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
- * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2026 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
 **/
 
@@ -33,7 +33,7 @@ class HtmlView extends BaseHtmlView {
         $this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 		$this->formControl = $this->form ? $this->form->getFormControl() : null;
-		$this->page_params  = new Registry($this->item->page_params);
+		// $this->page_params  = new Registry($this->item->page_params);
 	
         $this->addToolbar();
 

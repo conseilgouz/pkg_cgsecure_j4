@@ -2,7 +2,7 @@
 /**
  * @component     CG Secure
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
- * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2026 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
 **/
 
@@ -10,7 +10,9 @@ namespace ConseilGouz\Component\CGSecure\Administrator\Controller;
 
 \defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -127,6 +129,10 @@ class IpController extends FormController
         if ($infos->data->countryCode) {
             $data['country'] = $infos->data->countryCode;
         }
+        $timezone = Factory::getApplication()->getIdentity()->getTimezone();
+        $date = new Date('now');
+        $date->setTimezone($timezone);
+        $data['attempt_date'] = $date->format(Text::_('DATE_FORMAT_FILTER_DATETIME'));
         // Attempt to save the data.
         if (!$model->save($data)) {
             // Save the data in the session.

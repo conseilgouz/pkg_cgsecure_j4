@@ -2,7 +2,7 @@
 /**
  * @component     CG Secure
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
- * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2026 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
 **/
 
@@ -53,7 +53,7 @@ class JsonView extends AbstractView
                 $msg = "Country : ";
                 $msg .= $infos->data->countryCode ? $infos->data->countryCode : 'unknown';
                 $msg .= ", WhiteList : ";
-                $msg .= ($infos->data->isWhiteListed) ? 'true' : 'false';
+                $msg .= ($infos->data->isWhitelisted) ? 'true' : 'false';
                 $msg .= ', Score : '.$infos->data->abuseConfidenceScore;
                 $msg .= ', IsTor : ';
                 $msg .= ($infos->data->isTor) ? 'true' : 'false';

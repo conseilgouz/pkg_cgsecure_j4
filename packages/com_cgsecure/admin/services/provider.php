@@ -3,7 +3,7 @@
  * @component     CG Secure - Joomla 4.x/5.x
  * Version			: 3.0.11
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
- * @copyright (C) 2025 ConseilGouz. All Rights Reserved.
+ * @copyright (C) 2026 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
 **/
 defined('_JEXEC') or die;
