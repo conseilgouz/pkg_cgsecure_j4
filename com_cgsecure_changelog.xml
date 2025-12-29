@@ -8,6 +8,7 @@
         </note>
         <fix>
             <item>Admin : suppress new IP notices, null date on new IP</item>
+            <item>htaccess : block address containing wp strings</item>
         </fix>
 	</changelog>
 	<changelog>
