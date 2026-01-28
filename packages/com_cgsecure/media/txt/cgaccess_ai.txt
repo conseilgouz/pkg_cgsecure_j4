@@ -1,6 +1,6 @@
 #------------------------CG SECURE IA BOTS BEGIN---------------------
 # Ultimate AI Block List v1.8 20260105
-# https://perishablepress.com/ultimate-ai-block-list/
+# from https://perishablepress.com/ultimate-ai-block-list/
 <IfModule mod_rewrite.c>
 
 	RewriteEngine On
