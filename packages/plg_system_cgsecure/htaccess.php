@@ -66,7 +66,7 @@ if (is_file($helperFile)) {
 }
 $cgsecure_params = Cgipcheck::getParams();
 $ip = IpHelper::getIp();//  $_SERVER['REMOTE_ADDR'];
-$ip = '218.92.1.234'; // test hackeur chinois
+// $ip = '218.92.1.234'; // test hackeur chinois
 
 $tmp = '<html lang="fr-fr" dir="ltr"><head><meta charset="utf-8" />
       <title>Erreur: CG Secure HtAccess Blocked</title></head>';
