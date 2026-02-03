@@ -9,6 +9,9 @@
         <fix>
             <item>CG IPCheck : if AbuseIPDB/LocateIP HS, suppose not a hacker</item>
         </fix>
+        <change>
+            <item>Ultimate AI Block List v1.8 20260105</item>
+        </change>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>
