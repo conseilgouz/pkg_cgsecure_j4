@@ -8,6 +8,7 @@
         </note>
         <fix>
             <item>CG IPCheck : if AbuseIPDB/LocateIP HS, suppose not a hacker</item>
+            <item>HtAccess.php : use white list</item>
         </fix>
         <change>
             <item>Ultimate AI Block List v1.8 20260105</item>

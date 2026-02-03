@@ -9,6 +9,7 @@
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Utilities\IpHelper;
 use ConseilGouz\CGSecure\Cgipcheck;
 
 const _JEXEC = 1;
@@ -56,12 +57,7 @@ if ($language) {
     $language->load('com_cgsecure', JPATH_ADMINISTRATOR, $lang, true);
 }
 header('Access-Control-Allow-Origin: *');
-if (($_SERVER['REMOTE_ADDR'] == '::1') ||  ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
-    $ip = '::1';
-} else {
-    $ip = $_SERVER['REMOTE_ADDR'];
-}
-//$ip = '218.92.0.11'; // test
+
 $myname = 'CGSecureHTAccess';
 // namespace does not work on cli
 $helperFile = JPATH_SITE . '/libraries/cgsecure/src/Cgipcheck.php';
@@ -69,14 +65,8 @@ if (is_file($helperFile)) {
     include_once $helperFile;
 }
 $cgsecure_params = Cgipcheck::getParams();
-if (Cgipcheck::getLatest_ips($ip)) {
-    die('Restricted access');
-} // already blocked : die
-$security = $cgsecure_params->security;
-
-if (isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $security)) {
-    return ;
-} // CG Secure OK : on ignore les erreurs htaccess
+$ip = IpHelper::getIp();//  $_SERVER['REMOTE_ADDR'];
+$ip = '218.92.1.234'; // test hackeur chinois
 
 $tmp = '<html lang="fr-fr" dir="ltr"><head><meta charset="utf-8" />
       <title>Erreur: CG Secure HtAccess Blocked</title></head>';
@@ -84,6 +74,30 @@ $tmp = '<style>.text-center {text-align: center !important;}.align-self-center{a
 $tmp .= '<body class="error-page" style="" ><div class="text-center align-self-center">';
 $tmp .= '<h1>'.Text::_('CGSECURE_MSG_H1').'</h1>';
 $tmp .= '<div>'	 ;
+
+$req = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES); // sanitize command
+if (strpos($req, 'cgsecure/htaccess') !== false) {
+    $req = "..."; // lost URI in redirects
+}
+
+if (Cgipcheck::whiteList($ip)) { // white list : display error message
+    $tmp .= '<h3>'.$req.'</h3></body></html>';
+    $tmp .= '</body></html>';
+    echo $tmp;
+    return;
+}
+if (Cgipcheck::getLatest_ips($ip)) {
+    die('Restricted access');
+} // already blocked : die
+
+$security = $cgsecure_params->security;
+
+if (isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $security)) {
+    $tmp .= '<h3>'.$req.'</h3></body></html>';
+    echo $tmp;
+    return ;
+} // CG Secure OK : on ignore les erreurs htaccess
+
 $prefixe = $_SERVER['SERVER_NAME'];
 $prefixe = substr(str_replace('www.', '', $prefixe), 0, 2);
 $ctl = false;
@@ -92,11 +106,8 @@ $errtype = "e"; // supposed blocking error
 $err = "Wrong message";
 $block = "";
 if (isset($_SERVER['REDIRECT_STATUS'])) {
-    $req = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES); // sanitize command
-    if (strpos($req, 'cgsecure/htaccess') !== false) {
-        $req = "...";
-    } // lost URI in redirect
-    $line = substr($req, 0, 100); // else show entered line
+    $tmp .= '<h3>';
+    $line = substr($req, 0, 100);
     $compl = (strlen($req) < 101) ? '' : '...';
     foreach ($_GET as $key => $value) {
         if (($key == "sec") && ($value == $security)) {
@@ -108,7 +119,7 @@ if (isset($_SERVER['REDIRECT_STATUS'])) {
         if ($key == "t") {
             $errtype = substr($value, 0, 1);
         } // one char only
-        if (strpos($value,'___')) {
+        if (strpos($value, '___')) {
             $block = '('.str_replace('___', '', $value).')';
         }
         if (($key != "e") && ($key != "sec") && ($key != "t") && ($key != "m")) {
@@ -121,7 +132,7 @@ if (isset($_SERVER['REDIRECT_STATUS'])) {
 } else {
     $err = "Direct access to plugin not allowed";
 }
-$tmp .= $err.$block.'</ul></div></div></body></html>';
+$tmp .= $err.$block.'</h3></body></html>';
 echo $tmp;
 $err = $prefixe.$errtype.'-'.$err;
 if (($cgsecure_params->logging_ht == 1) || (($cgsecure_params->logging_ht == 2) && ($errtype == "e"))) {
