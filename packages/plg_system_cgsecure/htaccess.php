@@ -81,6 +81,10 @@ if (strpos($req, 'cgsecure/htaccess') !== false) {
 }
 
 if (Cgipcheck::whiteList($ip)) { // white list : display error message
+    if (($cgsecure_params->logging_ht == 1) || ($cgsecure_params->logging_ht == 2)) {
+        Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG, array('CGHTAccess'));
+        Log::add('White list : '.$req, Log::DEBUG, 'CGHTAccess');
+    }
     $tmp .= '<h3>'.$req.'</h3></body></html>';
     $tmp .= '</body></html>';
     echo $tmp;
@@ -93,6 +97,10 @@ if (Cgipcheck::getLatest_ips($ip)) {
 $security = $cgsecure_params->security;
 
 if (isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $security)) {
+    if (($cgsecure_params->logging_ht == 1) || ($cgsecure_params->logging_ht == 2)) {
+        Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG, array('CGHTAccess'));
+        Log::add('White list : '.$req, Log::DEBUG, 'CGHTAccess');
+    }
     $tmp .= '<h3>'.$req.'</h3></body></html>';
     echo $tmp;
     return ;
