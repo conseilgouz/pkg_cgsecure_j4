@@ -100,7 +100,6 @@ class Cgipcheck
         self::$message = $plugin->mymessage;
         self::$errtype = $plugin->errtype;
         self::$context = $context;
-        self::$latest_rejected = self::get_rejected();
         $ip = IpHelper::getIp();
         // $ip = $_SERVER['REMOTE_ADDR'];
         // $ip = '218.92.1.234'; // test hackeur chinois/confidence = 0
@@ -111,6 +110,7 @@ class Cgipcheck
         if (self::whiteList($ip)) {
             return true;
         }
+        self::$latest_rejected = self::get_rejected();
         self::$logging = self::$params->logging == 1;
         self::$report = self::$params->report == 1;
         self::$blockip  = self::$params->blockip == 1;
@@ -152,12 +152,11 @@ class Cgipcheck
                 // mode dégradé : check only country code, no reporting
                 $response = self::getIPLocate_via_curl(self::$iplocate.$ip);
                 $json_array = json_decode($response);
-                if ($json_array->country_code == "") { // IPLocate perdu : on suppose hackeur
+                if (!isset($json_array->country_code) || (isset($json_array->country_code) && ($json_array->country_code == ""))) { // IPLocate perdu : on suppose OK
                     if (self::$logging) {
-                        Log::add('IP Locate error : '.$json_array->country_code, Log::DEBUG, self::$caller);
+                        Log::add('IP Locate error : unknown country', Log::DEBUG, self::$caller);
                     }
-                    self::set_rejected(self::$caller, self::$errtype, $ip, 'unknown', self::$params->keep);
-                    self::redir_out();
+                    return;
                 } elseif ((($countries != '*') && (!in_array($json_array->country_code, $pays_autorise)))
                             || (($blockedcountries != '') && (in_array($json_array->country_code, $pays_interdit)))) {
                     if (self::$logging) {
@@ -177,15 +176,10 @@ class Cgipcheck
                 $response = self::getIPLocate_via_curl(self::$iplocate.$ip);
                 if ($response) { // IPLocate OK
                     $json_array = json_decode($response);
-                    if ($json_array->country_code == "") { // IPLocate perdu : on suppose hackeur
+                    if (!isset($json_array->country_code) || (isset($json_array->country_code) && ($json_array->country_code == ""))) { // IPLocate perdu : on suppose OK
                         if (self::$logging) {
                             Log::add('IP Locate error : unknown country', Log::DEBUG, self::$caller);
                         }
-                        if (self::$report) {
-                            self::report(self::$context, $ip);
-                        }
-                        self::set_rejected(self::$caller, self::$errtype, $ip, 'unknown', self::$params->keep);
-                        self::redir_out();
                     } elseif ((($countries != '*') && (!in_array($json_array->country_code, $pays_autorise)))
                             || (($blockedcountries != '') && (in_array($json_array->country_code, $pays_interdit)))) {
                         if (self::$report) {
@@ -196,17 +190,11 @@ class Cgipcheck
                         }
                         self::set_rejected(self::$caller, self::$errtype, $ip, $json_array->country_code, self::$params->keep);
                         self::redir_out();
-
                     }
-                } else { // IPLocate error
+                } else { // IPLocate error : assume OK
                     if (self::$logging) {
                         Log::add('IP Locate error : unknown country', Log::DEBUG, self::$caller);
                     }
-                    if (self::$report) {
-                        self::report(self::$context, $ip);
-                    }
-                    self::set_rejected(self::$caller, self::$errtype, $ip, 'unknown', self::$params->keep);
-                    self::redir_out();
                 }
             } elseif ((($countries != '*') && (!in_array($resp->data->countryCode, $pays_autorise)))
                     || (($blockedcountries != '') && (in_array($resp->data->countryCode, $pays_interdit)))) {
@@ -287,7 +275,7 @@ class Cgipcheck
                 if (self::$logging) {
                     Log::add(self::$context.' : '.'Country not found in AbuseIPDB, ip '.$ip.','.$resp->data->countryCode, Log::DEBUG, self::$caller);
                 }
-                return true; // spammeur
+                return false; // assume OK
             } elseif ((($countries != '*') && (!in_array($resp->data->countryCode, $pays_autorise)))
                      || (($blockedcountries != '') && (in_array($resp->data->countryCode, $pays_interdit)))) {
                 if (self::$logging) {
@@ -370,11 +358,11 @@ class Cgipcheck
     public static function report_hacker($plugin, $message, $errtype, $ip)
     {
         self::$message = $message;
-        self::$latest_hacker = self::get_rejected();
         //         $ip = '222.186.42.7'; // test hackeur chinois
         if (self::whiteList($ip)) {
             return true;
         }
+        self::$latest_hacker = self::get_rejected();
         if (in_array($ip, self::$latest_hacker)) { // already in database
             if (self::check_hacker($errtype, $ip)) {
                 return;
@@ -403,10 +391,10 @@ class Cgipcheck
     public static function block_hacker($myname, $err, $errtype, $ip)
     {
         if (self::$params->report == 0) {// not stored yet in DB
-            self::$latest_hacker = self::get_rejected();
             if (self::whiteList($ip)) {
                 return;
             }
+            self::$latest_hacker = self::get_rejected();
             if (in_array($ip, self::$latest_hacker)) { // already in database
                 if (self::check_hacker($errtype, $ip)) {
                     return;

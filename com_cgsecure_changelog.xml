@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.7.4</version>
+        <note>
+            <item>Update : 03/02/2026</item>
+        </note>
+        <fix>
+            <item>CG IPCheck : if AbuseIPDB/LocateIP HS, suppose not a hacker</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.7.3</version>
         <note>
             <item>Update : 01/01/2026</item>
