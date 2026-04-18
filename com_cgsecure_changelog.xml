@@ -2,6 +2,18 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.7.6</version>
+        <note>
+            <item>Update : 18/04/2026</item>
+        </note>
+        <fix>
+            <item>htaccess : block .shtml, .phpt extensions</item>
+            <item>htaccess AI list : remove FacebookExternalHit from the list</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.7.5</version>
         <note>
             <item>Update : 23/03/2026</item>
