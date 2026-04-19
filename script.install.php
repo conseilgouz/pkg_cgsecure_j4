@@ -35,7 +35,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $newlib_version	         = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "3.7.6";
+    private $cgsecure_force_update_version = "3.7.7";
     private $security;
     private $config;
     private $db;
@@ -296,8 +296,11 @@ class PlgSystemCgsecureInstallerInstallerScript
         } else { // no custom file : use cgaccess.txt file
             $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess.txt');
         }
-        $cgAI = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
         $this->config  = $this->getParams();
+        $cgAI = "";
+        if (isset($this->config->blockai) && $this->config->blockai) {
+            $cgAI = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
+        }
         $specific = isset($this->config->specific) && $this->config->specific;
         if ($specific) {
             $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$this->config->specific.PHP_EOL;
