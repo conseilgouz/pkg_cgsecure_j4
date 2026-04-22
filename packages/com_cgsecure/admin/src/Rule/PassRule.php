@@ -7,28 +7,27 @@
 **/
 
 namespace ConseilGouz\Component\CGSecure\Administrator\Rule;
-defined( '_JEXEC' ) or die( 'Restricted access' );
-use Joomla\CMS\Component\ComponentHelper;
+
+defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Form\Rule\PasswordRule;
+use Joomla\CMS\Form\FormRule;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
 
-class PassRule extends PasswordRule
+class PassRule extends FormRule
 {
-
-	public function test(\SimpleXMLElement $element, $value, $group = null, Registry $input = null,Form $form = null) {
+    public function test(\SimpleXMLElement $element, $value, $group = null, ?Registry $input = null, ?Form $form = null)
+    {
 
         if (!empty($value)) {
-           $nHits = preg_match_all('/[%&+]/', $value, $imatch);
-           if ($nHits > 0) {
-                Factory::getApplication()->enqueueMessage(Text::_('CGSECURE_INVALID_SPECIALS'),'error');
+            $nHits = preg_match_all('/[%&+]/', $value, $imatch);
+            if ($nHits > 0) {
+                Factory::getApplication()->enqueueMessage(Text::_('CGSECURE_INVALID_SPECIALS'), 'error');
                 return false;
-           }
+            }
         }
-        return parent::test($element, $value, $group, $input,$form);
-		
-	}
+        return true;
+
+    }
 }
