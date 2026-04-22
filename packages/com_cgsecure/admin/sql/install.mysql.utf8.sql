@@ -1,6 +1,8 @@
 CREATE TABLE IF NOT EXISTS `#__cgsecure_config` (
+  `id` int(12) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `params` text NOT NULL
+  `params` text NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Store any configuration in key => params maps';
 CREATE TABLE IF NOT EXISTS `#__cg_rejected_ip` (
 	`id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', 

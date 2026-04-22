@@ -128,6 +128,14 @@ class PlgSystemCgsecureInstallerInstallerScript
     }
     private function postInstall()
     {
+        // CG Secure Config should contain only one record
+        $db = $this->db;
+        $query = $db->getQuery(true)
+            ->delete('#__cgsecure_config')
+            ->where($db->quoteName('id') . ' > 1');
+        $db->setQuery($query);
+        $db->execute();
+
         // remove obsolete update sites
         $db = $this->db;
         $query = $db->getQuery(true)

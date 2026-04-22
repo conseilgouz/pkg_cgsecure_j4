@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.8.0</version>
+        <note>
+            <item>Update : 22/04/2026</item>
+        </note>
+        <fix>
+            <item>add id in cgsecure_config table</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.7.10</version>
         <note>
             <item>Update : 22/04/2026</item>
