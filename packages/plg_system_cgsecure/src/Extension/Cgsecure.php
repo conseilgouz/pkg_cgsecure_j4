@@ -6,6 +6,7 @@
  * @copyright (C) 2026 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
  */
+
 namespace Conseilgouz\Plugin\System\CGSecure\Extension;
 
 defined('_JEXEC') or die('Restricted access');
@@ -21,7 +22,7 @@ use ConseilGouz\CGSecure\Cgipcheck;
 final class Cgsecure extends CMSPlugin implements SubscriberInterface
 {
     use UserFactoryAwareTrait;
-    
+
     public $myname = 'SystemCGSecure';
     public $mymessage = 'Joomla Admin : try to force the door...';
     public $cgsecure_params;
@@ -44,7 +45,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         return ['onAfterDispatch' => 'onAfterDispatch',
                 'onBeforeRender' => 'onBeforeRender' ];
     }
-    
+
     public function onAfterDispatch($event)
     {
         $mainframe 	= $this->getApplication();
@@ -52,12 +53,16 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         $session	= $this->getApplication()->getSession();
         if ($session->get('cgsecure')) {// already checked
             return;
-        } 
+        }
         if (!$mainframe->isClient('administrator') || !$user->guest) {
             return;
         }
         if (!$this->cgsecure_params->password) {// no check
             self::createCookie();
+            return;
+        }
+        if (isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $this->cgsecure_params->security)) {
+        // cookie has beeen created : don't check 
             return;
         }
         $prefixe = $_SERVER['SERVER_NAME'];
@@ -112,12 +117,12 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         $session	= $this->getApplication()->getSession();
         if ($session->get('cgsecure')) {// already checked
             return;
-        } 
+        }
         if ($mainframe->isClient('administrator') || !$user->guest) {
             return;
         }
-        
-        if (!$this->cgsecure_params->blockbad) { 
+
+        if (!$this->cgsecure_params->blockbad) {
             return;
         }
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
@@ -129,6 +134,6 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                     link.innerHTML='Do NOT follow this link or you will be banned from the site!';
                     document.body.appendChild(link);
                     })";
-       $wa->addInlineScript($script);
+        $wa->addInlineScript($script);
     }
 }

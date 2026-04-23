@@ -54,6 +54,30 @@ class PlgSystemCgsecureInstallerInstallerScript
         if (! file_exists($this->dir . '/' . $this->installerName . '.xml')) {
             return true;
         }
+        // check if multiple config records have been created
+        $db = $this->db;
+        $count = 2;
+        while ($count > 1) {
+            try {
+                $query = $db->getQuery(true)
+                    ->select('COUNT(*)')
+                    ->from('#__cgsecure_config')
+                ;
+                $db->setQuery($query);
+                $count = $db->loadResult();
+                if ($count > 1) { // remove one occurence
+                    $query = $db->getQuery(true)
+                        ->delete('#__cgsecure_config')
+                        ->where($db->quoteName('name') . ' = "config"')
+                        ->setLimit(1);
+                    $db->setQuery($query);
+                    $db->execute();
+                    $count -= 1;
+                }
+            } catch (RuntimeException $e) {
+                // ignore it
+            }
+        }
 
         Factory::getApplication()->getLanguage()->load('plgcgsecureinstaller', $this->dir);
 
@@ -116,7 +140,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         $this->delete([
             JPATH_ADMINISTRATOR . '/components/com_cgsecure/src/Field/VersionField.php',
         ]);
-        
+
         $this->postInstall();
         $this->check_cgsecure_task();
         Factory::getApplication()->enqueueMessage(Text::_('PKG_CGSECURE_XML_DESCRIPTION'), 'notice');
@@ -128,14 +152,6 @@ class PlgSystemCgsecureInstallerInstallerScript
     }
     private function postInstall()
     {
-        // CG Secure Config should contain only one record
-        $db = $this->db;
-        $query = $db->getQuery(true)
-            ->delete('#__cgsecure_config')
-            ->where($db->quoteName('id') . ' > 1');
-        $db->setQuery($query);
-        $db->execute();
-
         // remove obsolete update sites
         $db = $this->db;
         $query = $db->getQuery(true)
@@ -276,7 +292,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         }
         $current = $this->read_current($dest);
         $cgFile = $this->read_cgfile($source); // latest version of admin htaccess file
-        if (!$this->merge_file($dest, $current, $cgFile, '','' ,'')) {
+        if (!$this->merge_file($dest, $current, $cgFile, '', '', '')) {
             return 'err : '.Text::_('CGSECURE_ADD_ADMIN_INSERT_ERROR');
         }
     }
@@ -768,7 +784,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         $db->execute();
         // nettoyage du cache
         $cacheModel = Factory::getApplication()->bootComponent('com_cache')->getMVCFactory()->createModel('Cache', 'Administrator', ['ignore_request' => true]);
-        $cache = $cacheModel->getCache() ??null;
+        $cache = $cacheModel->getCache() ?? null;
         if ($cache) {
             foreach ($cache->getAll() as $group) {
                 $cache->clean($group->group);

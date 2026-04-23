@@ -1,0 +1,2 @@
+ALTER TABLE `#__cgsecure_config` DROP `id`;
+ALTER TABLE `#__cgsecure_config` ADD PRIMARY KEY(`name`);
