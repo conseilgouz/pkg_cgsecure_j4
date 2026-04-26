@@ -115,8 +115,8 @@ $err = "Wrong message";
 $block = "";
 if (isset($_SERVER['REDIRECT_STATUS'])) {
     $tmp .= '<h3>';
-    $line = substr($req, 0, 100);
-    $compl = (strlen($req) < 101) ? '' : '...';
+    $line = substr($req, 0, 300);
+    $compl = (strlen($req) < 301) ? '' : '...';
     foreach ($_GET as $key => $value) {
         if (($key == "sec") && ($value == $security)) {
             $ctl = true;
@@ -135,10 +135,10 @@ if (isset($_SERVER['REDIRECT_STATUS'])) {
         }
     }
     if (!$ctl) {
-        $err = 'Security key failure';
+        $err = 'Security key failure'.$line;
     }
 } else {
-    $err = "Direct access to plugin not allowed";
+    $err = "Direct access to plugin not allowed. Req : ".$req;
 }
 $tmp .= $err.$block.'</h3></body></html>';
 echo $tmp;

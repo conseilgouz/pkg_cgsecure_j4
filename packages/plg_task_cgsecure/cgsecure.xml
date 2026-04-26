@@ -2,7 +2,7 @@
 <extension version="4.1" type="plugin" group="task" method="upgrade">
 	<name>PLG_TASK_CGSECURE</name>
 	<author>conseilgouz</author>
-	<creationDate>2026-04-23</creationDate>
+	<creationDate>2026-04-26</creationDate>
 	<copyright>Copyright (C) 2025 ConseilGouz. All rights reserved.</copyright>
 	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
