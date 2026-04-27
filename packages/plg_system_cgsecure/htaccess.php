@@ -138,6 +138,8 @@ if (isset($_SERVER['REDIRECT_STATUS'])) {
         $err = 'Security key failure'.$line;
     }
 } else {
+    $req = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
+    $req = substr($req, 0, 300); // limit message length
     $err = "Direct access to plugin not allowed. Req : ".$req;
 }
 $tmp .= $err.$block.'</h3></body></html>';
