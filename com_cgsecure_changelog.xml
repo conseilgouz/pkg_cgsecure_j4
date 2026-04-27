@@ -10,7 +10,6 @@
             <item>remove id in cgsecure_config table, set name as primary key</item>
             <item>On admin logout, remain on administration login page</item>
             <item>System/htaccess : increase hacker attempt input length</item>
-            <item>System/htaccess : direct access error : show hacker attempt input</item>
         </change>
 	</changelog>
 	<changelog>
