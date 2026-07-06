@@ -20,6 +20,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
+use ConseilGouz\CGSecure\LanguageDetection\Language as LanguageDetect;
 
 class Cgipcheck
 {
@@ -31,6 +32,7 @@ class Cgipcheck
     private static $logging;
 
     private static $blockip;
+    private static $blockipv6;
     private static $latest_rejected;
     private static $latest_hacker;
     private static $params;
@@ -98,21 +100,23 @@ class Cgipcheck
         self::$message = $plugin->mymessage;
         self::$errtype = $plugin->errtype;
         self::$context = $context;
-        self::$latest_rejected = self::get_rejected();
         $ip = IpHelper::getIp();
         // $ip = $_SERVER['REMOTE_ADDR'];
         // $ip = '218.92.1.234'; // test hackeur chinois/confidence = 0
         // $ip = '92.184.96.127'; // in abuseip confidence = 0
         // $ip = '54.36.148.179'; // in abuseip whitelist
-        // $ip = '3.92.135.245'; // us hacker
+        // $ip = '100.29.192.106'; // us hacker
+        // $ip = '2a00:f940:2:2:1:3:0:211'; // AI robots V6 Ip
         if (self::whiteList($ip)) {
             return true;
         }
+        self::$latest_rejected = self::get_rejected();
         self::$logging = self::$params->logging == 1;
         self::$report = self::$params->report == 1;
         self::$blockip  = self::$params->blockip == 1;
+        self::$blockipv6  = self::$params->blockipv6 == 1;
         if (self::$logging) {
-            Log::addLogger(array('text_file' => 'cgipcheck.trace.log'), Log::DEBUG, array(self::$caller));
+            Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::DEBUG, array(self::$caller));
         }
         if (in_array($ip, self::$latest_rejected)) {
             if (self::check_hacker(self::$errtype, $ip)) { // no errtype change : ok
@@ -124,9 +128,15 @@ class Cgipcheck
             }
         }
         if (extension_loaded('curl')) {
-            $countries = self::$params->country;
+            $countries = "*";
+            if (isset(self::$params->country)) {
+                $countries = self::$params->country;
+            }
             $pays_autorise = explode(',', $countries);
-            $blockedcountries = self::$params->blockedcountry;
+            $blockedcountries = "";
+            if (isset(self::$params->blockedcountry)) {
+                $blockedcountries = self::$params->blockedcountry;
+            }
             $pays_interdit = explode(',', $blockedcountries);
             $resp = self::abuseIPDBrequest('check', 'GET', [ 'ipAddress' => $ip, 'maxAgeInDays' => 30, 'verbose' => true ]);
             if (!isset($resp->data)) { // AbuseIP Error
@@ -142,12 +152,11 @@ class Cgipcheck
                 // mode dégradé : check only country code, no reporting
                 $response = self::getIPLocate_via_curl(self::$iplocate.$ip);
                 $json_array = json_decode($response);
-                if ($json_array->country_code == "") { // IPLocate perdu : on suppose hackeur
+                if (!isset($json_array->country_code) || (isset($json_array->country_code) && ($json_array->country_code == ""))) { // IPLocate perdu : on suppose OK
                     if (self::$logging) {
-                        Log::add('IP Locate error : '.$json_array->country_code, Log::DEBUG, self::$caller);
+                        Log::add('IP Locate error : unknown country', Log::DEBUG, self::$caller);
                     }
-                    self::set_rejected(self::$caller, self::$errtype, $ip, 'unknown', self::$params->keep);
-                    self::redir_out();
+                    return;
                 } elseif ((($countries != '*') && (!in_array($json_array->country_code, $pays_autorise)))
                             || (($blockedcountries != '') && (in_array($json_array->country_code, $pays_interdit)))) {
                     if (self::$logging) {
@@ -167,15 +176,10 @@ class Cgipcheck
                 $response = self::getIPLocate_via_curl(self::$iplocate.$ip);
                 if ($response) { // IPLocate OK
                     $json_array = json_decode($response);
-                    if ($json_array->country_code == "") { // IPLocate perdu : on suppose hackeur
+                    if (!isset($json_array->country_code) || (isset($json_array->country_code) && ($json_array->country_code == ""))) { // IPLocate perdu : on suppose OK
                         if (self::$logging) {
                             Log::add('IP Locate error : unknown country', Log::DEBUG, self::$caller);
                         }
-                        if (self::$report) {
-                            self::report(self::$context, $ip);
-                        }
-                        self::set_rejected(self::$caller, self::$errtype, $ip, 'unknown', self::$params->keep);
-                        self::redir_out();
                     } elseif ((($countries != '*') && (!in_array($json_array->country_code, $pays_autorise)))
                             || (($blockedcountries != '') && (in_array($json_array->country_code, $pays_interdit)))) {
                         if (self::$report) {
@@ -186,17 +190,11 @@ class Cgipcheck
                         }
                         self::set_rejected(self::$caller, self::$errtype, $ip, $json_array->country_code, self::$params->keep);
                         self::redir_out();
-
                     }
-                } else { // IPLocate error
+                } else { // IPLocate error : assume OK
                     if (self::$logging) {
                         Log::add('IP Locate error : unknown country', Log::DEBUG, self::$caller);
                     }
-                    if (self::$report) {
-                        self::report(self::$context, $ip);
-                    }
-                    self::set_rejected(self::$caller, self::$errtype, $ip, 'unknown', self::$params->keep);
-                    self::redir_out();
                 }
             } elseif ((($countries != '*') && (!in_array($resp->data->countryCode, $pays_autorise)))
                     || (($blockedcountries != '') && (in_array($resp->data->countryCode, $pays_interdit)))) {
@@ -245,7 +243,7 @@ class Cgipcheck
 
         self::$logging = self::$params->logging == 1;
         if (self::$logging) {
-            Log::addLogger(array('text_file' => 'cgipcheck.trace.log'), Log::DEBUG, array(self::$caller));
+            Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::DEBUG, array(self::$caller));
         }
         if (extension_loaded('curl')) {
             $resp = self::abuseIPDBrequest('check', 'GET', [ 'ipAddress' => $ip, 'maxAgeInDays' => 30, 'verbose' => true ]);
@@ -261,10 +259,15 @@ class Cgipcheck
                 }
                 return false; // suppose OK
             }
-            $countries = self::$params->country;
+            $countries = "*";
+            if (isset(self::$params->country)) {
+                $countries = self::$params->country;
+            }
             $pays_autorise = explode(',', $countries);
-
-            $blockedcountries = self::$params->blockedcountry;
+            $blockedcountries = "";
+            if (isset(self::$params->blockedcountry)) {
+                $blockedcountries = self::$params->blockedcountry;
+            }
             $pays_interdit = explode(',', $blockedcountries);
 
             // Verifie si l'IP du visiteur est dans la liste des pays que j'ai autorise
@@ -272,7 +275,7 @@ class Cgipcheck
                 if (self::$logging) {
                     Log::add(self::$context.' : '.'Country not found in AbuseIPDB, ip '.$ip.','.$resp->data->countryCode, Log::DEBUG, self::$caller);
                 }
-                return true; // spammeur
+                return false; // assume OK
             } elseif ((($countries != '*') && (!in_array($resp->data->countryCode, $pays_autorise)))
                      || (($blockedcountries != '') && (in_array($resp->data->countryCode, $pays_interdit)))) {
                 if (self::$logging) {
@@ -309,15 +312,57 @@ class Cgipcheck
         }
         return false;
     }
+    // check message language
+    public static function check_language($plugin, $contact, $message)
+    {
+        self::$caller = $plugin->myname;
+        self::$message = $plugin->mymessage;
+        self::$logging = self::$params->logging_contact == 1;
+        if (isset(self::$params->contactcountry)) {
+            if (!count(self::$params->contactcountry)) {
+                return true;
+            }
+            $pays_autorise = self::$params->contactcountry;
+        } else {
+            return true; // don't check language
+        }
+        $ld = new LanguageDetect();
+        $ret = $ld->detect($message)->bestResults();
+        $found = false;
+        $onelang = "";
+        foreach ($ret as $country => $score) {
+            if (in_array($country, $pays_autorise)) {
+                $found = true;
+            }
+            if (!$onelang) {// store first one
+                $onelang = $country;
+            }
+        }
+        if (!$found) {
+            if (self::$logging) {
+                Log::addLogger(array('text_file' => 'cgcontact.trace.php'), Log::DEBUG, array(self::$caller));
+                Log::add(self::$message.$onelang, Log::DEBUG, self::$caller);
+            }
+            if (self::$params->contactaction == 'reject') {
+                self::redir_out();
+            } elseif (self::$params->contactaction == 'block') {
+                $msg = Text::sprintf('CGSECURE_BAD_LANGUAGE_CODE', $onelang);
+                Factory::getApplication()->enqueueMessage($msg, 'error');
+                self::redir_out();
+            }
+            return false; // Wrong language found
+        }
+        return true; // everything is OK
+    }
     // Report hacking blocked by htaccess
     public static function report_hacker($plugin, $message, $errtype, $ip)
     {
         self::$message = $message;
-        self::$latest_hacker = self::get_rejected();
         //         $ip = '222.186.42.7'; // test hackeur chinois
         if (self::whiteList($ip)) {
             return true;
         }
+        self::$latest_hacker = self::get_rejected();
         if (in_array($ip, self::$latest_hacker)) { // already in database
             if (self::check_hacker($errtype, $ip)) {
                 return;
@@ -346,10 +391,10 @@ class Cgipcheck
     public static function block_hacker($myname, $err, $errtype, $ip)
     {
         if (self::$params->report == 0) {// not stored yet in DB
-            self::$latest_hacker = self::get_rejected();
             if (self::whiteList($ip)) {
                 return;
             }
+            self::$latest_hacker = self::get_rejected();
             if (in_array($ip, self::$latest_hacker)) { // already in database
                 if (self::check_hacker($errtype, $ip)) {
                     return;
@@ -420,7 +465,7 @@ class Cgipcheck
         }
     }
     // curl request function
-    private static function abuseIPDBrequest($path, $method, $data)
+    public static function abuseIPDBrequest($path, $method, $data)
     {
         $key = self::$params->api_key;
         if ($key == '') {
@@ -555,9 +600,23 @@ class Cgipcheck
     {
         $wait = self::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
         if (file_exists($wait)) {//
-            return;
+            $readBuffer = file($wait, FILE_IGNORE_NEW_LINES);
+            if (!$readBuffer) {
+                // `file` couldn't read the htaccess we can't do anything at this point
+                File::delete($wait);
+                return;
+            }
+            foreach ($readBuffer as $id => $line) {
+                $current = time();
+                $diff = $current - $line;
+                if ($diff > 60) { // plus d'une minute : on est perdu ?
+                    File::delete($wait);
+                } else {
+                    return;
+                }
+            }
         }
-        $msg = 'wait...';
+        $msg = time();
         File::write($wait, $msg);
         $serverConfigFile = self::getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
         if (!$serverConfigFile) { // no .htaccess file
@@ -611,15 +670,16 @@ class Cgipcheck
     }
     private static function create_ips($list)
     {
+        self::$blockipv6  = isset(self::$params->blockipv6) && self::$params->blockipv6 == 1;
         $ret = "#------------------------CG SECURE IP LIST BEGIN---------------------". PHP_EOL;
         $ret .= "#Type serveur : ".$_SERVER['SERVER_SOFTWARE']. PHP_EOL;
         $ret .= "<IfModule mod_authz_core.c>".PHP_EOL;
         $ret .= "<RequireAll>". PHP_EOL;
         $ret .= "Require all granted". PHP_EOL;
         foreach ($list as $key => $ip) {
-            if (strpos($ip, ':') !== false) {
+            if ((strpos($ip, ':') !== false) && !self::$blockipv6) {// IPV6 : ignore it : bug in OVH/APACH
                 continue;
-            } // IPV6 : ignore it, blocked later : bug in OVH/APACH
+            }
             $ret .= "require not ip ".$ip.PHP_EOL;
         }
         $ret .= "</RequireAll>". PHP_EOL;
@@ -627,7 +687,7 @@ class Cgipcheck
         $ret .= '#------------------------CG SECURE IP LIST END--------------------'. PHP_EOL;
         return $ret;
     }
-    private static function store_file($htaccess, $current)
+    private static function store_file(String $htaccess, String $current)
     {
         $pathToHtaccess  = $htaccess;
         if (file_exists($pathToHtaccess)) {
@@ -686,7 +746,6 @@ class Cgipcheck
             if ($responseCode == 500) {
                 return false;
             }
-            return true;
         } catch (\RuntimeException $e) {
             return false;
         }

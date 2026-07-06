@@ -9,6 +9,7 @@
 namespace ConseilGouz\Component\CGSecure\Administrator\View\Config;
 
 defined('_JEXEC') or die('Restricted access');
+use Joomla\CMS\Access\Access;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\AbstractView;
@@ -48,15 +49,36 @@ class JsonView extends AbstractView
         $type = $input->get('type');
         $access = (int)$input->get('access');
         $this->security = $input->get('security');
-        $msg = "";
-        $wait = self::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
-        if (file_exists($wait)) {
+        $user = Factory::getApplication()->getIdentity();
+        if (!$user->authorise('core.manage', 'com_cgsecure')) {
             $arr = [];
-            $arr['retour'] = 'err : already in progress';
+            $arr['retour'] = 'err : not authorized';
             echo new JsonResponse($arr);
             return;
         }
-        $msg = 'wait...';
+        $msg = "";
+        $wait = self::getServerConfigFilePath('.working'); // create a temp. file to block other requests
+        if (file_exists($wait)) {
+            $readBuffer = file($wait, FILE_IGNORE_NEW_LINES);
+            if (!$readBuffer) {
+                // `file` couldn't read the htaccess we can't do anything at this point
+                File::delete($wait);
+                return;
+            }
+            foreach ($readBuffer as $id => $line) {
+                $current = time();
+                $diff = $current - $line;
+                if ($diff > 60) { // plus d'une minute : on est perdu ?
+                    File::delete($wait);
+                } else {
+                    $arr = [];
+                    $arr['retour'] = 'err : already in progress';
+                    echo new JsonResponse($arr);
+                    return;
+                }
+            }
+        }
+        $msg = time();
         File::write($wait, $msg);
         $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
         $this->config  = $this->getParams();
@@ -78,7 +100,7 @@ class JsonView extends AbstractView
                 $this->config->blockipv6 = 0;
                 $this->config->blockai = 0;
                 $this->config->blockhotlink = 0;
-               // remove cg secure infos from .htaccess in images, media, files, administrator directories
+                // remove cg secure infos from .htaccess in images, media, files, administrator directories
                 $this->unprotectdirs();
 
             } elseif ($access == 1) {// add CG Secure lines to htaccess file

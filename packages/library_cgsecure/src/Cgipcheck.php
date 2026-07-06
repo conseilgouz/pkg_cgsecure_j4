@@ -105,7 +105,7 @@ class Cgipcheck
         // $ip = '218.92.1.234'; // test hackeur chinois/confidence = 0
         // $ip = '92.184.96.127'; // in abuseip confidence = 0
         // $ip = '54.36.148.179'; // in abuseip whitelist
-        // $ip = '3.92.135.245'; // us hacker
+        // $ip = '100.29.192.106'; // us hacker
         // $ip = '2a00:f940:2:2:1:3:0:211'; // AI robots V6 Ip
         if (self::whiteList($ip)) {
             return true;
@@ -600,9 +600,23 @@ class Cgipcheck
     {
         $wait = self::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
         if (file_exists($wait)) {//
-            return;
+            $readBuffer = file($wait, FILE_IGNORE_NEW_LINES);
+            if (!$readBuffer) {
+                // `file` couldn't read the htaccess we can't do anything at this point
+                File::delete($wait);
+                return;
+            }
+            foreach ($readBuffer as $id => $line) {
+                $current = time();
+                $diff = $current - $line;
+                if ($diff > 60) { // plus d'une minute : on est perdu ?
+                    File::delete($wait);
+                } else {
+                    return;
+                }
+            }
         }
-        $msg = 'wait...';
+        $msg = time();
         File::write($wait, $msg);
         $serverConfigFile = self::getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
         if (!$serverConfigFile) { // no .htaccess file
@@ -673,7 +687,7 @@ class Cgipcheck
         $ret .= '#------------------------CG SECURE IP LIST END--------------------'. PHP_EOL;
         return $ret;
     }
-    private static function store_file($htaccess, $current)
+    private static function store_file(String $htaccess, String $current)
     {
         $pathToHtaccess  = $htaccess;
         if (file_exists($pathToHtaccess)) {
@@ -732,7 +746,6 @@ class Cgipcheck
             if ($responseCode == 500) {
                 return false;
             }
-            return true;
         } catch (\RuntimeException $e) {
             return false;
         }
