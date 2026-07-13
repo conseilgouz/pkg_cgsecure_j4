@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.9.0</version>
+        <note>
+            <item>Update : 13/07/2026</item>
+        </note>
+        <change>
+            <item>Create CGSecureHelper file for common functions</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.8.2</version>
         <note>
             <item>Update : 06/07/2026</item>

@@ -21,6 +21,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
 use ConseilGouz\CGSecure\LanguageDetection\Language as LanguageDetect;
+use ConseilGouz\CGSecure\Helper\CGSecureHelper;
 
 class Cgipcheck
 {
@@ -47,53 +48,17 @@ class Cgipcheck
     // get CG Secure params
     public static function getParams()
     {
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-
-        $query = $db->getQuery(true);
-        $query->select('*')
-        ->from($db->quoteName('#__cgsecure_config'));
-        $db->setQuery($query);
-        try {
-            $params = $db->loadObject();
-        } catch (\RuntimeException $e) {
-            return array();
-        }
-        self::$params = json_decode($params->params);
+        self::$params = CGSecureHelper::getParams();
         return self::$params;
     }
     // check brute force
-    public static function getLatest_ips($ip)
+    public static function getLatest_ips(String $ip) : String|bool
     {
-        // read latest_ips file
-        $file = JPATH_ROOT . '/media/com_cgsecure/backup/latest_ips.txt';
-        $readBuffer = file($file, FILE_IGNORE_NEW_LINES);
-        foreach ($readBuffer as $id => $line) {
-            self::$latest_ips[] = $line;
-        }
-        // check if present
-        if (self::whiteList($ip)) {
-            return false;
-        }
-        if (in_array($ip, self::$latest_ips)) {
-            return true;
-        }
-        self::$latest_ips[] = $ip;
-        if (count(self::$latest_ips) > 20) {
-            array_shift(self::$latest_ips);
-        }
-        $out = '';
-        foreach (self::$latest_ips as $val) {
-            $out .= $val.PHP_EOL;
-        }
-        // not in file yet : store it
-        if (is_readable($file)) {
-            // Write the htaccess using the Frameworks File Class
-            File::write($file, $out);
-        }
-        return false;
+        return CGSecureHelper::getLatest_ips($ip);
+
     }
     // Check if IP is allowed or not
-    public static function check_ip($plugin, $context)
+    public static function check_ip($plugin, $context) : bool
     {
         $plugin->loadLanguage();
         self::$caller = $plugin->myname;
@@ -156,7 +121,7 @@ class Cgipcheck
                     if (self::$logging) {
                         Log::add('IP Locate error : unknown country', Log::DEBUG, self::$caller);
                     }
-                    return;
+                    return false;
                 } elseif ((($countries != '*') && (!in_array($json_array->country_code, $pays_autorise)))
                             || (($blockedcountries != '') && (in_array($json_array->country_code, $pays_interdit)))) {
                     if (self::$logging) {
@@ -165,7 +130,7 @@ class Cgipcheck
                     self::set_rejected(self::$caller, self::$errtype, $ip, $json_array->country_code, self::$params->keep);
                     self::redir_out();
                 }
-                return;
+                return false;
             }
             // Verifie si l'IP du visiteur est dans la liste des pays que j'ai autorise
             if ($resp->data->countryCode == "") { // AbuseIPDB : no country
@@ -223,6 +188,7 @@ class Cgipcheck
                 Log::add(self::$context.' : '."Curl not installed: ", Log::DEBUG, self::$caller);
             }
         }
+        return true;
     }
     // Check Spammer status in AbuseIPDB
     // return OK: a spammer
@@ -410,7 +376,7 @@ class Cgipcheck
 
             }
         }
-        $hackers = self::get_htaccess_List(); // hackers with blocking errors
+        $hackers = self::get_reject_onerror_list(); // hackers with blocking errors
         self::store_htaccess($hackers);
     }
     // store hacker's IP in database
@@ -513,21 +479,6 @@ class Cgipcheck
             }
         }
     }
-    // Get Rejected IPs list
-    private static function get_rejected()
-    {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('ip'))
-                ->from($db->quoteName('#__cg_rejected_ip'));
-        $db->setQuery($query);
-        try {
-            $list = $db->loadColumn();
-        } catch (\RuntimeException $e) {
-            return array();
-        }
-        return $list;
-    }
     // Store rejected IP after deleting out-dated IP's
     private static function set_rejected($action, $errtype, $ip, $country, $keep)
     {
@@ -558,7 +509,7 @@ class Cgipcheck
         }
         self::$blockip  = self::$params->blockip == 1;
         if ((self::$blockip == 1) && ($errtype == "e")) { // new hacker
-            $hackers = self::get_htaccess_List(); //get hackers list
+            $hackers = self::get_reject_onerror_list(); //get hackers list
             self::store_htaccess($hackers); // block them
         }
         return true;
@@ -578,22 +529,17 @@ class Cgipcheck
             return null;
         }
     }
-    // Get HTAccess Rejected IPs list
-    private static function get_htaccess_List()
+    // Get Rejected IPs list
+    private static function get_rejected() : Array
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $where = " errtype LIKE 'e'";
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('ip'))
-                ->from($db->quoteName('#__cg_rejected_ip'))
-                ->where($where)
-                ->order('ip ASC');
-        $db->setQuery($query);
-        try {
-            $list = $db->loadColumn();
-        } catch (\RuntimeException $e) {
-            return array();
-        }
+        $list = CGSecureHelper::get_rejected();
+        return $list;
+    }
+    
+    // Get HTAccess Rejected IPs list
+    private static function get_reject_onerror_list() : Array
+    {
+        $list = CGSecureHelper::get_reject_onerror_list();
         return $list;
     }
     private static function store_htaccess($list)
@@ -637,6 +583,7 @@ class Cgipcheck
     // read current .htaccess file, add new IP list and remove old IP list
     private static function read_current($afile, $list)
     {
+        $v6 = isset(self::$params->blockipv6) && self::$params->blockipv6 == 1;
         $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
         $outBuffer = '';
         if (!$readBuffer) {
@@ -647,7 +594,7 @@ class Cgipcheck
 
         foreach ($readBuffer as $id => $line) {
             if (strpos($line, 'CG SECURE HTACCESS BEGIN') !== false) { // insert new hackers' table before CG htccess lines
-                $outBuffer .= self::create_ips($list);
+                $outBuffer .= CGSecureHelper::create_ips($list,$v6);
             }
             if ($line === '#------------------------CG SECURE IP LIST BEGIN---------------------') {
                 $cgLines = true;
@@ -667,25 +614,6 @@ class Cgipcheck
             $outBuffer .= $line . PHP_EOL;
         }
         return $outBuffer;
-    }
-    private static function create_ips($list)
-    {
-        self::$blockipv6  = isset(self::$params->blockipv6) && self::$params->blockipv6 == 1;
-        $ret = "#------------------------CG SECURE IP LIST BEGIN---------------------". PHP_EOL;
-        $ret .= "#Type serveur : ".$_SERVER['SERVER_SOFTWARE']. PHP_EOL;
-        $ret .= "<IfModule mod_authz_core.c>".PHP_EOL;
-        $ret .= "<RequireAll>". PHP_EOL;
-        $ret .= "Require all granted". PHP_EOL;
-        foreach ($list as $key => $ip) {
-            if ((strpos($ip, ':') !== false) && !self::$blockipv6) {// IPV6 : ignore it : bug in OVH/APACH
-                continue;
-            }
-            $ret .= "require not ip ".$ip.PHP_EOL;
-        }
-        $ret .= "</RequireAll>". PHP_EOL;
-        $ret .= "</IfModule>".PHP_EOL;
-        $ret .= '#------------------------CG SECURE IP LIST END--------------------'. PHP_EOL;
-        return $ret;
     }
     private static function store_file(String $htaccess, String $current)
     {

@@ -22,6 +22,8 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Component\Scheduler\Administrator\Model\TaskModel;
+use ConseilGouz\CGSecure\Helper\CGSecureHelper;
+use ConseilGouz\CGSecure\Cgipcheck;
 
 class PlgSystemCgsecureInstallerInstallerScript
 {
@@ -35,7 +37,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $newlib_version	         = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "3.7.7";
+    private $cgsecure_force_update_version = "3.9.0";
     private $security;
     private $config;
     private $db;
@@ -216,7 +218,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         // remove obsolete file
         $this->delete([
             JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.php',
-            // JPATH_ROOT . '/libraries/cgsecure/Helper' // leave Helper directory to give time to update all cg secure plugins
+            JPATH_ROOT . '/libraries/cgsecure/Helper/Cgipcheck.php'
         ]);
 
         // replace index.php file in cg_no_robot dir by new version
@@ -229,7 +231,7 @@ class PlgSystemCgsecureInstallerInstallerScript
             );
         }
         // Check if HTACCESS file has to be updated
-        $serverConfigFile = $this->getServerConfigFile('.htaccess');
+        $serverConfigFile = CGSecureHelper::getServerConfigFile('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
             return;
         }
@@ -256,285 +258,19 @@ class PlgSystemCgsecureInstallerInstallerScript
     }
     private function htaccess_other_dirs()
     {
-        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
-        // media : block php
-        $f = JPATH_ROOT . '/media/.htaccess';
-        if (!@file_exists($f)) { // .htaccess in media dir
-            $dest   = JPATH_ROOT.'/media/.htaccess';
-            if (!copy($source, $dest)) {
-                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
-            }
-        }
-        // images/media/files : block php
-        $f = JPATH_ROOT . '/images/.htaccess';
-        if (!@file_exists($f)) { // .htaccess in images dir
-            $dest   = JPATH_ROOT.'/images/.htaccess';
-            if (!copy($source, $dest)) {
-                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
-            }
-        }
-        if (is_dir(JPATH_ROOT . '/files')) { // Joomla 5.3.0 : new dir
-            $f = JPATH_ROOT . '/files/.htaccess';
-            if (!@file_exists($f)) { // .htaccess in files dir
-                $dest   = JPATH_ROOT.'/files/.htaccess';
-                if (!copy($source, $dest)) {
-                    Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
-                }
-            }
-        }
-        // administrator : block protected directories
-        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_admin.txt';
-        $dest   = JPATH_ROOT.'/administrator/.htaccess';
-        if (!@file_exists($dest)) { // no .htaccess in admin dir
-            if (!copy($source, $dest)) { // copy it
-                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
-            }
-        }
-        $current = $this->read_current($dest);
-        $cgFile = $this->read_cgfile($source); // latest version of admin htaccess file
-        if (!$this->merge_file($dest, $current, $cgFile, '', '', '')) {
-            return 'err : '.Text::_('CGSECURE_ADD_ADMIN_INSERT_ERROR');
-        }
+        return CGSecureHelper::protectotherdirs();
     }
     // Begin update HTACCESS -----------------------------------------------
     private function forceHTAccess()
     {
-        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
-        if (!$serverConfigFile) { // no .htaccess file : copy default htaccess.txt as .htaccess
-            $source = JPATH_ROOT.self::CGPATH .'/txt/htaccess.txt';
-            $dest = $this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS);
-            if (!copy($source, $dest)) {
-                return Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS error');
-            }
-        }
-        // save htaccess file before adding CG Secure lines
-        $source = $this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS);
-        $dest = JPATH_ROOT.self::CGPATH .'/backup/htaccess.av'.gmdate('Ymd-His', time());
-        if (!copy($source, $dest)) {
-            return Factory::getApplication()->enqueueMessage('CGSECURE : save HTACCESS error');
-        }
-        $current = $this->read_current($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        $rejips = $this->get_current_ips($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
-        if (file_exists(JPATH_ROOT.self::CGPATH .'/txt/custom.txt')) { // custom file exists : use it
-            $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/custom.txt');
-        } else { // no custom file : use cgaccess.txt file
-            $cgFile = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess.txt');
-        }
-        $this->config  = $this->getParams();
-        $cgAI = "";
-        if (isset($this->config->blockai) && $this->config->blockai) {
-            $cgAI = $this->read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_ai.txt');
-        }
-        $specific = isset($this->config->specific) && $this->config->specific;
-        if ($specific) {
-            $specific  = '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------'.PHP_EOL.$this->config->specific.PHP_EOL;
-            $specific .= '#------------------------CG SECURE SPECIFIC CODE END------------------------'.PHP_EOL;
-        }
-
-        if ($this->merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $cgAI, $rejips, $specific)) {
-            return; // everything OK => exit
-        }
-        Factory::getApplication()->enqueueMessage('CGSECURE : Error during insert');
-        return;
+        CGSecureHelper::forceHTAccess();
     }
 
-    private function getServerConfigFile($file)
-    {
-        if (file_exists($this->getServerConfigFilePath($file))
-            && substr(strtolower($_SERVER['SERVER_SOFTWARE']), 0, 6) === 'apache') {
-            return $this->getServerConfigFilePath($file);
-        }
-        return '';
-    }
-    private function getServerConfigFilePath($file)
-    {
-        return JPATH_ROOT . DIRECTORY_SEPARATOR . $file;
-    }
-    // read current .htaccess file and remove CG lines
-    private function read_current($afile)
-    {
-        $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
-        $outBuffer = '';
-        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
-            return '';
-        }
-        $cgLines = false;
-        foreach ($readBuffer as $id => $line) {
-            if (strpos($line, 'CG SECURE HTACCESS BEGIN') !== false) {
-                $cgLines = true;
-                continue;
-            }
-            if (strpos($line, 'CG SECURE HTACCESS END') !== false) {
-                $cgLines = false;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE IP LIST BEGIN---------------------') {
-                $cgLines = true;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE IP LIST END--------------------') {
-                $cgLines = false;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE IP LIST BEGIN---------------------') {
-                $cgLines = true;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE IP LIST END--------------------') {
-                $cgLines = false;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE IA BOTS BEGIN---------------------') {
-                $cgLines = true;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE IA BOTS END---------------------') {
-                $cgLines = false;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE SPECIFIC CODE BEGIN------------------------') {
-                $cgLines = true;
-                continue;
-            }
-            if ($line === '#------------------------CG SECURE SPECIFIC CODE END------------------------') {
-                $cgLines = false;
-                continue;
-            }
-            if ($cgLines) {
-                // When we are between our makers all content should be removed
-                continue;
-            }
-            $outBuffer .= $line . PHP_EOL;
-        }
-        return $outBuffer;
-    }
-    private function read_cgfile($afile)
-    {
-        $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
-        $this->config  = $this->getParams();
-        $this->security =	$this->config->security;
-        if ($this->config->multi == '1') {// site multi-adresse
-            $server = '('.str_replace(',', '|', $this->config->get('multisite', '')).')';
-            $dir = "";
-        } elseif ($this->config->subdir == '1') { // site in subdir ?
-            $server = $_SERVER['SERVER_NAME'];
-            $dir = "/".$this->config->subdirsite;
-        } else {
-            $server = $_SERVER['SERVER_NAME'];
-            $dir = "";
-        }
-        $sitename = str_replace('.', '\.', $server);
-        $sitename = str_replace('www\.', '', $sitename); // remove www
-
-        $outBuffer = '';
-        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
-            return '';
-        }
-        foreach ($readBuffer as $id => $line) {
-            if (strpos($line, '??site??') !== false) {
-                $line = str_replace('??site??', $sitename, $line);
-            }
-            if (strpos($line, '??dir??') !== false) {
-                $line = str_replace('??dir??', $dir, $line);
-            }
-            if (strpos($line, '??security??') !== false) {
-                $line = str_replace('??security??', $this->security, $line);
-            }
-            $outBuffer .= $line . PHP_EOL;
-        }
-        return $outBuffer;
-    }
-    // get current ips from .htaccess file
-    private function get_current_ips($afile)
-    {
-        $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
-        $outBuffer = '';
-        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
-            return '';
-        }
-        $cgLines = false;
-        foreach ($readBuffer as $id => $line) {
-            if (($line === '#------------------------CG SECURE IP LIST BEGIN---------------------') && ($outBuffer == '')) {
-                $cgLines = true;
-            }
-            if (($line === '#------------------------CG SECURE IP LIST END--------------------') && $cgLines) {
-                $cgLines = false;
-                $outBuffer .= $line . PHP_EOL;
-            }
-            if (!$cgLines) {
-                // remove everything outsite the markers
-                continue;
-            }
-            $outBuffer .= $line . PHP_EOL;
-        }
-        return $outBuffer;
-    }
     private function getParams()
     {
-        $db = $this->db;
-        $query = $db->getQuery(true);
-        $query->select('*')
-        ->from($db->quoteName('#__cgsecure_config'));
-        $db->setQuery($query);
-        try {
-            $params = $db->loadObject();
-        } catch (\RuntimeException $e) {
-            return array();
-        }
-        $params = json_decode($params->params);
+        $params = CGSecureHelper::getParams();
         return $params;
     }
-    private function merge_file($file, $current, $cgFile, $cgAI, $rejips, $specific)
-    {
-        $pathToFile  = $file;
-        if (file_exists($pathToFile)) {
-            copy($pathToFile, $pathToFile.'.wait');
-            if (is_readable($pathToFile)) {
-                $records = $rejips.$specific.$cgFile.$cgAI.$current; // pour éviter les conflits, on se met devant....
-                // Write the htaccess using the Frameworks File Class
-                $bool = File::write($pathToFile, $records);
-                if ($bool) {
-                    if (self::check_site()) {
-                        File::delete($pathToFile.'.wait');
-                        return $bool;
-                    } else {
-                        // restore previous version
-                        copy($pathToFile.'.wait', $pathToFile);
-                        File::delete($pathToFile.'.wait');
-                        return false;
-                    }
-                }
-            }
-            File::delete($pathToFile.'.wait');
-        }
-        return Factory::getApplication()->enqueueMessage('CGSECURE : merge error');
-    }
-    // check if website is still working
-    private function check_site()
-    {
-        $url = URI::root();
-        try {
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_HEADER, 0);
-            curl_setopt($curl, CURLOPT_NOBODY, 0);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-            curl_exec($curl);
-            $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            if ($responseCode == 500) {
-                return false;
-            }
-            return true;
-        } catch (\RuntimeException $e) {
-            return false;
-        }
-        return false;
-    }
-
     // End HTACCESS update -------------------------------------------------------------
 
     private function createExtensionRoot()

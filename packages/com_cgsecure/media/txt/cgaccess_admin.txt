@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.6.9--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.9.0--------------------
 # an idea from AESecure. CG Secure blocks and reports hacking attempts
 #
 ErrorDocument 403 /plugins/system/cgsecure/htaccess.php?e=403&sec=??security??

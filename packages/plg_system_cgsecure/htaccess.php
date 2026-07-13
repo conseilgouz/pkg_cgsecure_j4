@@ -11,6 +11,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Utilities\IpHelper;
 use ConseilGouz\CGSecure\Cgipcheck;
+use ConseilGouz\CGSecure\Helper\CGSecureHelper;
 
 const _JEXEC = 1;
 
@@ -60,11 +61,15 @@ header('Access-Control-Allow-Origin: *');
 
 $myname = 'CGSecureHTAccess';
 // namespace does not work on cli
-$helperFile = JPATH_SITE . '/libraries/cgsecure/src/Cgipcheck.php';
+$helperFile = JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper.php';
 if (is_file($helperFile)) {
     include_once $helperFile;
 }
-$cgsecure_params = Cgipcheck::getParams();
+$checkipFile = JPATH_SITE . '/libraries/cgsecure/src/Cgipcheck.php';
+if (is_file($checkipFile)) {
+    include_once $checkipFile;
+}
+$cgsecure_params = CGSecureHelper::getParams();
 $ip = IpHelper::getIp();//  $_SERVER['REMOTE_ADDR'];
 // $ip = '218.92.1.234'; // test hackeur chinois
 
@@ -80,7 +85,7 @@ if (strpos($req, 'cgsecure/htaccess') !== false) {
     $req = "..."; // lost URI in redirects
 }
 
-if (Cgipcheck::whiteList($ip)) { // white list : display error message
+if (CGSecureHelper::whiteList($ip)) { // white list : display error message
     if (($cgsecure_params->logging_ht == 1) || ($cgsecure_params->logging_ht == 2)) {
         Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG, array('CGHTAccess'));
         Log::add('White list : '.$req, Log::DEBUG, 'CGHTAccess');
