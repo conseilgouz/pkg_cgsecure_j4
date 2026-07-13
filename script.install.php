@@ -235,6 +235,10 @@ class PlgSystemCgsecureInstallerInstallerScript
                 $norobots. '/index.php'
             );
         }
+        if (!class_exists('CGSecureHelper')) {
+            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper.php');
+        }
+        
         // Check if HTACCESS file has to be updated
         $serverConfigFile = CGSecureHelper::getServerConfigFile('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
@@ -546,21 +550,4 @@ class PlgSystemCgsecureInstallerInstallerScript
             }
         }
     }
-    
-    /**
-     * Method to uninstall the extension
-     * $parent is the class calling this method
-     *
-     * @return void
-     */
-    public function uninstall($parent)
-    {
-        // remove CG Secure infos from htaccess file
-        CGSecureHelper::empty_current(CGSecureHelper::getServerConfigFilePath(CGSecureHelper::SERVER_CONFIG_FILE_HTACCESS))
-
-        
-        
-        echo('<p>CG Secure uninstalled</p>');
-    }
-
 }

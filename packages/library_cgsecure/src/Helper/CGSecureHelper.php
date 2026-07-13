@@ -38,7 +38,11 @@ class CGSecureHelper
         } catch (\RuntimeException $e) {
             return array();
         }
-        $params = json_decode($params->params);
+        if ($params && isset($params->params)) {
+            $params = json_decode($params->params);
+        } else {
+            $params = [];
+        }
         return $params;
     }
 
@@ -259,6 +263,32 @@ class CGSecureHelper
                 continue;
             }
             if ($line === '#------------------------CG SECURE HOTLINK END---------------------') {
+                $cgLines = false;
+                continue;
+            }
+            if ($cgLines) {
+                // When we are between our makers all content should be removed
+                continue;
+            }
+            $outBuffer .= $line . PHP_EOL;
+        }
+        return $outBuffer;
+    }
+    // remove CG lines from htaccess not on root
+    public static function empty_other(String $afile): String
+    {
+        $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
+        $outBuffer = '';
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return '';
+        }
+        $cgLines = false;
+        foreach ($readBuffer as $id => $line) {
+            if (strpos($line, 'CG SECURE HTACCESS BEGIN') !== false) {
+                $cgLines = true;
+                continue;
+            }
+            if (strpos($line, 'CG SECURE HTACCESS END') !== false) {
                 $cgLines = false;
                 continue;
             }
