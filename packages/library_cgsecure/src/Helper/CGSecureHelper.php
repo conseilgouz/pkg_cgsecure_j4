@@ -23,12 +23,22 @@ class CGSecureHelper
     public const CGPATH = '/media/com_cgsecure';
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
     public const SERVER_CONFIG_FILE_NONE = '';
-
+    
     // get CG Secure params
     public static function getParams()
     {
-        $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
-        $params = json_decode($table->getSecureParams()->params);
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true);
+        $query->select('*')
+        ->from($db->quoteName('#__cgsecure_config'));
+        $db->setQuery($query);
+        try {
+            $params = $db->loadObject();
+        } catch (\RuntimeException $e) {
+            return array();
+        }
+        $params = json_decode($params->params);
         return $params;
     }
 
@@ -96,7 +106,7 @@ class CGSecureHelper
         return $list;
     }
     // Get HTAccess Rejected IPs list
-    public static function get_reject_onerror_list(): array
+    public static function get_reject_onerror_list() : Array
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         $where = " errtype LIKE 'e'";
@@ -280,7 +290,7 @@ class CGSecureHelper
         return Text::_('CGSECURE_MERGE_ERROR');
         ;
     }
-    // Force recreate HTACCESS -----------------------------------------------
+   // Force recreate HTACCESS -----------------------------------------------
     public static function forceHTAccess($json = false)
     {
         $serverConfigFile = self::getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
@@ -306,11 +316,11 @@ class CGSecureHelper
             }
         }
         $config  = self::getParams();
-        $v6 = isset($blockipv6) && $config->blockipv6 == 1;
+        $v6 = isset($config->blockipv6) && $config->blockipv6 == 1;
         $current = self::empty_current(self::getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
 
         $hackers = self::get_rejected();
-        $rejips = self::create_ips($hackers, $v6);
+        $rejips = self::create_ips($hackers,$v6);
 
         if (file_exists(JPATH_ROOT.self::CGPATH .'/txt/custom.txt')) { // custom file exists : use it
             $cgFile = self::read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/custom.txt');
@@ -330,7 +340,7 @@ class CGSecureHelper
         if (isset($config->blockhotlink) && $config->blockhotlink) {
             $hotlink = self::read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
         }
-        if (CGSecureHelper::merge_file(CGSecureHelper::getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific, $cgAI, $hotlink)) {
+        if (CGSecureHelper::merge_file(CGSecureHelper::getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile,$rejips,$specific, $cgAI, $hotlink)) {
             if ($json) {
                 return Text::_('CGSECURE_ADD_HTACCESS');
             } else {
@@ -340,7 +350,7 @@ class CGSecureHelper
         // Error : restore saved version
         copy($dest, $source);
         if ($json) {
-            return 'err : '.Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
+           return 'err : '.Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
         } else {
             Factory::getApplication()->enqueueMessage('CGSECURE : Error during insert');
             return;
@@ -374,7 +384,7 @@ class CGSecureHelper
             if ($json) {
                 return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
             } else {
-                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
+               Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
             }
         }
         if (is_dir(JPATH_ROOT.'/files')) {// Joomla 5.3.0 : new directory

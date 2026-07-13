@@ -65,7 +65,12 @@ class PlgSystemCgsecureInstallerInstallerScript
                     ->select('COUNT(*)')
                     ->from('#__cgsecure_config')
                 ;
-                $db->setQuery($query);
+                try {
+                    $db->setQuery($query);
+                } catch (\Exception $e) {
+                    $count = 0;
+                    continue;
+                }
                 $count = $db->loadResult();
                 if ($count > 1) { // remove one occurence
                     $query = $db->getQuery(true)
@@ -541,4 +546,21 @@ class PlgSystemCgsecureInstallerInstallerScript
             }
         }
     }
+    
+    /**
+     * Method to uninstall the extension
+     * $parent is the class calling this method
+     *
+     * @return void
+     */
+    public function uninstall($parent)
+    {
+        // remove CG Secure infos from htaccess file
+        CGSecureHelper::empty_current(CGSecureHelper::getServerConfigFilePath(CGSecureHelper::SERVER_CONFIG_FILE_HTACCESS))
+
+        
+        
+        echo('<p>CG Secure uninstalled</p>');
+    }
+
 }
