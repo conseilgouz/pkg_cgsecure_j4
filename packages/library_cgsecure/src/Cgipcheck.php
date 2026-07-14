@@ -52,13 +52,13 @@ class Cgipcheck
         return self::$params;
     }
     // check brute force
-    public static function getLatest_ips(String $ip) : String|bool
+    public static function getLatest_ips(String $ip): String|bool
     {
         return CGSecureHelper::getLatest_ips($ip);
 
     }
     // Check if IP is allowed or not
-    public static function check_ip($plugin, $context) : bool
+    public static function check_ip($plugin, $context): bool
     {
         $plugin->loadLanguage();
         self::$caller = $plugin->myname;
@@ -70,7 +70,8 @@ class Cgipcheck
         // $ip = '218.92.1.234'; // test hackeur chinois/confidence = 0
         // $ip = '92.184.96.127'; // in abuseip confidence = 0
         // $ip = '54.36.148.179'; // in abuseip whitelist
-        // $ip = '100.29.192.106'; // us hacker
+        //$ip = '100.29.192.106'; // us hacker
+        //$ip = '192.155.88.1'; // US ok
         // $ip = '2a00:f940:2:2:1:3:0:211'; // AI robots V6 Ip
         if (self::whiteList($ip)) {
             return true;
@@ -202,6 +203,7 @@ class Cgipcheck
         // $ip = $_SERVER['REMOTE_ADDR'];
         if (self::$context  != 'SystemCGSecure') { // no test when system, otherwise, you'll loose your admin....
             //$ip = '222.186.42.7'; // test hackeur chinois
+            // $ip = '192.155.88.1'; // US ok
         }
         if (self::whiteList($ip)) {
             return false;
@@ -281,6 +283,7 @@ class Cgipcheck
     // check message language
     public static function check_language($plugin, $contact, $message)
     {
+        $plugin->loadLanguage();
         self::$caller = $plugin->myname;
         self::$message = $plugin->mymessage;
         self::$logging = self::$params->logging_contact == 1;
@@ -530,14 +533,14 @@ class Cgipcheck
         }
     }
     // Get Rejected IPs list
-    private static function get_rejected() : Array
+    private static function get_rejected(): array
     {
         $list = CGSecureHelper::get_rejected();
         return $list;
     }
-    
+
     // Get HTAccess Rejected IPs list
-    private static function get_reject_onerror_list() : Array
+    private static function get_reject_onerror_list(): array
     {
         $list = CGSecureHelper::get_reject_onerror_list();
         return $list;
@@ -594,7 +597,7 @@ class Cgipcheck
 
         foreach ($readBuffer as $id => $line) {
             if (strpos($line, 'CG SECURE HTACCESS BEGIN') !== false) { // insert new hackers' table before CG htccess lines
-                $outBuffer .= CGSecureHelper::create_ips($list,$v6);
+                $outBuffer .= CGSecureHelper::create_ips($list, $v6);
             }
             if ($line === '#------------------------CG SECURE IP LIST BEGIN---------------------') {
                 $cgLines = true;

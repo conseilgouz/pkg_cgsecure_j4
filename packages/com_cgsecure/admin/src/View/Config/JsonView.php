@@ -83,6 +83,10 @@ class JsonView extends AbstractView
         File::write($wait, $msg);
         $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
         $this->config  = $this->getParams();
+        if (isset($this->config->security) && !$this->config->security) {
+            $this->config->security = $this->security;
+            $table->updateSecureParams(json_encode($this->config));
+        }
         if ($type == 'robots') {
             if ($access == 0) { // delete CG Secure lines from robots.txt file and delete cg_robots dir
                 $msg = $this->delRobots();
@@ -331,7 +335,7 @@ class JsonView extends AbstractView
     // add CG Secure information from .htaccess file
     private function addHTAccess()
     {
-        return CGSecureHelper::forceHTAccess(true); 
+        return CGSecureHelper::forceHTAccess(true);
     }
     // copy CG Secure information in .htaccess from images, media, files, administrator directories
     private function protectdirs()
@@ -442,7 +446,7 @@ class JsonView extends AbstractView
         return CGSecureHelper::empty_current($afile);
     }
     // get current ips from .htaccess file
-    private function get_current_ips(String $afile) : String
+    private function get_current_ips(String $afile): String
     {
         return CGSecureHelper::get_current_ips($afile);
     }
@@ -526,16 +530,16 @@ class JsonView extends AbstractView
     }
     private function read_cgfile($afile)
     {
-        
+
         $outBuffer = CGSecureHelper::read_cgfile($afile);
-        
+
         return $outBuffer;
     }
-    private function getServerConfigFile(String $file) : String
+    private function getServerConfigFile(String $file): String
     {
         return CGSecureHelper::getServerConfigFile($file);
     }
-    private function getServerConfigFilePath(String $file) : String
+    private function getServerConfigFilePath(String $file): String
     {
         return CGSecureHelper::getServerConfigFilePath($file);
     }

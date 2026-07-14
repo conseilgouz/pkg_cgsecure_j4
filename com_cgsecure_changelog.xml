@@ -4,11 +4,15 @@
 		<type>package</type>
 		<version>3.9.0</version>
         <note>
-            <item>Update : 13/07/2026</item>
+            <item>Update : 14/07/2026</item>
         </note>
         <change>
             <item>Create CGSecureHelper file for common functions</item>
         </change>
+        <fix>
+            <item>Check message language : missing loadlanguage call</item>
+            <item>Unsintall : remove CG Secure infos from htaccess files</item>
+        </fix>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>
