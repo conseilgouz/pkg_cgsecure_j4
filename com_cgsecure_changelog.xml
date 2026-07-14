@@ -11,7 +11,7 @@
         </change>
         <fix>
             <item>Check message language : missing loadlanguage call</item>
-            <item>Unsintall : remove CG Secure infos from htaccess files</item>
+            <item>Uninstall : remove CG Secure infos from htaccess files</item>
         </fix>
 	</changelog>
 	<changelog>
