@@ -268,17 +268,7 @@ class Cgipcheck
     // Check IP in whitelist or local
     public static function whiteList($ip = null)
     {
-        if (!$ip) {
-            $ip = IpHelper::getIp();
-        }
-        $whitelist = self::$params->whitelist;
-        $whitelist = str_replace(" ", "", $whitelist); // remove any space
-        $whitelist = preg_replace("/(?![a-fA-F0-9.,:]])/", "", $whitelist); // remove unwanted characters
-        $arr_whitelist = explode(',', $whitelist);
-        if (in_array($ip, $arr_whitelist) || ($ip == '::1') || ($ip == '127.0.0.1')) { // dans liste ou local
-            return true;
-        }
-        return false;
+        return CGSecureHelper::whiteList($ip);
     }
     // check message language
     public static function check_language($plugin, $contact, $message)

@@ -100,11 +100,11 @@ if (Cgipcheck::getLatest_ips($ip)) {
 } // already blocked : die
 
 $security = $cgsecure_params->security;
-
-if (isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $security)) {
+$user 	  = $app->getIdentity();
+if (($app->isClient('administrator') || !$user->guest) && (isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $security))) {
     if (($cgsecure_params->logging_ht == 1) || ($cgsecure_params->logging_ht == 2)) {
         Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG, array('CGHTAccess'));
-        Log::add('White list : '.$req, Log::DEBUG, 'CGHTAccess');
+        Log::add('White list cookie : '.$req, Log::DEBUG, 'CGHTAccess');
     }
     $tmp .= '<h3>'.$req.'</h3></body></html>';
     echo $tmp;
