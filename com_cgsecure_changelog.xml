@@ -8,6 +8,7 @@
         </note>
         <fix>
             <item>HTAccess Cookie : check user status</item>
+            <item>Don't create cookie if no admin password required</item>
         </fix>
 	</changelog>
 	<changelog>

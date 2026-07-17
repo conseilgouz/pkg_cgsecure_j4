@@ -58,7 +58,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
             return;
         }
         if (!$this->cgsecure_params->password) {// no check
-            self::createCookie();
+            // self::createCookie();
             return;
         }
         if (isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $this->cgsecure_params->security)) {
