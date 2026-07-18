@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>3.9.2</version>
+        <note>
+            <item>Update : 18/07/2026</item>
+        </note>
+        <fix>
+            <item>Logs : cleaning too fast ips from rejected_ip table</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>3.9.1</version>
         <note>
             <item>Update : 17/07/2026</item>

@@ -54,6 +54,7 @@ class Cgipcheck
     // check brute force
     public static function getLatest_ips(String $ip): String|bool
     {
+        self::$params = CGSecureHelper::getParams();
         return CGSecureHelper::getLatest_ips($ip);
 
     }
@@ -61,6 +62,7 @@ class Cgipcheck
     public static function check_ip($plugin, $context): bool
     {
         $plugin->loadLanguage();
+        self::$params = CGSecureHelper::getParams();
         self::$caller = $plugin->myname;
         self::$message = $plugin->mymessage;
         self::$errtype = $plugin->errtype;
@@ -196,6 +198,7 @@ class Cgipcheck
     public static function check_spammer($plugin, $context)
     {
         $plugin->loadLanguage();
+        self::$params = CGSecureHelper::getParams();
         self::$caller = $plugin->myname;
         self::$message = $plugin->mymessage;
         self::$context = $context;
@@ -268,11 +271,13 @@ class Cgipcheck
     // Check IP in whitelist or local
     public static function whiteList($ip = null)
     {
+        self::$params = CGSecureHelper::getParams();
         return CGSecureHelper::whiteList($ip);
     }
     // check message language
     public static function check_language($plugin, $contact, $message)
     {
+        self::$params = CGSecureHelper::getParams();
         $plugin->loadLanguage();
         self::$caller = $plugin->myname;
         self::$message = $plugin->mymessage;
@@ -316,6 +321,7 @@ class Cgipcheck
     // Report hacking blocked by htaccess
     public static function report_hacker($plugin, $message, $errtype, $ip)
     {
+        self::$params = CGSecureHelper::getParams();
         self::$message = $message;
         //         $ip = '222.186.42.7'; // test hackeur chinois
         if (self::whiteList($ip)) {
@@ -349,6 +355,7 @@ class Cgipcheck
     // store IP address in .htaccess file
     public static function block_hacker($myname, $err, $errtype, $ip)
     {
+        self::$params = CGSecureHelper::getParams();
         if (self::$params->report == 0) {// not stored yet in DB
             if (self::whiteList($ip)) {
                 return;
@@ -375,6 +382,7 @@ class Cgipcheck
     // store hacker's IP in database
     private static function reject_hacker($plugin, $message, $errtype, $ip)
     {
+        self::$params = CGSecureHelper::getParams();
         $response = self::getIPLocate_via_curl(self::$iplocate.$ip);
         if ($response) {
             $json_array = json_decode($response);
@@ -426,6 +434,7 @@ class Cgipcheck
     // curl request function
     public static function abuseIPDBrequest($path, $method, $data)
     {
+        self::$params = CGSecureHelper::getParams();
         $key = self::$params->api_key;
         if ($key == '') {
             $key = 'e7d05d2a802351a36dfe63bcc65d7a33e52c6ccd2fe18f0342abe688a7b2f68e0eb72043d135a38d';
