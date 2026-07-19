@@ -1,5 +1,5 @@
 #------------------------CG SECURE HOTLINK BEGIN---------------------
- # Prevent hotlinking (http://www.htaccesstools.com/hotlink-protection/)
+ # Prevent hotlinking (https://perishablepress.com/creating-the-ultimate-htaccess-anti-hotlinking-strategy/)
 <IfModule mod_rewrite.c>
  RewriteEngine On
  RewriteCond %{REMOTE_ADDR} !127.0.0.1
