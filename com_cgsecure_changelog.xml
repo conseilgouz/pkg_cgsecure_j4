@@ -4,11 +4,15 @@
 		<type>package</type>
 		<version>3.9.3</version>
         <note>
-            <item>Update : 19/07/2026</item>
+            <item>Update : 28/07/2026</item>
         </note>
         <fix>
             <item>Inline Help : change hotlink documentation link</item>
         </fix>
+        <addition>
+            <item>Matomo bad referers list : new parameter to load it or not</item>
+            <item>Add some values to rogues php list</item>
+        </addition>
 	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>

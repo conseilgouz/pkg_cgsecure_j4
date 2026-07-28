@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function(){
     blockai1 = document.querySelector('input[id="jform_blockai1"]');
     blockhotlink0 = document.querySelector('input[id="jform_blockhotlink0"]');
     blockhotlink1 = document.querySelector('input[id="jform_blockhotlink1"]');
+    matomo0 = document.querySelector('input[id="jform_matomo0"]');
+    matomo1 = document.querySelector('input[id="jform_matomo1"]');
     ['click', 'mouseup', 'touchstart'].forEach(type => {    
         htaccess0.addEventListener(type, function(){
             security = document.querySelector('input[id="jform_security"]').value;
@@ -76,6 +78,14 @@ document.addEventListener('DOMContentLoaded', function(){
         blockhotlink1.addEventListener(type,function(){ // add  hotlink block
             security = document.querySelector('input[id="jform_security"]');
             htaccess(9,security.value);
+        })
+        matomo0.addEventListener(type,function(){ // delete matomo bad referers list
+            security = document.querySelector('input[id="jform_security"]');
+            htaccess(10,security.value);
+        })
+        matomo1.addEventListener(type,function(){ // add  matomo bad referers list
+            security = document.querySelector('input[id="jform_security"]');
+            htaccess(11,security.value);
         })
 	})
     multi = document.querySelector('input[id="jform_multisite"]')

@@ -71,10 +71,14 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
     {
         $lang = Factory::getApplication()->getLanguage();
         $lang->load('plg_task_automsg');
-        $this->checkMatomo();  // Update Matomo spammers list
         $cgsecure_params = Cgipcheck::getParams();
+        if (isset($cgsecure_params->matomo) && $cgsecure_params->matomo) { // use matomo bad referers list ?
+            $this->checkMatomo();  // Update Matomo spammers list
+        } elseif (!isset($cgsecure_params->matomo)) { // CG Secure before 3.9.4 : suppose update required
+            $this->checkMatomo();  // Update Matomo spammers list
+        }
         if ($cgsecure_params->blockai) { // blocking AI ?
-            $this->checkAI();      // update perishablepress AI list 
+            $this->checkAI();      // update perishablepress AI list
         }
         return TaskStatus::OK;
     }

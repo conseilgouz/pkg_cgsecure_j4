@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\AbstractView;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Component\Scheduler\Administrator\Model\TaskModel;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
@@ -142,6 +142,12 @@ class JsonView extends AbstractView
             } elseif ($access == 9) { // add hotlink block
                 $msg = $this->addHotlinkHTAccess();
                 $this->config->blockhotlink = 1;
+            } elseif ($access == 10) { // delete matomo bad referers list
+                $msg = $this->deleteMatomoHTAccess();
+                $this->config->matomo = 0;
+            } elseif ($access == 11) { // add matomo bad referers list
+                $msg = $this->addMatomoHTAccess();
+                $this->config->matomo = 1;
             }
             $table->updateSecureParams(json_encode($this->config));
         }
@@ -306,6 +312,45 @@ class JsonView extends AbstractView
             return Text::_('CGSECURE_ADD_HOTLINK_HTACCESS');
         } else {
             return 'err : '.Text::_('CGSECURE_ADD_HOTLINK_HTACCESS_ERROR');
+        }
+    }
+    // delete CG Secure information in .htaccess file
+    private function deleteMatomoHTAccess()
+    {
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_nomatomo($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+        $cgFile = '';
+        $rejips = '';
+        if (CGSecureHelper::merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, '')) {
+            return Text::_('CGSECURE_DEL_MATOMO_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_DEL_MATOMO_HTACCESS_ERROR');
+        }
+    }
+    // delete CG Secure information in .htaccess file
+    private function addMatomoHTAccess()
+    {
+        $file = JPATH_ROOT.self::CGPATH .'/txt/spammers.txt';
+        if (!is_file($file)) {// file missing
+            return;
+        }
+        $hash = hash_file('sha256', $file);
+        $serverConfigFile = $this->getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
+        if (!$serverConfigFile) { // no .htaccess file
+            return Text::_('CGSECURE_NO_HTACCESS');
+        }
+        $current = $this->read_current_nomatomo($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
+        $this->config  = $this->getParams();
+        $matomo = $file;
+        $current = $this->replace_matomo($this->getServerConfigFilePath('.htaccess'), $matomo, $hash);
+
+        if (CGSecureHelper::merge_file($this->getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, '', '', '')) {
+            return Text::_('CGSECURE_ADD_MATOMO_HTACCESS');
+        } else {
+            return 'err : '.Text::_('CGSECURE_ADD_MATOMO_HTACCESS_ERROR');
         }
     }
 
@@ -528,6 +573,34 @@ class JsonView extends AbstractView
         }
         return $outBuffer;
     }
+    // read current .htaccess file and remove matomo lines
+    private function read_current_nomatomo($afile)
+    {
+        $readBuffer = file($afile, FILE_IGNORE_NEW_LINES);
+        $outBuffer = '';
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return '';
+        }
+        $cgLines = false;
+        foreach ($readBuffer as $id => $line) {
+            if ($line === '#------MATOMO') {
+                $cgLines = true;
+                $outBuffer .= $line . PHP_EOL; // keep line
+                continue;
+            }
+            if ($line === '#------END MATOMO') {
+                $cgLines = false;
+                $outBuffer .= $line . PHP_EOL; // keep line
+                continue;
+            }
+            if ($cgLines) {
+                // When we are between our makers all content should be removed
+                continue;
+            }
+            $outBuffer .= $line . PHP_EOL;
+        }
+        return $outBuffer;
+    }
     private function read_cgfile($afile)
     {
 
@@ -550,4 +623,64 @@ class JsonView extends AbstractView
         return $params;
 
     }
+    // read current .htaccess file and remove CG lines
+    private function replace_matomo($htaccess, $matomo, $hash)
+    {
+        $readBuffer = file($htaccess, FILE_IGNORE_NEW_LINES);
+        $outBuffer = '';
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return '';
+        }
+        $cgLines = false;
+        foreach ($readBuffer as $id => $line) {
+            if ($line === '#------MATOMO') {
+                $outBuffer .= $line . PHP_EOL;
+                $date = HTMLHelper::date(time(), 'Y-m-d H:i:s');
+                $outBuffer .= '#----> hash '.$hash.',updated '.$date . PHP_EOL;
+                $cgLines = true;
+                continue;
+            }
+            if ($line === '#------END MATOMO') {
+                $outBuffer = $this->merge_matomo($outBuffer, $matomo);
+                $outBuffer .= $line . PHP_EOL;
+                $cgLines = false;
+                continue;
+            }
+            if ($cgLines) {
+                // When we are between our makers all content should be removed
+                continue;
+            }
+            $outBuffer .= $line . PHP_EOL;
+        }
+        return $outBuffer;
+    }
+    private function merge_matomo($buffer, $matomo)
+    {
+        $readBuffer = file($matomo, FILE_IGNORE_NEW_LINES);
+        if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
+            return '';
+        }
+        $oneline = '';
+        $i = 0;
+        foreach ($readBuffer as $id => $line) {
+            if ($i > 20) { // write one line
+                $buffer .= $oneline .') [NC,OR]'. PHP_EOL;
+                $oneline = "";
+                $i = 0;
+            }
+            if ($oneline == "") {
+                $oneline = "RewriteCond %{HTTP_REFERER} (";
+            }
+            if ($i > 0) {
+                $oneline .= '|';
+            }
+            $oneline .= trim($line);
+            $i++;
+        }
+        if ($i > 0) { // write last line
+            $buffer .= $oneline .') [NC,OR]'. PHP_EOL;
+        }
+        return $buffer;
+    }
+
 }

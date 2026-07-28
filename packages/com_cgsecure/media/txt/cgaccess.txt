@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.9.0--------------------
+#------------------------CG SECURE HTACCESS BEGIN-3.9.3--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/, https://perishablepress.com/8g-firewall and AESecure.
 #
@@ -319,7 +319,9 @@ RewriteCond %{REQUEST_URI} /(an0nym0us|anoncol7|anongt|anonym0us|anonymous|anzos
 RewriteCond %{REQUEST_URI} /(h4ck|h4cked|h4ntu|h4x|h4x0r|hack|hax|index1|indoxploit|info|inj3ct0r|ironshell|isko|islam|j3|jackal|jacker|jaguar|ja|jaja|jajaja|jar|java|javacpl|killer|king|ksa|l3b|ls|m1n1|madspot|madspotshell|m4r0c|marvins|mini|minishell|modules|mysql|network|newshell|newup|nkr|offline|olux|pr1v|press-this|priv|priv8|r1z|r0k|r00t|r57|readme|root)\.php [NC,OR]
 RewriteCond %{REQUEST_URI} /(s|sa|sa2|sado|sh3ll|shel|shell|sm|smevk|sniper|sok|sql|sql-new|ss|sym|sym403|sym404|symbpass|syml1nk|symlink|symlinkbypass|syrian_shell|system|system_log|t00|think|tmp|up|uploader|uploads|uploadfile|uploadfile1|user|v4team|vuln)\.php [NC,OR]
 RewriteCond %{REQUEST_URI} /(w|w3br00t|webadmin|webr00t|webroot|whmcrack|whmcracker|whmcs|wp-|ws|ws0|wso|wsoshell|ws0shell|wso25|wsoshell|up|x|xa|xccc|xd|xx|xxx|zdz|zone-h)\.php [NC,OR]
-RewriteCond %{REQUEST_URI} /(admin2\.asp|alfa-shell-v4(.*)|blindshell\.c|cgishell\.pl|controller\.ashx|jaguar\.izri|perl\.alfa|xx\.pl) [NC]
+RewriteCond %{REQUEST_URI} /(admin2\.asp|alfa-shell-v4(.*)|blindshell\.c|cgishell\.pl|controller\.ashx|jaguar\.izri|perl\.alfa|xx\.pl) [NC,OR]
+# add in version 3.9.3
+RewriteCond %{REQUEST_URI} /(content|network|new|newfile|nf|cream1|css|database|db|default|diagnostic|doc|file|filemanager|g|gettest|goods|help|inc|info|init|lite|load|log|manager|media|mac|mini|new\).php [NC]
 RewriteRule .* plugins/system/cgsecure/htaccess.php?e=21&t=e&m=%1&sec=??security?? [L]
 </IfModule>
 
