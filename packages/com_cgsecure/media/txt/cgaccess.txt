@@ -321,7 +321,7 @@ RewriteCond %{REQUEST_URI} /(s|sa|sa2|sado|sh3ll|shel|shell|sm|smevk|sniper|sok|
 RewriteCond %{REQUEST_URI} /(w|w3br00t|webadmin|webr00t|webroot|whmcrack|whmcracker|whmcs|wp-|ws|ws0|wso|wsoshell|ws0shell|wso25|wsoshell|up|x|xa|xccc|xd|xx|xxx|zdz|zone-h)\.php [NC,OR]
 RewriteCond %{REQUEST_URI} /(admin2\.asp|alfa-shell-v4(.*)|blindshell\.c|cgishell\.pl|controller\.ashx|jaguar\.izri|perl\.alfa|xx\.pl) [NC,OR]
 # add in version 3.9.3
-RewriteCond %{REQUEST_URI} /(content|network|new|newfile|nf|cream1|css|database|db|default|diagnostic|doc|file|filemanager|g|gettest|goods|help|inc|info|init|lite|load|log|manager|media|mac|mini|new\).php [NC]
+RewriteCond %{REQUEST_URI} /(content|network|new|newfile|nf|cream1|css|database|db|default|diagnostic|doc|file|filemanager|g|gettest|goods|help|inc|info|init|lite|load|log|manager|media|mac|mini|new)\.php [NC]
 RewriteRule .* plugins/system/cgsecure/htaccess.php?e=21&t=e&m=%1&sec=??security?? [L]
 </IfModule>
 
