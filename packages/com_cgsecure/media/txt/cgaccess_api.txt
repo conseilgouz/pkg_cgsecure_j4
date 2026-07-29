@@ -1,0 +1,17 @@
+#------------------------CG SECURE HTACCESS BEGIN-3.9.3---------------
+# an idea from AESecure. CG Secure blocks and reports hacking attempts
+#
+#Deny access to all CGI, Perl, PHP and Python
+<FilesMatch "\.(cgi|php|pl|py|jsp|sh|js)$">
+Deny from all
+</FilesMatch>
+
+# secure directory by disabling script execution
+AddHandler cgi-script  .pl .php .py .jsp .asp .sh .cgi .js
+Options -ExecCGI
+
+<FilesMatch ^index.php>
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+#------------------------CG SECURE HTACCESS END--------------------

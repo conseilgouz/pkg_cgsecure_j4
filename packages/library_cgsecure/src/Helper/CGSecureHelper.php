@@ -23,7 +23,7 @@ class CGSecureHelper
     public const CGPATH = '/media/com_cgsecure';
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
     public const SERVER_CONFIG_FILE_NONE = '';
-    
+
     // get CG Secure params
     public static function getParams()
     {
@@ -110,7 +110,7 @@ class CGSecureHelper
         return $list;
     }
     // Get HTAccess Rejected IPs list
-    public static function get_reject_onerror_list() : Array
+    public static function get_reject_onerror_list(): array
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         $where = " errtype LIKE 'e'";
@@ -320,7 +320,7 @@ class CGSecureHelper
         return Text::_('CGSECURE_MERGE_ERROR');
         ;
     }
-   // Force recreate HTACCESS -----------------------------------------------
+    // Force recreate HTACCESS -----------------------------------------------
     public static function forceHTAccess($json = false)
     {
         $serverConfigFile = self::getServerConfigFile(self::SERVER_CONFIG_FILE_HTACCESS);
@@ -350,7 +350,7 @@ class CGSecureHelper
         $current = self::empty_current(self::getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS));
 
         $hackers = self::get_rejected();
-        $rejips = self::create_ips($hackers,$v6);
+        $rejips = self::create_ips($hackers, $v6);
 
         if (file_exists(JPATH_ROOT.self::CGPATH .'/txt/custom.txt')) { // custom file exists : use it
             $cgFile = self::read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/custom.txt');
@@ -370,7 +370,7 @@ class CGSecureHelper
         if (isset($config->blockhotlink) && $config->blockhotlink) {
             $hotlink = self::read_cgfile(JPATH_ROOT.self::CGPATH .'/txt/cgaccess_hotlink.txt');
         }
-        if (CGSecureHelper::merge_file(CGSecureHelper::getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile,$rejips,$specific, $cgAI, $hotlink)) {
+        if (CGSecureHelper::merge_file(CGSecureHelper::getServerConfigFilePath(self::SERVER_CONFIG_FILE_HTACCESS), $current, $cgFile, $rejips, $specific, $cgAI, $hotlink)) {
             if ($json) {
                 return Text::_('CGSECURE_ADD_HTACCESS');
             } else {
@@ -380,22 +380,32 @@ class CGSecureHelper
         // Error : restore saved version
         copy($dest, $source);
         if ($json) {
-           return 'err : '.Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
+            return 'err : '.Text::_('CGSECURE_ADD_HTACCESS_INSERT_ERROR');
         } else {
             Factory::getApplication()->enqueueMessage('CGSECURE : Error during insert');
             return;
         }
     }
-    // copy CG Secure information in .htaccess from images, media, files, administrator directories
+    // copy CG Secure information in .htaccess from all directories
     public static function protectotherdirs($json = false)
     {
-        if (file_exists(JPATH_ROOT.'/images/.htaccess')
-            && file_exists(JPATH_ROOT.'/media/.htaccess')
-            && (is_dir(JPATH_ROOT.'/files') && file_exists(JPATH_ROOT.'/files/.htaccess'))) {
-            return; // .htaccess already present in images/media/files directories
-        }
+        $listNoPHP = ['cli','components','files','includes','images','language','layouts','libraries','media','modules','plugins','templates'];
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
-        $dest = JPATH_ROOT.'/images/.htaccess';
+        foreach ($listNoPHP as $one) {
+            $dest = JPATH_ROOT.'/'.$one.'/.htaccess';
+            if (is_file($dest)) {
+                File::delete($dest);
+            }
+            if (!copy($source, $dest)) {
+                if ($json) {
+                    return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
+                } else {
+                    Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in '.$one.' error');
+                }
+            }
+        }
+        $dest = JPATH_ROOT.'/api/.htaccess';
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_api.txt';
         if (is_file($dest)) {
             File::delete($dest);
         }
@@ -403,31 +413,7 @@ class CGSecureHelper
             if ($json) {
                 return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
             } else {
-                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in images error');
-            }
-        }
-        $dest = JPATH_ROOT.'/media/.htaccess';
-        if (is_file($dest)) {
-            File::delete($dest);
-        }
-        if (!copy($source, $dest)) {
-            if ($json) {
-                return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
-            } else {
-               Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in media error');
-            }
-        }
-        if (is_dir(JPATH_ROOT.'/files')) {// Joomla 5.3.0 : new directory
-            $dest = JPATH_ROOT.'/files/.htaccess';
-            if (is_file($dest)) {
-                File::delete($dest);
-            }
-            if (!copy($source, $dest)) {
-                if ($json) {
-                    return 'err : '.Text::_('CGSECURE_PROTECTDIRS_ERROR');
-                } else {
-                    Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in files error');
-                }
+                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in api error');
             }
         }
         $dest = JPATH_ROOT.'/administrator/.htaccess';

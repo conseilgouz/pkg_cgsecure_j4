@@ -12,6 +12,8 @@
         <addition>
             <item>Matomo bad referers list : new parameter to load it or not</item>
             <item>Add some values to rogues php list</item>
+            <item>Add htaccess to block php in most folders</item>
+            <item>Add htaccess to allow only index.php in api folder </item>
         </addition>
 	</changelog>
 	<changelog>
