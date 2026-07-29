@@ -9,6 +9,9 @@
         <fix>
             <item>Inline Help : change hotlink documentation link</item>
         </fix>
+        <change>
+            <item>Update requirements to Joomla 5.x/PHP 8.1 as minimum versions</item>
+        </change>
         <addition>
             <item>Matomo bad referers list : new parameter to load it or not</item>
             <item>Add some values to rogues php list</item>

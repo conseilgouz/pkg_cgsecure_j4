@@ -27,8 +27,8 @@ use ConseilGouz\CGSecure\Cgipcheck;
 
 class PlgSystemCgsecureInstallerInstallerScript
 {
-    private $min_joomla_version      = '4.0.0';
-    private $min_php_version         = '7.4';
+    private $min_joomla_version      = '5.0.0';
+    private $min_php_version         = '8.1';
     private $name                    = 'CG Secure';
     private $extname                 = '';
     private $extension_type          = '';
