@@ -2,16 +2,22 @@
 # an idea from AESecure. CG Secure blocks and reports hacking attempts
 #
 #Deny access to all CGI, Perl, PHP and Python
-<FilesMatch "\.(cgi|php|pl|py|jsp|sh|js)$">
+<IfModule mod_rewrite.c>
+	RewriteCond %{REQUEST_URI} ^/api/
+	RewriteCond %{REQUEST_URI} !^/api/index\.php
+	# and the requested path and file doesn't directly match a physical file
+	RewriteCond %{REQUEST_FILENAME} !-f
+	# and the requested path and file doesn't directly match a physical folder
+	RewriteCond %{REQUEST_FILENAME} !-d
+	# internally rewrite the request to the /api/index.php script
+	RewriteRule .* api/index.php [L]
+</IfModule>
+<FilesMatch "\.(cgi|pl|py|jsp|sh)$">
 Deny from all
 </FilesMatch>
 
 # secure directory by disabling script execution
-AddHandler cgi-script  .pl .php .py .jsp .asp .sh .cgi .js
+AddHandler cgi-script .pl .py .jsp .asp .sh .cgi
 Options -ExecCGI
 
-<FilesMatch ^index.php>
-    Order Allow,Deny
-    Allow from all
-</FilesMatch>
 #------------------------CG SECURE HTACCESS END--------------------
