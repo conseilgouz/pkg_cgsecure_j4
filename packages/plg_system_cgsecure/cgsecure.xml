@@ -13,7 +13,6 @@
 	<files>
 		<folder plugin="cgsecure">services</folder>
 		<folder>src</folder>
-		<filename>htaccess.php</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
