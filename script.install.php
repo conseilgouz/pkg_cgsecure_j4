@@ -37,7 +37,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $newlib_version	         = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "3.9.3";
+    private $cgsecure_force_update_version = "4.0.0";
     private $security;
     private $config;
     private $db;
@@ -223,7 +223,8 @@ class PlgSystemCgsecureInstallerInstallerScript
         // remove obsolete file
         $this->delete([
             JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.php',
-            JPATH_ROOT . '/libraries/cgsecure/Helper/Cgipcheck.php'
+            JPATH_ROOT . '/libraries/cgsecure/Helper/Cgipcheck.php',
+            JPATH_ROOT . '/plugins/system/cgsecure/htaccess.php',
         ]);
 
         // replace index.php file in cg_no_robot dir by new version

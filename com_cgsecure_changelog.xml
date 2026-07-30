@@ -2,15 +2,16 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>3.9.3</version>
+		<version>4.0.0</version>
         <note>
-            <item>Update : 28/07/2026</item>
+            <item>Update : 01/08/2026</item>
         </note>
         <fix>
             <item>Inline Help : change hotlink documentation link</item>
         </fix>
         <change>
             <item>Update requirements to Joomla 5.x/PHP 8.1 as minimum versions</item>
+            <item>htaccess.php becomes a webservice</item>
         </change>
         <addition>
             <item>Matomo bad referers list : new parameter to load it or not</item>

@@ -179,6 +179,9 @@ class CGSecureHelper
             if (strpos($line, '??security??') !== false) {
                 $line = str_replace('??security??', $security, $line);
             }
+            if (strpos($line, '??uri??') !== false) {
+                $line = str_replace('??uri??', Uri::root(), $line);
+            }
             $outBuffer .= $line . PHP_EOL;
         }
         return $outBuffer;

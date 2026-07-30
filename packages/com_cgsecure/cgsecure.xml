@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="4.0" method="upgrade">
 	<name>COM_CGSECURE</name>
-	<creationDate>2026-07-28</creationDate>
+	<creationDate>2026-08-01</creationDate>
 	<author>ConseilGouz</author>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<copyright>Copyright (C) 2024 ConseilGouz.com. All Rights Reserved</copyright>
+	<copyright>Copyright (C) 2026 ConseilGouz.com. All Rights Reserved</copyright>
 	<license>GNU/GPL Version 3 or later - https://www.gnu.org/licenses/gpl-3.0.html</license>
-	<version>3.9.3</version>
+	<version>4.0.0</version>
 	<scriptfile>script.php</scriptfile>
 	<namespace path="src">ConseilGouz\Component\CGSecure</namespace>
 	<description>COM_CGSECURE_XML_DESCRIPTION</description>
@@ -61,6 +61,12 @@
 			<folder>cg_no_robot</folder>
 			<filename>index.html</filename>
 	</media>
+    <api>
+        <files folder="api">
+            <folder>src</folder>
+            <filename>index.html</filename>
+        </files>
+    </api>
 	<changelogurl>https://raw.githubusercontent.com/conseilgouz/pkg_cgsecure_j4/master/com_cgsecure_changelog.xml</changelogurl>
 	<updateservers>
 	<server type="extension" name="CG Secure" priority="1">https://raw.githubusercontent.com/conseilgouz/updates_github/master/com_cgsecure_update.xml</server>

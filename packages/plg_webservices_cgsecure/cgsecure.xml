@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<extension type="plugin" group="webservices" method="upgrade">
+    <name>PLG_WEBSERVICES_CGSECURE</name>
+    <version>4.0.0</version>
+    <creationDate>2026-07-30</creationDate>
+	<copyright>(C)2026 ConseilGouz. All rights reserved.</copyright>
+	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
+	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
+	<authorUrl>www.conseilgouz.com</authorUrl>
+    <description>PLG_WEBSERVICES_CGSECURE_XML_DESCRIPTION</description>
+    <namespace path="src">ConseilGouz\Plugin\WebServices\CGSecure</namespace>
+    <files>
+        <folder>services</folder>
+        <folder plugin="cgsecure">src</folder>
+        <filename>index.html</filename>
+    </files>
+
+    <languages folder="language">
+        <language tag="en-GB">en-GB/plg_webservices_cgsecure.ini</language>
+        <language tag="en-GB">en-GB/plg_webservices_cgsecure.sys.ini</language>
+    </languages>
+</extension>
