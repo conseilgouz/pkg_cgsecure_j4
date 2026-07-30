@@ -73,7 +73,7 @@ class CgsecureController extends ApiController
                 Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG, array('CGHTAccess'));
                 Log::add('White list : '.$req, Log::DEBUG, 'CGHTAccess');
             }
-            $this->app->setHeader('status', 200);
+            return;
         }
         if (Cgipcheck::getLatest_ips($ip)) {
             $this->app->redirect(URI::root());
