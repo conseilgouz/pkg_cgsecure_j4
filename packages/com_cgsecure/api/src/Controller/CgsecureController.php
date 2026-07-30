@@ -118,7 +118,7 @@ class CgsecureController extends ApiController
                 if (strpos($value, '___')) {
                     $block = '('.str_replace('___', '', $value).')';
                 }
-                if (($key != "e") && ($key != "sec") && ($key != "t") && ($key != "m")) {
+                if (($key != "e") && ($key != "sec") && ($key != "t") && ($key != "m") && ($key != "req")) {
                     $err = "Wrong key : ".substr($key, 0, 5)." =>".$line.$compl;
                 }
             }
