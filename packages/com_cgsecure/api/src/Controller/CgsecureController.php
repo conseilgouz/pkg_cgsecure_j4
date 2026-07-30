@@ -64,7 +64,7 @@ class CgsecureController extends ApiController
         $cgsecure_params = CGSecureHelper::getParams();
         $security = $cgsecure_params->security;
         $ip = IpHelper::getIp();//
-        // $ip = '218.92.1.242'; // test hackeur chinois
+        // $ip = '113.206.183.117'; // test hackeur chinois
 
         $req = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES); // sanitize command
 
@@ -109,6 +109,11 @@ class CgsecureController extends ApiController
                 } // one char only
                 if ($key == "m") {
                     $compl = $value;
+                } // one char only
+                if ($key == "req") {
+                    $line = substr($value, 0, 300);
+                    // $line = trim($line, JPATH_BASE);
+                    $compl = (strlen($line) < 301) ? '' : '...';
                 } // one char only
                 if (strpos($value, '___')) {
                     $block = '('.str_replace('___', '', $value).')';
