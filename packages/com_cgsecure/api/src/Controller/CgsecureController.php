@@ -64,7 +64,7 @@ class CgsecureController extends ApiController
         $cgsecure_params = CGSecureHelper::getParams();
         $security = $cgsecure_params->security;
         $ip = IpHelper::getIp();//
-        $ip = '218.92.1.242'; // test hackeur chinois
+        // $ip = '218.92.1.242'; // test hackeur chinois
 
         $req = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES); // sanitize command
 
