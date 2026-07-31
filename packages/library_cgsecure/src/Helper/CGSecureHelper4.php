@@ -5,6 +5,8 @@
  * @copyright (c) 2026 ConseilGouz. All Rights Reserved.
  * @author ConseilGouz
 **/
+/* version for CG Secure 4.0 */
+/* copy of CGSecureHelper to fix issue with installation process */
 
 namespace ConseilGouz\CGSecure\Helper;
 
@@ -17,7 +19,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
 
-class CGSecureHelper
+class CGSecureHelper4
 {
     protected static Bool $blockipv6;
     public const CGPATH = '/media/com_cgsecure';

@@ -16,13 +16,13 @@ use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Version;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Component\Scheduler\Administrator\Model\TaskModel;
-use ConseilGouz\CGSecure\Helper\CGSecureHelper;
+
+// use ConseilGouz\CGSecure\Helper\CGSecureHelper;
 
 class PlgSystemCgsecureInstallerInstallerScript
 {
@@ -110,7 +110,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         return true;
     }
 
-    public function postflight($route, $installer)
+    public function postflight(String $route, $installer)
     {
         if (! in_array($route, ['install', 'update'])) {
             return true;
@@ -235,8 +235,12 @@ class PlgSystemCgsecureInstallerInstallerScript
                 $norobots. '/index.php'
             );
         }
+        if (!class_exists('CGSecureHelper4')) {
+            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper4.php');
+        }
         // Check if HTACCESS file has to be updated
-        $serverConfigFile = CGSecureHelper::getServerConfigFile('.htaccess');
+        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper4();
+        $serverConfigFile = $helper->getServerConfigFile('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
             return;
         }
@@ -257,8 +261,8 @@ class PlgSystemCgsecureInstallerInstallerScript
             return;
         } // No CG Secure line in htacces file => exit
         if (!$version || ($version && ($version < $this->cgsecure_force_update_version))) {
-            CGSecureHelper::forceHTAccess(); // update htaccess
-            CGSecureHelper::protectotherdirs(); // create htaccess file in media,images/administrator dir
+            $helper->forceHTAccess(); // update htaccess
+            $helper->protectotherdirs(); // create htaccess file in media,images/administrator dir
         }
     }
     private function createExtensionRoot()
