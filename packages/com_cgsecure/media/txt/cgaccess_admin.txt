@@ -14,7 +14,7 @@ ErrorDocument 403 ??uri??api/index.php/v1/cgsecure/secure?e=403&sec=??security??
  RewriteRule ^administrator/(components|modules|templates|images|plugins)/([^/]+/)*([^/.]+\.)+(jp(e?g|2)?|png|gif|webp|bmp|css|js|swf|html?|mp(eg?|[34])|avi|wav|og[gv]|flv|mov)$ - [L]
  # Disallowed : the rest
  # Block f.i. http://yoursite/administrator/components/com_admin/admin.xml
- RewriteRule ^administrator/ ??uri??api/index.php/v1/cgsecure/secure?e=99&t=w&sec=??security??&req=%0 [L]
+ RewriteRule ^administrator/ ??uri??api/index.php/v1/cgsecure/secure?e=99&t=w&sec=??security?? [L]
 </IfModule>
  # Deny access to XML files of /administrator
  <Files ~ ".xml$">

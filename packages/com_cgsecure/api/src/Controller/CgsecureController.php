@@ -34,12 +34,12 @@ class CgsecureController extends ApiController
     public function execute($task)
     {
         try {
-            $result = parent::execute($task);
+            parent::execute($task);
         } catch (\RuntimeException $e) {
             $this->failWithError($e);
         }
-
         $this->app->redirect(URI::root());
+        throw new NotAllowed(Factory::getApplication()->getLanguage()->_('JERROR_ALERTNOAUTHOR'), 403);
     }
     public function secure()
     {
@@ -141,7 +141,6 @@ class CgsecureController extends ApiController
         }
 
         throw new NotAllowed(Factory::getApplication()->getLanguage()->_('JERROR_ALERTNOAUTHOR'), 403);
-        ;
     }
 
     private function failWithError(\Throwable $e)
