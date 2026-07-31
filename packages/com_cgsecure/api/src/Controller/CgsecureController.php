@@ -38,8 +38,8 @@ class CgsecureController extends ApiController
         } catch (\RuntimeException $e) {
             $this->failWithError($e);
         }
-        $this->app->redirect(URI::root());
-        throw new NotAllowed(Factory::getApplication()->getLanguage()->_('JERROR_ALERTNOAUTHOR'), 403);
+        $this->app->redirect('https://www.google.com', 301);
+        die(403);
     }
     public function secure()
     {
@@ -140,14 +140,14 @@ class CgsecureController extends ApiController
             Cgipcheck::report_hacker($myname, $err.$block, $errtype, $ip);
         }
 
-        throw new NotAllowed(Factory::getApplication()->getLanguage()->_('JERROR_ALERTNOAUTHOR'), 403);
     }
 
     private function failWithError(\Throwable $e)
     {
         $errorCode = $e->getCode() ?: 500;
         $this->app->setHeader('status', $errorCode);
-        $this->app->redirect(URI::root());
+        $this->app->redirect('https://www.google.com');
+        die();
     }
 
 }
