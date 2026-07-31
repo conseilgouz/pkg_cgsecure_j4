@@ -23,7 +23,6 @@ use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Component\Scheduler\Administrator\Model\TaskModel;
 use ConseilGouz\CGSecure\Helper\CGSecureHelper;
-use ConseilGouz\CGSecure\Cgipcheck;
 
 class PlgSystemCgsecureInstallerInstallerScript
 {
@@ -236,10 +235,6 @@ class PlgSystemCgsecureInstallerInstallerScript
                 $norobots. '/index.php'
             );
         }
-        if (!class_exists('CGSecureHelper')) {
-            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper.php');
-        }
-        
         // Check if HTACCESS file has to be updated
         $serverConfigFile = CGSecureHelper::getServerConfigFile('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
@@ -262,27 +257,11 @@ class PlgSystemCgsecureInstallerInstallerScript
             return;
         } // No CG Secure line in htacces file => exit
         if (!$version || ($version && ($version < $this->cgsecure_force_update_version))) {
-            $this->forceHTAccess(); // update htaccess
             $this->htaccess_other_dirs(); // create htaccess file in media,images/administrator dir
+            CGSecureHelper::forceHTAccess(); // update htaccess
+            CGSecureHelper::protectotherdirs(); // create htaccess file in media,images/administrator dir
         }
     }
-    private function htaccess_other_dirs()
-    {
-        return CGSecureHelper::protectotherdirs();
-    }
-    // Begin update HTACCESS -----------------------------------------------
-    private function forceHTAccess()
-    {
-        CGSecureHelper::forceHTAccess();
-    }
-
-    private function getParams()
-    {
-        $params = CGSecureHelper::getParams();
-        return $params;
-    }
-    // End HTACCESS update -------------------------------------------------------------
-
     private function createExtensionRoot()
     {
         $destination = JPATH_PLUGINS . '/system/' . $this->installerName;
@@ -529,6 +508,10 @@ class PlgSystemCgsecureInstallerInstallerScript
         $db->setQuery($query);
         $db->execute();
         // nettoyage du cache
+        $this->clearCache();
+    }
+    private function clearCache()
+    {
         $cacheModel = Factory::getApplication()->bootComponent('com_cache')->getMVCFactory()->createModel('Cache', 'Administrator', ['ignore_request' => true]);
         $cache = $cacheModel->getCache() ?? null;
         if ($cache) {
@@ -538,7 +521,6 @@ class PlgSystemCgsecureInstallerInstallerScript
             Factory::getApplication()->enqueueMessage('<p>Cache cleared.</p>');
         }
     }
-
     public function delete($files = [])
     {
         foreach ($files as $file) {
