@@ -257,7 +257,6 @@ class PlgSystemCgsecureInstallerInstallerScript
             return;
         } // No CG Secure line in htacces file => exit
         if (!$version || ($version && ($version < $this->cgsecure_force_update_version))) {
-            $this->htaccess_other_dirs(); // create htaccess file in media,images/administrator dir
             CGSecureHelper::forceHTAccess(); // update htaccess
             CGSecureHelper::protectotherdirs(); // create htaccess file in media,images/administrator dir
         }
