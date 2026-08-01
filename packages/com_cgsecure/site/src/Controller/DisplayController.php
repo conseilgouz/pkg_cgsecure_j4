@@ -28,8 +28,12 @@ class DisplayController extends BaseController
     {
         $input = Factory::getApplication()->getInput();
         $view = $input->getCmd('view', 'secure');
+        $layout = $input->getCmd('layout', 'default');
         $input->set('view', $view);
-        $input->set('layout', 'default');
+        if ($layout == 'error') {
+            $input->set('layout', $layout);
+        }
+
         $cachable = (bool)$this->app->getConfig()->get('caching');
         parent::display(false, $urlparams);
         return $this;

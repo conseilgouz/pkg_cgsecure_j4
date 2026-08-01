@@ -10,6 +10,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\IpHelper;
 use ConseilGouz\CGSecure\Cgipcheck;
@@ -39,7 +40,7 @@ $myname = 'CGSecureHTAccess';
 $cgsecure_params = CGSecureHelper::getParams();
 $security = $cgsecure_params->security;
 $ip = IpHelper::getIp();//
-// $ip = '113.206.183.110'; // test hackeur chinois
+$ip = '113.206.183.110'; // test hackeur chinois
 
 $req = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES); // sanitize command
 
@@ -48,10 +49,11 @@ if (CGSecureHelper::whiteList($ip)) { // white list : display error message
         Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG, array('CGHTAccess'));
         Log::add('White list : '.$req, Log::DEBUG, 'CGHTAccess');
     }
-    $app->redirect(URI::root());
+    $app->redirect(URI::root().'index.php?option=com_cgsecure&view=secure&layout=error');
     die();
 }
 if (Cgipcheck::getLatest_ips($ip)) {
+    $app->redirect(URI::root().'index.php?option=com_cgsecure&view=secure&layout=error');
     die('CG Secure : Restricted access');
 } // already blocked : die
 $user 	  = $app->getIdentity();
@@ -60,7 +62,8 @@ if (($app->isClient('administrator') || !$user->guest) && (isset($_COOKIE['cg_se
         Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG, array('CGHTAccess'));
         Log::add('White list cookie : '.$req, Log::DEBUG, 'CGHTAccess');
     }
-    return ;
+    $app->redirect(URI::root().'index.php?option=com_cgsecure&view=secure&layout=error');
+    die();
 } // CG Secure OK : on ignore les erreurs htaccess
 $prefixe = $_SERVER['SERVER_NAME'];
 $prefixe = substr(str_replace('www.', '', $prefixe), 0, 2);
@@ -114,5 +117,5 @@ if ($report) {
     Cgipcheck::report_hacker($myname, $err.$block, $errtype, $ip);
 }
 $msg = $err.$block.'</h3></body></html>';
-
-echo $tmp.$msg;
+$app->redirect(URI::root().'index.php?option=com_cgsecure&view=secure&layout=error');
+die('CG Secure : '.$tmp.$msg);
