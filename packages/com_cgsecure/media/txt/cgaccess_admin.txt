@@ -1,7 +1,7 @@
 #------------------------CG SECURE HTACCESS BEGIN-3.9.0--------------------
 # an idea from AESecure. CG Secure blocks and reports hacking attempts
 #
-ErrorDocument 403 ??uri??api/index.php/v1/cgsecure/secure?e=403&sec=??security??
+ErrorDocument 403 ??uri??index.php?option=com_cgsecure&view=secure&e=403&sec=??security??
 <IfModule mod_rewrite.c>
  # Block access to special files of the administrator like xml, gif, ... in order to avoid fingerprints
  # Allowed : yoursite/administror
@@ -14,7 +14,7 @@ ErrorDocument 403 ??uri??api/index.php/v1/cgsecure/secure?e=403&sec=??security??
  RewriteRule ^administrator/(components|modules|templates|images|plugins)/([^/]+/)*([^/.]+\.)+(jp(e?g|2)?|png|gif|webp|bmp|css|js|swf|html?|mp(eg?|[34])|avi|wav|og[gv]|flv|mov)$ - [L]
  # Disallowed : the rest
  # Block f.i. http://yoursite/administrator/components/com_admin/admin.xml
- RewriteRule ^administrator/ ??uri??api/index.php/v1/cgsecure/secure?e=99&t=w&sec=??security?? [L]
+ RewriteRule ^administrator/ ??uri??https://localhost/conseil/index.php?option=com_cgsecure&view=secure&e=99&t=w&sec=??security?? [L]
 </IfModule>
  # Deny access to XML files of /administrator
  <Files ~ ".xml$">

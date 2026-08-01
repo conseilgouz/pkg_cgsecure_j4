@@ -174,7 +174,7 @@ RewriteRule administrator\/components\/com_joomlaupdate\/extract\.php$ - [L]
 ##  allow Acy Mailing component calls
 RewriteRule administrator\/components\/com_acym\/acym\.php$ - [L]
 ## Disallow everything else
-RewriteRule  ^administrator/ ??uri??api/index.php/v1/cgsecure/secure?e=1&t=e&sec=??security?? [L]
+RewriteRule  ^administrator/ ??uri??index.php?option=com_cgsecure&view=secure&e=1&t=e&sec=??security?? [L]
 
 # common REMOTE_HOST/HTTP_REFERER # 7G FIREWALL v1.2 20190727 + matomo referlist + site.ru
 RewriteCond %{REMOTE_HOST} (163data|amazonaws|colocrossing|crimea|g00g1e|justhost|kanagawa|loopia|masterhost|onlinehome|poneytel|sprintdatacenter|reverse.softlayer|safenet|ttnet|woodpecker|wowrack) [NC,OR]
@@ -182,31 +182,31 @@ RewriteCond %{REMOTE_HOST} (163data|amazonaws|colocrossing|crimea|g00g1e|justhos
 #------MATOMO
 #------END MATOMO
 RewriteCond %{HTTP_REFERER} (todaperfeita|site.ru) [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=5&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=5&t=e&m=%1___%2&sec=??security?? [L]
 
 # Block direct access to system files
-RewriteCond %{REQUEST_FILENAME} (boot.ini|changelog.php|changelog.txt|configuration.php|contributing.md|copyright.php|credits.php|htaccess.txt|httpd.conf|install.mysql)$ [NC,OR]
-RewriteCond %{REQUEST_FILENAME} (install.pgsql|install.txt|joomla.xml|license.php|license.txt|maintainers.php|maintainers.txt|php.ini|phpinfo.php|readme.htm)$ [NC,OR]
-RewriteCond %{REQUEST_FILENAME} (readme.html|readme.txt|upgrade.php|upgrade.txt|web.config.txt|web.config|wp-config.php|wp-login.php)$ [NC,OR]
-RewriteCond %{QUERY_STRING} (boot.ini|changelog.php|changelog.txt|configuration.php|contributing.md|copyright.php|credits.php|htaccess.txt|httpd.conf|install.mysql).*$ [NC,OR]
-RewriteCond %{QUERY_STRING} (install.pgsql|install.txt|joomla.xml|license.php|license.txt|maintainers.php|maintainers.txt|php.ini|phpinfo.php|readme.htm).*$ [NC,OR]
-RewriteCond %{QUERY_STRING} (readme.html|readme.txt|upgrade.php|upgrade.txt|web.config.txt|web.config|wp-config.php|wp-login.php).*$ [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=6&t=e&m=%1___%2&sec=??security?? [L]
+RewriteCond %{REQUEST_FILENAME} (boot|changelog|changelog|configuration|contributing.md|copyright|credits|htaccess|httpd|install).(md|mysql|conf|xml|ini|html|php|txt)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} (install|joomla|license|maintainers|php|phpinfo|readme).(pgsql|xml|ini|html|php|txt)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} (readme|readme|upgrade|upgrade|web.config|web.config|wp-config|wp-login).(html|php|txt)$ [NC,OR]
+RewriteCond %{QUERY_STRING} (boot|changelog|changelog|configuration|contributing|copyright|credits|htaccess|httpd|install).(md|mysql|conf|xml|ini|html|php|txt)$ [NC,OR]
+RewriteCond %{QUERY_STRING} (pgsql|install|joomla|license|maintainers|maintainers|php|phpinfo|readme).(pgsql|md|mysql|conf|xml|ini|htm|html|php|txt)$ [NC,OR]
+RewriteCond %{QUERY_STRING} (readme|upgrade|web.config|web|wp-config|wp-login).(config|pgsql|md|mysql|conf|xml|ini|htm|html|php|txt)$ [NC]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=6&t=e&m=%1___%2&sec=??security?? [L]
 
 # Block access to WP directories (we are Joomla, aren't we ?)
-RewriteRule ^.*(wp-admin|wp|wordpress|wp-content|wp-includes)($|/) ??uri??api/index.php/v1/cgsecure/secure?e=7&t=e&sec=??security?? [L]
+RewriteRule ^.*(wp-admin|wp|wordpress|wp-content|wp-includes)($|/) ??uri??index.php?option=com_cgsecure&view=secure&e=7&t=e&sec=??security?? [L]
 
 # Block temp files and other files extensions
 RewriteCond %{REQUEST_FILENAME} .*\.(phtm?l?|shtm?l?|phpt|ash?x|aspx?|cfml?|pl|jsp|sql)$ [NC,OR]
 RewriteCond %{REQUEST_FILENAME} .*\.(bak|config|dll|exe|sql|ini|log|sh|inc|dist)$ [NC,OR]
 RewriteCond %{REQUEST_FILENAME} .*\.(htaccess|htaccess_old|htpasswd)$ [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=7&t=e&m=%1&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=7&t=e&m=%1&sec=??security?? [L]
 
 # Block out any script trying to modify a _REQUEST / PHP GLOBAL / PHPSSESSID variables via URL
 RewriteCond %{QUERY_STRING} ((\?|&)GLOBALS(=|\[|\%[0-9A-Z]{0,2})?) [NC,OR]
 RewriteCond %{QUERY_STRING} ((\?|&)_REQUEST(=|\[|\%[0-9A-Z]{0,2})?) [NC,OR]
 RewriteCond %{QUERY_STRING} ^.*PHPSESSID.*$ [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=8&t=e&m=%1&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=8&t=e&m=%1&sec=??security?? [L]
 
 # Block out use of illegal or unsafe characters in the HTTP Request
 # Block urls having a carriage return or linefeed in it
@@ -215,7 +215,7 @@ RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=8&t=e&m=%1&sec=??securi
 RewriteCond %{QUERY_STRING} .*((alert|char|eval|function|load_file)\().* [NC,OR]
 RewriteCond %{QUERY_STRING} .*(\_vti\_|crossdomain|wwwroot|public_html).* [NC,OR]
 RewriteCond %{QUERY_STRING} .*(\\r|\\n|%0A|%0D).* [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=11&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=11&t=e&m=%1___%2&sec=??security?? [L]
 
 # No carriage return, line feed, escape (%27), ... in the query string
 RewriteCond %{QUERY_STRING} ^.*(<|>|'|%0A|%0D|%25|%27|%3C|%3E|%00).* [NC,OR]
@@ -225,7 +225,7 @@ RewriteCond %{QUERY_STRING} !option=com_akeeba(.*)$ [NC]   # exception for Akeeb
 RewriteCond %{QUERY_STRING} !option=com_akeebabackup(.*)$ [NC]   # exception for Akeeba backup pro
 ## CG Secure 2.1.5 : 12 - allow Acy Mailing component calls
 RewriteCond %{QUERY_STRING} !option=com_acym(.*)$ [NC]   # exception for acymailing
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=12&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=12&t=e&m=%1___%2&sec=??security?? [L]
 
 # Block SQL injection tentatives
 RewriteCond %{QUERY_STRING} ^.*(;|<|>|'|"|\)|%0A|%0D|%22|%25|%27|%3C|%3E|%00).*(/\*|union|select|insert|cast|declare|drop|update|md5|benchmark).* [NC,OR]
@@ -233,15 +233,15 @@ RewriteCond %{QUERY_STRING} ^.*(%20)?([(])?(union|select|insert|cast|declare|gro
 RewriteCond %{QUERY_STRING} ^.*(%20|\+)(AND|OR)(%20|\+).* [NC,OR] 
 RewriteCond %{QUERY_STRING} ^.*(%20|\+)ORDER(%20|\+).* [NC,OR] 
 RewriteCond %{QUERY_STRING} ^.*%201\=1.* [NC] 
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=13&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=13&t=e&m=%1___%2&sec=??security?? [L]
 
 # Block urls trying to get access to the jos_ defaut prefix of Joomla 1.5
 RewriteCond %{QUERY_STRING} .*jos_.*  [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=14&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=14&t=e&m=%1___%2&sec=??security?? [L]
 
 #Block functions in the querystring (f.i. String.fromCharCode)
 RewriteCond %{QUERY_STRING} ^.*string\.fromcharcode.* [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=15&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=15&t=e&m=%1___%2&sec=??security?? [L]
 
 # Filter against shell attacks
 RewriteCond %{REQUEST_URI} .*((php|my)?shell|remview.*|phpremoteview.*|sshphp.*|pcom|nstview.*|c99|r57|webadmin.*|phpget.*|phpwriter.*|fileditor.*|locus7.*|storm7.*)\.(p?s?x?htm?l?|txt|aspx?|cfml?|pl|php[3-9]{0,1}|jsp?|sql|xml) [NC,OR]
@@ -258,20 +258,20 @@ RewriteCond %{QUERY_STRING} ^(.*)*etc(/|%2F)passwd* [NC,OR]
 RewriteCond %{QUERY_STRING} .*(((\\|%5C)\.\.\\)+).* [NC,OR]
 RewriteCond %{QUERY_STRING} .*(((\/|%2F)\.\.)+).* [NC,OR]
 RewriteCond %{QUERY_STRING} ^(.*)*proc\/self\/environ* [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=16&t=e&m=%1___%2&sec=??security??  [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=16&t=e&m=%1___%2&sec=??security??  [L]
 
 RewriteCond %{REQUEST_METHOD} ^(connect|debug|move|trace|track) [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=16&t=e&m=%1___%2&sec=??security??  [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=16&t=e&m=%1___%2&sec=??security??  [L]
 
 # Block access to hidden files and directories.
 RewriteCond %{REQUEST_URI} "(^|/)\."
-RewriteRule "/\.|^\.(?!well-known/)" ??uri??api/index.php/v1/cgsecure/secure?e=17&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule "/\.|^\.(?!well-known/)" ??uri??index.php?option=com_cgsecure&view=secure&e=17&t=e&m=%1___%2&sec=??security?? [L]
 
 # PHP Easter Eggs
 RewriteCond %{REMOTE_ADDR} !127.0.0.1
 RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC]
 RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)???site?? [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=18&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=18&t=e&m=%1___%2&sec=??security?? [L]
 
 #xss blocage  For instance, a parameter on the querystring is an url (http://...)
 RewriteCond %{REQUEST_METHOD} (GET|POST) [NC]
@@ -288,17 +288,17 @@ RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)%20(t|
 RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)%20(p|%70|%50)(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
 RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)(t|%74|%54)(t|%74|%54)(p|%70|%50)%20(%3A|:)(/|%2F){2}(.*)$ [NC,OR]
 RewriteCond %{QUERY_STRING} ^(.*)(%3D|=|%3A|%09)(.*)(h|%68|%48)%20(t|%74|%54)(t|%74|%54)(p|%70|%50)(%3A|:)(/|%2F){2}(.*)$ [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=19&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=19&t=e&m=%1___%2&sec=??security?? [L]
 
 # Prevent use of specified methods in HTTP Request,  but allow opensiteexplorer.org to do so
 RewriteCond %{REQUEST_METHOD} ^(TRACE|DELETE|TRACK) [NC]
 RewriteCond %{HTTP_REFERER} !(www\.)?opensiteexplorer\.org/ [NC]
 RewriteCond %{HTTP_REFERER} !(www\.)?uptimerobot\.com/ [NC]
 RewriteCond %{HTTP_REFERER} !https://validator\.w3\.org/ [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=10&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=10&t=e&m=%1___%2&sec=??security?? [L]
 
 # block direct access to robots.txt file
-#######RewriteRule robots.txt$ ??uri??api/index.php/v1/cgsecure/secure?e=15&t=w&sec=??security?? [L]
+#######RewriteRule robots.txt$ ??uri??index.php?option=com_cgsecure&view=secure&e=15&t=w&sec=??security?? [L]
 
 # block bad words
 RewriteCond %{QUERY_STRING} \b(ambien|blue\spill|cialis|cocaine|erectile)\b [NC,OR]
@@ -309,7 +309,7 @@ RewriteCond %{QUERY_STRING} \b(order(\s|%20)by(\s|%20)1--)\b [NC,OR]
 RewriteCond %{QUERY_STRING} \b(@unlink|assert\(|print_r\(|x00|xbshell)\b [NC,OR]
 RewriteCond %{QUERY_STRING} \b(100dollars|best-seo|blue\spill|ejaculat|mopub\.com) [NC,OR]
 RewriteCond %{QUERY_STRING} \b(pornhelm|semalt\.com|social-buttions|todaperfeita) [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=20&t=e&m=%1___%2&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=20&t=e&m=%1___%2&sec=??security?? [L]
 </IfModule>
 
 # 8G FIREWALL:[ROGUE PHP FILES]
@@ -323,7 +323,7 @@ RewriteCond %{REQUEST_URI} /(w|w3br00t|webadmin|webr00t|webroot|whmcrack|whmcrac
 RewriteCond %{REQUEST_URI} /(admin2\.asp|alfa-shell-v4(.*)|blindshell\.c|cgishell\.pl|controller\.ashx|jaguar\.izri|perl\.alfa|xx\.pl) [NC,OR]
 # add in version 3.9.3
 RewriteCond %{REQUEST_URI} /(content|network|new|newfile|nf|cream1|css|database|db|default|diagnostic|doc|file|filemanager|g|gettest|goods|help|inc|info|init|lite|load|log|manager|media|mac|mini|new)\.php [NC]
-RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=21&t=e&m=%1&sec=??security?? [L]
+RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=21&t=e&m=%1&sec=??security?? [L]
 </IfModule>
 
 # block darknet market spam
@@ -331,6 +331,6 @@ RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=21&t=e&m=%1&sec=??secur
 <IfModule mod_rewrite.c>
 	RewriteCond %{REQUEST_METHOD} POST [NC]
 	RewriteCond %{REQUEST_URI} (dark(\s)net|dark(\s)web|dark(\s)market|darkmarket|darknet|drug(\s)store) [NC]
-    RewriteRule .* ??uri??api/index.php/v1/cgsecure/secure?e=23&t=e&m=%1&sec=??security?? [L]
+    RewriteRule .* ??uri??index.php?option=com_cgsecure&view=secure&e=23&t=e&m=%1&sec=??security?? [L]
 </IfModule>
 #------------------------CG SECURE HTACCESS END--------------------
