@@ -40,7 +40,7 @@ $myname = 'CGSecureHTAccess';
 $cgsecure_params = CGSecureHelper::getParams();
 $security = $cgsecure_params->security;
 $ip = IpHelper::getIp();//
-$ip = '113.206.183.110'; // test hackeur chinois
+// $ip = '113.206.183.110'; // test hackeur chinois
 
 $req = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES); // sanitize command
 
