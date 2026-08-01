@@ -31,7 +31,7 @@ class DisplayController extends BaseController
         $layout = $input->getCmd('layout', 'default');
         $input->set('view', $view);
         if ($layout == 'error') {
-            $input->set('layout', $layout);
+            die('CG Secure : restricted access');
         }
 
         $cachable = (bool)$this->app->getConfig()->get('caching');
