@@ -235,11 +235,32 @@ class PlgSystemCgsecureInstallerInstallerScript
                 $norobots. '/index.php'
             );
         }
-        if (!class_exists('CGSecureHelper4')) {
-            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper4.php');
+        // move htaccess.php to cgsecure folder
+        $cgsecure = JPATH_ROOT.'/cgsecure';
+        if (!is_dir($cgsecure)) {
+            mkdir($cgsecure);
+        }
+        if (is_dir($cgsecure)) { // cg_no_robot dir exists : copy new copy of index.php -------------------------------
+            $this->delete([$cgsecure.'/htaccess.php']);
+            File::copy(
+                JPATH_ROOT.self::CGPATH . '/txt/htaccess.php.txt',
+                $cgsecure. '/htaccess.php'
+            );
+            File::copy(
+                JPATH_ROOT.self::CGPATH . '/txt/index.html',
+                $cgsecure. '/index.html'
+            );
+            $this->delete([$cgsecure.'/.htaccess']);
+            File::copy(
+                JPATH_ROOT.self::CGPATH . '/txt/cgsecure_htaccess.txt',
+                $cgsecure. '/.htaccess'
+            );
+        }
+        if (!class_exists('CGSecureHelper')) {
+            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper.php');
         }
         // Check if HTACCESS file has to be updated
-        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper4();
+        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper();
         $serverConfigFile = $helper->getServerConfigFile('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
             return;

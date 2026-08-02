@@ -63,8 +63,6 @@
 	</media>
     <files folder="site">
 		<filename>index.html</filename>
-		<folder>src</folder>
-        <folder>tmpl</folder>
 	</files>
 	<changelogurl>https://raw.githubusercontent.com/conseilgouz/pkg_cgsecure_j4/master/com_cgsecure_changelog.xml</changelogurl>
 	<updateservers>
