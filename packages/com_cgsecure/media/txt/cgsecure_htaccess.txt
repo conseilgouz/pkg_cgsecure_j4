@@ -1,18 +1,18 @@
 #------------------------CG SECURE HTACCESS BEGIN-4.0.0---------------
 # an idea from AESecure. CG Secure blocks and reports hacking attempts
 #
-ErrorDocument 403 "CG Secure : Access CGSecure folder error"
+#ErrorDocument 403 "CG Secure : Access CGSecure folder error"
 #Deny access to all CGI, Perl, PHP and Python
-<FilesMatch "\.(cgi|php|pl|py|jsp|sh)$">
-Deny from all
-</FilesMatch>
+#<FilesMatch "\.(cgi|php|pl|py|jsp|sh)$">
+#Deny from all
+#</FilesMatch>
 
 # secure directory by disabling script execution
-AddHandler cgi-script .php .pl .py .jsp .asp .sh .cgi
-Options -ExecCGI
+#AddHandler cgi-script .php .pl .py .jsp .asp .sh .cgi
+#Options -ExecCGI
 
-<FilesMatch "(htaccess\.php)">
-Order Allow,Deny 
-Allow from all
-</FilesMatch>
+#<FilesMatch "(htaccess\.php)">
+#Order Allow,Deny 
+#Allow from all
+#</FilesMatch>
 #------------------------CG SECURE HTACCESS END--------------------
