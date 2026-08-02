@@ -12,6 +12,7 @@
         <change>
             <item>Update requirements to Joomla 5.x/PHP 8.1 as minimum versions</item>
             <item>moving htaccess.php to cgsecure folder</item>
+            <item>delete IP : delete it from AbuseipDB and latest_ips file</item>
         </change>
         <addition>
             <item>Matomo bad referers list : new parameter to load it or not</item>

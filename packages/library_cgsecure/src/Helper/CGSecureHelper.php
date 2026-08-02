@@ -78,6 +78,35 @@ class CGSecureHelper
         }
         return false;
     }
+    // check brute force
+    public static function deleteLatest_ips(String $ip): Bool
+    {
+        $latest_ips = [];
+        // read latest_ips file
+        $file = JPATH_ROOT . '/media/com_cgsecure/backup/latest_ips.txt';
+        $readBuffer = file($file, FILE_IGNORE_NEW_LINES);
+        foreach ($readBuffer as $id => $line) {
+            $latest_ips[] = $line;
+        }
+        // check if present
+        if (self::whiteList($ip)) {
+            return false;
+        }
+        if (!in_array($ip, $latest_ips)) {
+            return true;
+        }
+        $out = '';
+        foreach ($latest_ips as $val) {
+            if ($val == $ip) continue; // ignore it
+            $out .= $val.PHP_EOL;
+        }
+        // not in file yet : store it
+        if (is_readable($file)) {
+            // Write the htaccess using the Frameworks File Class
+            File::write($file, $out);
+        }
+        return true;
+    }
     // Check IP in whitelist or local
     public static function whiteList($ip = null): Bool
     {

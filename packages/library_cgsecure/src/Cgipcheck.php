@@ -56,7 +56,12 @@ class Cgipcheck
     {
         self::$params = CGSecureHelper::getParams();
         return CGSecureHelper::getLatest_ips($ip);
-
+    }
+    // delete one IP from latest_ips
+    public static function deleteLatest_ips(String $ip): String|bool
+    {
+        self::$params = CGSecureHelper::getParams();
+        return CGSecureHelper::deleteLatest_ips($ip);
     }
     // Check if IP is allowed or not
     public static function check_ip($plugin, $context): bool
@@ -421,6 +426,15 @@ class Cgipcheck
         $db->execute();
         return false; // force new record creation
     }
+    // delete an ip address from abuseipdb
+    public static function delete_address($ip)
+    {
+
+        $resp = self::abuseIPDBrequest('clear-address', 'DELETE', [ 'ipAddress' => $ip]);
+
+    }
+
+
     // redirect unwanted guests
     private static function redir_out()
     {
@@ -446,6 +460,9 @@ class Cgipcheck
         if ($method == 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        } elseif ($method == 'DELETE') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
         } else {
             $url .= '?' . http_build_query($data);
         }

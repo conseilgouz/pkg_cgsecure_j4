@@ -14,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use ConseilGouz\CGSecure\Cgipcheck;
 
 /**
  * Config Model Class
@@ -66,13 +67,13 @@ class LogsModel extends ListModel
         $tn = "#__cg_rejected_ip";
         $query->from($db->quoteName($tn) . ' AS a');
 
-		// Filter by search
-		$search = $this->getState('filter.search');
-		if (!empty($search)) {							
-			// $search = $db->Quote($db->escape($search, true));
-			$searchLike = $db->Quote('%'.$db->escape($search, true).'%');
-			$query->where('ip like '.$searchLike);
-		} //end search
+        // Filter by search
+        $search = $this->getState('filter.search');
+        if (!empty($search)) {
+            // $search = $db->Quote($db->escape($search, true));
+            $searchLike = $db->Quote('%'.$db->escape($search, true).'%');
+            $query->where('ip like '.$searchLike);
+        } //end search
         // Add the list ordering clause.
         $orderCol	= $this->state->get('list.ordering', 'a.id');
         $orderDirn	= $this->state->get('list.direction', 'asc');
@@ -89,7 +90,7 @@ class LogsModel extends ListModel
 
         // Iterate the items to delete each one.
         foreach ($pks as $i => $pk) {
-            if ($table->load($pk)) {
+            if ($rec = $table->load($pk)) {
                 if (!$table->delete($pk)) {
                     $this->setError($table->getError());
                     return false;
@@ -98,6 +99,8 @@ class LogsModel extends ListModel
                 $this->setError($table->getError());
                 return false;
             }
+            Cgipcheck::delete_address($table->ip);
+            Cgipcheck::deleteLatest_ips($table->ip);
         }
 
         // Clear the component's cache
