@@ -19,6 +19,7 @@
             <item>Add some values to rogues php list</item>
             <item>Add htaccess to block php in most folders</item>
             <item>Add htaccess to allow only index.php in api folder </item>
+            <item>Add IP V6 address in white list</item>
         </addition>
 	</changelog>
 	<changelog>

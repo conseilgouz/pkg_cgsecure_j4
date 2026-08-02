@@ -13,7 +13,30 @@
 		$ip = data['ip'];
 		$result.innerHTML = $html+$ip;
 		$html = document.getElementById("jform_whitelist").value;
-		if ($html.trim() == '') document.getElementById("jform_whitelist").value = $ip;
+		if ($html.trim() == '') 
+            document.getElementById("jform_whitelist").value = $ip;
+        else if ($html.indexOf($ip) < 0)
+            document.getElementById("jform_whitelist").value = $html.trim()+','+$ip;
+		$html = document.getElementById("jform_country").value;
+		$lang = navigator.language;
+		if ($lang.length != 2) {
+			$lang = $lang.substr($lang.length-2,2);
+		}
+		if ($html.trim() == '') document.getElementById("jform_country").value = $lang;
+	});
+}
+ function getIPV6(data) {
+	document.addEventListener('DOMContentLoaded', function(){
+		$result = document.getElementById("result");
+		$html = $result.innerHTML;
+		$ip = data['ip'];
+        if (!$ip) return;
+		$result.innerHTML = $html+','+$ip;
+		$html = document.getElementById("jform_whitelist").value;
+		if ($html.trim() == '') 
+            document.getElementById("jform_whitelist").value = $ip;
+        else if ($html.indexOf($ip) < 0)
+            document.getElementById("jform_whitelist").value = $html.trim()+','+$ip;
 		$html = document.getElementById("jform_country").value;
 		$lang = navigator.language;
 		if ($lang.length != 2) {
