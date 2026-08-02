@@ -15,5 +15,4 @@ Options -ExecCGI
 Order Allow,Deny 
 Allow from all
 </FilesMatch>
-<IfModule mod_rewrite.c>
 #------------------------CG SECURE HTACCESS END--------------------
