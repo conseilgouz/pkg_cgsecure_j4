@@ -429,12 +429,8 @@ class Cgipcheck
     // delete an ip address from abuseipdb
     public static function delete_address($ip)
     {
-
         $resp = self::abuseIPDBrequest('clear-address', 'DELETE', [ 'ipAddress' => $ip]);
-
     }
-
-
     // redirect unwanted guests
     private static function redir_out()
     {
