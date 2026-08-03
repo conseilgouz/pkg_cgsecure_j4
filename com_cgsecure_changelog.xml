@@ -4,7 +4,7 @@
 		<type>package</type>
 		<version>4.0.0</version>
         <note>
-            <item>Update : 01/08/2026</item>
+            <item>Update : 03/08/2026</item>
         </note>
         <fix>
             <item>Inline Help : change hotlink documentation link</item>
@@ -13,6 +13,7 @@
             <item>Update requirements to Joomla 5.x/PHP 8.1 as minimum versions</item>
             <item>moving htaccess.php to cgsecure folder</item>
             <item>delete IP : delete it from AbuseipDB and latest_ips file</item>
+            <item>install : cleanup backup folder</item>
         </change>
         <addition>
             <item>Matomo bad referers list : new parameter to load it or not</item>

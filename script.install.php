@@ -285,6 +285,7 @@ class PlgSystemCgsecureInstallerInstallerScript
             $helper->forceHTAccess(); // update htaccess
             $helper->protectotherdirs(); // create htaccess file in media,images/administrator dir
         }
+        $this->cleanup_backups();
     }
     private function createExtensionRoot()
     {
@@ -423,7 +424,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         }
 
     }
-    private function installPackage($package)
+    private function installPackage(String $package)
     {
         $tmpInstaller = new Installer();
         $tmpInstaller->setDatabase($this->db);
@@ -478,7 +479,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         $table->save($data);
         Factory::getApplication()->enqueueMessage(Text::_('PLG_CGSECURE_CREATE_TASK_OK'), 'notice');
     }
-    private function checkLibrary($library)
+    private function checkLibrary(String $library)
     {
         $file = $this->dir.'/lib_conseilgouz/conseilgouz.xml';
         if (!is_file($file)) {// library not installed
@@ -505,7 +506,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         }
         return false; // need library
     }
-    private function installPackageCG($package)
+    private function installPackageCG(String $package)
     {
         $tmpInstaller = new Joomla\CMS\Installer\Installer();
         $db = Factory::getContainer()->get(DatabaseInterface::class);
@@ -513,7 +514,22 @@ class PlgSystemCgsecureInstallerInstallerScript
         $installed = $tmpInstaller->install($this->dir . '/' . $package);
         return $installed;
     }
-
+    private function cleanup_backups()
+    {
+        $dir = JPATH_ROOT.self::CGPATH.'/backup';
+        $files = glob($dir.'/htaccess*');
+        rsort($files);
+        $keep = 2; // keep only 3 latest files
+        $count = 0;
+        foreach ($files as $file) {
+            if ($count > $keep) {
+                continue;
+            }
+            unset($files[$count]);
+            $count++;
+        }
+        $this->delete($files);
+    }
     private function uninstallInstaller()
     {
         if (! is_dir(JPATH_PLUGINS . '/system/' . $this->installerName)) {
