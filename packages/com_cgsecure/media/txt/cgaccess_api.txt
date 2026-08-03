@@ -1,23 +1,15 @@
-#------------------------CG SECURE HTACCESS BEGIN-3.9.3---------------
+#------------------------CG SECURE HTACCESS BEGIN-4.0.0---------------
 # an idea from AESecure. CG Secure blocks and reports hacking attempts
 #
-#Deny access to all CGI, Perl, PHP and Python
-<IfModule mod_rewrite.c>
-	RewriteCond %{REQUEST_URI} ^/api/
-	RewriteCond %{REQUEST_URI} !^/api/index\.php
-	# and the requested path and file doesn't directly match a physical file
-	RewriteCond %{REQUEST_FILENAME} !-f
-	# and the requested path and file doesn't directly match a physical folder
-	RewriteCond %{REQUEST_FILENAME} !-d
-	# internally rewrite the request to the /api/index.php script
-	RewriteRule .* api/index.php [L]
-</IfModule>
-<FilesMatch "\.(cgi|pl|py|jsp|sh)$">
+# only accept index.php 
+#
+ErrorDocument 403 "CG Secure : Access API folder error"
+
+Order deny,allow
 Deny from all
-</FilesMatch>
 
-# secure directory by disabling script execution
-AddHandler cgi-script .pl .py .jsp .asp .sh .cgi
-Options -ExecCGI
-
+<Files "index.php">
+    Allow from all
+    Satisfy Any
+</Files>
 #------------------------CG SECURE HTACCESS END--------------------
