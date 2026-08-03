@@ -256,11 +256,11 @@ class PlgSystemCgsecureInstallerInstallerScript
                 $cgsecure. '/.htaccess'
             );
         }
-        if (!class_exists('CGSecureHelper')) {
-            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper.php');
+        if (!class_exists('CGSecureHelper4')) {
+            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper4.php');
         }
         // Check if HTACCESS file has to be updated
-        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper();
+        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper4();
         $serverConfigFile = $helper->getServerConfigFile('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
             return;
