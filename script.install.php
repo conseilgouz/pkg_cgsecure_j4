@@ -286,6 +286,8 @@ class PlgSystemCgsecureInstallerInstallerScript
             $helper->protectotherdirs(); // create htaccess file in media,images/administrator dir
         }
         $this->cleanup_backups();
+        // remove .htaccess from modules : side effects
+        $this->delete([JPATH_ROOT . '/modules/.htaccess']);
     }
     private function createExtensionRoot()
     {

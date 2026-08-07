@@ -418,10 +418,10 @@ class CGSecureHelper4
             return;
         }
     }
-    // copy CG Secure information in .htaccess from all directories
+    // copy CG Secure information in .htaccess from all directories (except modules)
     public static function protectotherdirs($json = false)
     {
-        $listNoPHP = ['cli','components','files','includes','images','language','layouts','libraries','media','modules','plugins','templates'];
+        $listNoPHP = ['cli','components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         foreach ($listNoPHP as $one) {
             $dest = JPATH_ROOT.'/'.$one.'/.htaccess';
