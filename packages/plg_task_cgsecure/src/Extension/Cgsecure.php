@@ -19,6 +19,7 @@ use Joomla\Component\Scheduler\Administrator\Traits\TaskPluginTrait;
 use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Event\SubscriberInterface;
 use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use ConseilGouz\CGSecure\Helper\CGSecureHelper;
 
 final class Cgsecure extends CMSPlugin implements SubscriberInterface
@@ -82,7 +83,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         }
         if (isset($cgsecure_params->iphtaccess) && $cgsecure_params->iphtaccess == 'task') { // mise à jour IP dans htaccess ?
             CGSecureHelper::forceHTAccess();
-            self::cleanup_backups();
+            $this->cleanup_backups();
         }
         return TaskStatus::OK;
     }
@@ -328,7 +329,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         $keep = 5; // keep only 5 latest files
         $count = 0;
         foreach ($files as $file) {
-            if ($count > $keep) {
+            if ($count => $keep) {
                 continue;
             }
             unset($files[$count]);
@@ -336,5 +337,17 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         }
         $this->delete($files);
     }
-    
+    private function delete($files = [])
+    {
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                Folder::delete($file);
+            }
+
+            if (is_file($file)) {
+                File::delete($file);
+            }
+        }
+    }
+
 }
