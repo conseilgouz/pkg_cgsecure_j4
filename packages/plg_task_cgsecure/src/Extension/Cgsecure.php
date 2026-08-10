@@ -329,7 +329,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         $keep = 5; // keep only 5 latest files
         $count = 0;
         foreach ($files as $file) {
-            if ($count => $keep) {
+            if ($count >= $keep) {
                 continue;
             }
             unset($files[$count]);
