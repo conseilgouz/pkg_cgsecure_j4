@@ -82,6 +82,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         }
         if (isset($cgsecure_params->iphtaccess) && $cgsecure_params->iphtaccess == 'task') { // mise à jour IP dans htaccess ?
             CGSecureHelper::forceHTAccess();
+
         }
         return TaskStatus::OK;
     }
@@ -319,4 +320,21 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
             File::delete($pathToHtaccess.'.wait');
         }
     }
+    private function cleanup_backups()
+    {
+        $dir = JPATH_ROOT.'/media/com_cgsecure/backup';
+        $files = glob($dir.'/htaccess*');
+        rsort($files);
+        $keep = 5; // keep only 5 latest files
+        $count = 0;
+        foreach ($files as $file) {
+            if ($count > $keep) {
+                continue;
+            }
+            unset($files[$count]);
+            $count++;
+        }
+        $this->delete($files);
+    }
+    
 }
