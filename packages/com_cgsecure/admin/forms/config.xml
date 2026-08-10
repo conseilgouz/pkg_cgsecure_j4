@@ -71,7 +71,7 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
-		<field showon="htaccess:1[AND]blockip:1" name="iphtaccess" type="radio" class="radio btn-group-toggle btn-group btn-group-yesno" default="direct" label="CGSECURE_IPHTACCESS" description="CGSECURE_IPHTACCESS_DESC">
+		<field showon="htaccess:1[AND]blockip:1" name="iphtaccess" type="radio" class="radio btn-group-toggle btn-group btn-group-yesno" default="task" label="CGSECURE_IPHTACCESS" description="CGSECURE_IPHTACCESS_DESC">
 			<option value="direct">CGSECURE_IPHTACCESS_DIRECT</option>
 			<option value="task">CGSECURE_IPHTACCESS_TASK</option>
 		</field>

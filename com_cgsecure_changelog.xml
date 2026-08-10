@@ -7,7 +7,7 @@
             <item>Update : 10/08/2026</item>
         </note>
         <change>
-            <item>Store IP's once a day using CG Secure scheduled task</item>
+            <item>Store IP's once a day using CG Secure scheduled task (defaulk = task)</item>
             <item>Don't auto add IP V6 in white list</item>
         </change>
         <fix>

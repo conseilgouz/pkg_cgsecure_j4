@@ -380,8 +380,9 @@ class Cgipcheck
 
             }
         }
-        if (isset(self::$params->iphtaccess) && self::$params->iphtaccess != 'direct') {
-            return ;
+        if ((isset(self::$params->iphtaccess) && self::$params->iphtaccess != 'direct')
+            || !isset(self::$params->iphtaccess)) { // iphataccess not found : assume task
+                return ;
         }
         $hackers = self::get_reject_onerror_list(); // hackers with blocking errors
         self::store_htaccess($hackers);
@@ -525,9 +526,10 @@ class Cgipcheck
             return false;
         }
         self::$blockip  = self::$params->blockip == 1;
-        if (isset(self::$params->iphtaccess) && self::$params->iphtaccess != 'direct') {
-            return true;
-        }            
+        if ((isset(self::$params->iphtaccess) && (self::$params->iphtaccess != 'direct'))
+            || !isset(self::$params->iphtaccess)) { // iphataccess not found : assume task
+                return true;
+        }
         if ((self::$blockip == 1) && ($errtype == "e")) { // new hacker
             $hackers = self::get_reject_onerror_list(); //get hackers list
             self::store_htaccess($hackers); // block them

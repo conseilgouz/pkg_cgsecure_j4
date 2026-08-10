@@ -81,7 +81,8 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         if ($cgsecure_params->blockai) { // blocking AI ?
             $this->checkAI();      // update perishablepress AI list
         }
-        if (isset($cgsecure_params->iphtaccess) && $cgsecure_params->iphtaccess == 'task') { // mise à jour IP dans htaccess ?
+        if ((isset(self::$params->iphtaccess) && self::$params->iphtaccess == 'task')
+            || !isset(self::$params->iphtaccess)) { // iphataccess not found : assume task
             CGSecureHelper::forceHTAccess();
             $this->cleanup_backups();
         }
