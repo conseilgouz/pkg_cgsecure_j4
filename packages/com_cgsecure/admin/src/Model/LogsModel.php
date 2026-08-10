@@ -15,7 +15,7 @@ use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
 use ConseilGouz\CGSecure\Cgipcheck;
-
+use ConseilGouz\CGSecure\Helper\CGSecureHelper;
 /**
  * Config Model Class
  */
@@ -101,6 +101,7 @@ class LogsModel extends ListModel
             }
             Cgipcheck::delete_address($table->ip);
             Cgipcheck::deleteLatest_ips($table->ip);
+            CGSecureHelper::forceHTAccess();
         }
 
         // Clear the component's cache

@@ -19,7 +19,7 @@ use Joomla\Component\Scheduler\Administrator\Traits\TaskPluginTrait;
 use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Event\SubscriberInterface;
 use Joomla\Filesystem\File;
-use ConseilGouz\CGSecure\Cgipcheck;
+use ConseilGouz\CGSecure\Helper\CGSecureHelper;
 
 final class Cgsecure extends CMSPlugin implements SubscriberInterface
 {
@@ -71,7 +71,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
     {
         $lang = Factory::getApplication()->getLanguage();
         $lang->load('plg_task_automsg');
-        $cgsecure_params = Cgipcheck::getParams();
+        $cgsecure_params = CGSecureHelper::getParams();
         if (isset($cgsecure_params->matomo) && $cgsecure_params->matomo) { // use matomo bad referers list ?
             $this->checkMatomo();  // Update Matomo spammers list
         } elseif (!isset($cgsecure_params->matomo)) { // CG Secure before 3.9.4 : suppose update required
@@ -79,6 +79,9 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         }
         if ($cgsecure_params->blockai) { // blocking AI ?
             $this->checkAI();      // update perishablepress AI list
+        }
+        if (isset($cgsecure_params->iphtaccess) && $cgsecure_params->iphtaccess == 'task') { // mise à jour IP dans htaccess ?
+            CGSecureHelper::forceHTAccess();
         }
         return TaskStatus::OK;
     }
@@ -97,7 +100,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
     // same hash : no need to update
     private function checkHTAccessMatomo($hash)
     {
-        $htaccess = $this->getServerConfigFilePath('.htaccess');
+        $htaccess = CGSecureHelper::getServerConfigFilePath('.htaccess');
         $readBuffer = file($htaccess, FILE_IGNORE_NEW_LINES);
         if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
             return false;
@@ -114,19 +117,19 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
 
     private function storeHTAccessMatomo($hash)
     {
-        $wait = self::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
+        $wait = CGSecureHelper::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
         if (file_exists($wait)) {//
             return;
         }
         $msg = 'wait...';
         File::write($wait, $msg);
-        $serverConfigFile = $this->getServerConfigFilePath('.htaccess');
+        $serverConfigFile = CGSecureHelper::getServerConfigFilePath('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
             return;
         }
-        $spammer = $this->getServerConfigFilePath('media/com_cgsecure/txt/spammers.txt');
-        $current = $this->replace_matomo($this->getServerConfigFilePath('.htaccess'), $spammer, $hash);
-        $this->store_file($this->getServerConfigFilePath('.htaccess'), $current);
+        $spammer = CGSecureHelper::getServerConfigFilePath('media/com_cgsecure/txt/spammers.txt');
+        $current = $this->replace_matomo(CGSecureHelper::getServerConfigFilePath('.htaccess'), $spammer, $hash);
+        $this->store_file(CGSecureHelper::getServerConfigFilePath('.htaccess'), $current);
         File::delete($wait);
     }
     // read current .htaccess file and remove CG lines
@@ -193,7 +196,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
     // same version : no need to update
     private function checkHTAccessAI($version)
     {
-        $htaccess = $this->getServerConfigFilePath('.htaccess');
+        $htaccess = CGSecureHelper::getServerConfigFilePath('.htaccess');
         $readBuffer = file($htaccess, FILE_IGNORE_NEW_LINES);
         if (!$readBuffer) {// `file` couldn't read the htaccess we can't do anything at this point
             return false;
@@ -209,19 +212,19 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
     }
     private function storeHTAccessAI()
     {
-        $wait = self::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
+        $wait = CGSecureHelper::getServerConfigFilePath('.inprogress'); // create a temp. file to block other requests
         if (file_exists($wait)) {//
             return;
         }
         $msg = 'wait...';
         File::write($wait, $msg);
-        $serverConfigFile = $this->getServerConfigFilePath('.htaccess');
+        $serverConfigFile = CGSecureHelper::getServerConfigFilePath('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
             return;
         }
-        $ai = $this->getServerConfigFilePath('media/com_cgsecure/txt/cgaccess_ai.txt');
-        $current = $this->replace_AI($this->getServerConfigFilePath('.htaccess'), $ai);
-        $this->store_file($this->getServerConfigFilePath('.htaccess'), $current);
+        $ai = CGSecureHelper::getServerConfigFilePath('media/com_cgsecure/txt/cgaccess_ai.txt');
+        $current = $this->replace_AI(CGSecureHelper::getServerConfigFilePath('.htaccess'), $ai);
+        $this->store_file(CGSecureHelper::getServerConfigFilePath('.htaccess'), $current);
         File::delete($wait);
     }
     // read current .htaccess file and remove CG lines
@@ -302,7 +305,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                 // Write the htaccess using the Frameworks File Class
                 $bool = File::write($pathToHtaccess, $records);
                 if ($bool) {
-                    if (self::check_site()) {
+                    if (CGSecureHelper::check_site()) {
                         File::delete($pathToHtaccess.'.wait');
                         return $bool;
                     } else {
@@ -316,36 +319,4 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
             File::delete($pathToHtaccess.'.wait');
         }
     }
-
-    // check if website is still working
-    private static function check_site()
-    {
-        $url = URI::root();
-        try {
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_HEADER, 0);
-            curl_setopt($curl, CURLOPT_NOBODY, 0);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-            curl_exec($curl);
-            $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            if ($responseCode == 500) {
-                return false;
-            }
-            return true;
-        } catch (\RuntimeException $e) {
-            return false;
-        }
-        return false;
-    }
-
-    private function getServerConfigFilePath($file)
-    {
-        return JPATH_ROOT . DIRECTORY_SEPARATOR . $file;
-    }
-
 }

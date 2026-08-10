@@ -11,6 +11,7 @@ namespace ConseilGouz\CGSecure\Helper;
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
@@ -97,7 +98,9 @@ class CGSecureHelper4
         }
         $out = '';
         foreach ($latest_ips as $val) {
-            if ($val == $ip) continue; // ignore it
+            if ($val == $ip) {
+                continue;
+            } // ignore it
             $out .= $val.PHP_EOL;
         }
         // not in file yet : store it
@@ -501,6 +504,32 @@ class CGSecureHelper4
     public static function getServerConfigFilePath(String $file): String
     {
         return JPATH_ROOT . DIRECTORY_SEPARATOR . $file;
+    }
+    // check task status and returns it to administrator messages page
+    public static function getTaskStatus()
+    {
+        $params = self::getParams();
+        // if (!$params->iphtaccess || $params->iphtaccess != 'task') {
+        //     return '';
+        //}
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()
+            ->select('*')
+            ->from($db->qn('#__scheduler_tasks'))
+            ->where($db->qn('type') . ' = '.$db->q('cgsecure'))  // automsg task
+            ->where($db->quoteName('state') . '>= 0');          // enabled
+        $db->setQuery($query);
+        $task = $db->loadObject();
+        if (!$task) {
+            return "<span class='text-danger'>".Text::_('CGSECURE_TASK_NOTASK')."</span>";
+        }
+        if ($task->state == 0) {
+            return "<span class='text-danger'>".Text::_('CGSECURE_TASK_DISABLED')."</span>";
+        }
+        if ($task->locked) {
+            return "<span class='text-danger'>".sprintf(Text::_('CGSECURE_TASK_LOCKED'), HTMLHelper::_('date', $task->locked, Text::_('DATE_FORMAT_FILTER_DATETIME')))."</span>";
+        }
+        return "<span class='text-success'>".sprintf(Text::_('CGSECURE_TASK_NEXT'), HTMLHelper::_('date', $task->next_execution, Text::_('DATE_FORMAT_FILTER_DATETIME')))."</span>";
     }
 
 }

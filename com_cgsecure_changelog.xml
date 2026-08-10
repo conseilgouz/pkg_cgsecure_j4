@@ -2,6 +2,21 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>4.0.2</version>
+        <note>
+            <item>Update : 10/08/2026</item>
+        </note>
+        <change>
+            <item>Store IP's once a day using CG Secure scheduled task</item>
+        </change>
+        <fix>
+            <item>delete IP : delete it from .htaccess file</item>
+            <item>CG Secure task : call CGSecureHelper functions</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>4.0.1</version>
         <note>
             <item>Update : 07/08/2026</item>

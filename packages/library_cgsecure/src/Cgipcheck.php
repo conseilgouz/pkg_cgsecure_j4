@@ -73,7 +73,6 @@ class Cgipcheck
         self::$errtype = $plugin->errtype;
         self::$context = $context;
         $ip = IpHelper::getIp();
-        // $ip = $_SERVER['REMOTE_ADDR'];
         // $ip = '218.92.1.234'; // test hackeur chinois/confidence = 0
         // $ip = '92.184.96.127'; // in abuseip confidence = 0
         // $ip = '54.36.148.179'; // in abuseip whitelist
@@ -381,6 +380,9 @@ class Cgipcheck
 
             }
         }
+        if (isset(self::$params->iphtaccess) && self::$params->iphtaccess != 'direct') {
+            return ;
+        }
         $hackers = self::get_reject_onerror_list(); // hackers with blocking errors
         self::store_htaccess($hackers);
     }
@@ -523,6 +525,9 @@ class Cgipcheck
             return false;
         }
         self::$blockip  = self::$params->blockip == 1;
+        if (isset(self::$params->iphtaccess) && self::$params->iphtaccess != 'direct') {
+            return true;
+        }            
         if ((self::$blockip == 1) && ($errtype == "e")) { // new hacker
             $hackers = self::get_reject_onerror_list(); //get hackers list
             self::store_htaccess($hackers); // block them

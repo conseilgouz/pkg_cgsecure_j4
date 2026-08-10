@@ -8,7 +8,6 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -18,7 +17,6 @@ use Joomla\CMS\Session\Session;
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
-
 ?>
 
 <div class="nr-app nr-app-config">
@@ -40,13 +38,11 @@ $wa->useScript('keepalive')
     		      <div class="form-horizontal">
                     	<?php
                             echo HTMLHelper::_('uitab.startTabSet', 'tab', array('active' => 'basic'));
-
 foreach ($this->form->getFieldSets() as $key => $fieldset) {
     echo HTMLHelper::_('uitab.addTab', 'tab', $fieldset->name, Text::_($fieldset->label));
     echo $this->form->renderFieldSet($fieldset->name);
     echo HTMLHelper::_('uitab.endTab');
 }
-
 echo HTMLHelper::_('uitab.endTabSet');
 ?>
         		    </div>
