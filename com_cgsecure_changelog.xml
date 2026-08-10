@@ -8,6 +8,7 @@
         </note>
         <change>
             <item>Store IP's once a day using CG Secure scheduled task</item>
+            <item>Don't auto add IP V6 in white list</item>
         </change>
         <fix>
             <item>delete IP : delete it from .htaccess file</item>
