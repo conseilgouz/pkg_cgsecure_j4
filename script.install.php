@@ -20,6 +20,7 @@ use Joomla\CMS\Version;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
+use Joomla\Utilities\ArrayHelper;
 use Joomla\Component\Scheduler\Administrator\Model\TaskModel;
 
 // use ConseilGouz\CGSecure\Helper\CGSecureHelper;
@@ -455,7 +456,20 @@ class PlgSystemCgsecureInstallerInstallerScript
         $query->setLimit(1);
         $db->setQuery($query);
         $found = $db->loadResult();
-        if ($found) {// Found in db => exit
+        if ($found) {// Found in db => check old version : 7 days -> 1 day
+            $task = new TaskModel(array('ignore_request' => true));
+            $data_obj = $task->getItem($found);
+            $data = ArrayHelper::fromObject($data_obj);
+            $execution_rules = $data['execution_rules'];
+            $interval = $execution_rules['interval-days'];
+            if ($interval != 7) {
+                return; // already updated
+            }
+            $execution_rules['interval-days'] = "1"; // update it to once a day
+            $data['execution_rules'] = $execution_rules;
+            $nextExec = Factory::getDate('now');
+            $data['next_execution'] = $nextExec->toSql();
+            $task->save($data);
             return;
         }
         $task = new TaskModel(array('ignore_request' => true));
@@ -466,9 +480,9 @@ class PlgSystemCgsecureInstallerInstallerScript
         $data['type']   = 'cgsecure';
         $data['state']  = 1; // activate
         $data['execution_rules'] = ["rule-type" => "interval-days",
-                                    "interval-days" => "7",
+                                    "interval-days" => "1",
                                     "exec-day" => "1",
-                                    "exec-time" => "00:01"];
+                                    "exec-time" => "04:02"];
         $data['cron_rules']      = ["type" => "interval",
                                     "exp" => "P1D"];
         $notif = ["success_mail" => "0","failure_mail" => "1","fatal_failure_mail" => "1","orphan_mail" => "1"];
