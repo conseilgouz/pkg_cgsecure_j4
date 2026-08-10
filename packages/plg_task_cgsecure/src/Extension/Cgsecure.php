@@ -82,7 +82,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         }
         if (isset($cgsecure_params->iphtaccess) && $cgsecure_params->iphtaccess == 'task') { // mise à jour IP dans htaccess ?
             CGSecureHelper::forceHTAccess();
-
+            self::cleanup_backups();
         }
         return TaskStatus::OK;
     }
