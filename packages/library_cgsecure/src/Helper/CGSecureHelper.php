@@ -424,7 +424,7 @@ class CGSecureHelper
     // copy CG Secure information in .htaccess from all directories (except modules)
     public static function protectotherdirs($json = false)
     {
-        $listNoPHP = ['cli','components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
+        $listNoPHP = ['components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         foreach ($listNoPHP as $one) {
             $dest = JPATH_ROOT.'/'.$one.'/.htaccess';
@@ -449,6 +449,18 @@ class CGSecureHelper
                 return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
             } else {
                 Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in api error');
+            }
+        }
+        $dest = JPATH_ROOT.'/cli/.htaccess';
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cli.txt';
+        if (is_file($dest)) {
+            File::delete($dest);
+        }
+        if (!copy($source, $dest)) {
+            if ($json) {
+                return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
+            } else {
+                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in CLI error');
             }
         }
         $dest = JPATH_ROOT.'/administrator/.htaccess';

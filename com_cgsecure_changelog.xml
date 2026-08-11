@@ -2,13 +2,14 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>4.0.2</version>
+		<version>4.0.3</version>
         <note>
             <item>Update : 10/08/2026</item>
         </note>
         <change>
-            <item>Store IP's once a day using CG Secure scheduled task (defaulk = task)</item>
+            <item>Store IP's once a day using CG Secure scheduled task (default = task)</item>
             <item>Don't auto add IP V6 in white list</item>
+            <item>htaccess in cli folder : only accept joomla.php </item>
         </change>
         <fix>
             <item>delete IP : delete it from .htaccess file</item>

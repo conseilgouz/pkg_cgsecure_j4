@@ -18,7 +18,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
 // Copie de CGSecureHelper.php pour être sûr que cela soit chargé par l'installation
-class CGSecureHelper4
+class CGSecureHelper403
 {
     protected static Bool $blockipv6;
     public const CGPATH = '/media/com_cgsecure';
@@ -424,7 +424,7 @@ class CGSecureHelper4
     // copy CG Secure information in .htaccess from all directories (except modules)
     public static function protectotherdirs($json = false)
     {
-        $listNoPHP = ['cli','components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
+        $listNoPHP = ['components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         foreach ($listNoPHP as $one) {
             $dest = JPATH_ROOT.'/'.$one.'/.htaccess';
@@ -448,7 +448,19 @@ class CGSecureHelper4
             if ($json) {
                 return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
             } else {
-                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in api error');
+                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in API error');
+            }
+        }
+        $dest = JPATH_ROOT.'/cli/.htaccess';
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cli.txt';
+        if (is_file($dest)) {
+            File::delete($dest);
+        }
+        if (!copy($source, $dest)) {
+            if ($json) {
+                return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
+            } else {
+                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in CLI error');
             }
         }
         $dest = JPATH_ROOT.'/administrator/.htaccess';
