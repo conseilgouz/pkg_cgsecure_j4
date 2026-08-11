@@ -19,6 +19,7 @@ use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Utilities\IpHelper;
 
+// Copie de CGSecureHelper.php pour être sûr que cela soit chargé par l'installation
 class CGSecureHelper403
 {
     protected static Bool $blockipv6;
