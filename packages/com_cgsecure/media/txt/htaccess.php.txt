@@ -8,6 +8,7 @@
 **/
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\Utilities\IpHelper;
 use ConseilGouz\CGSecure\Cgipcheck;
@@ -71,7 +72,7 @@ if (is_file($checkipFile)) {
 }
 $cgsecure_params = CGSecureHelper::getParams();
 $ip = IpHelper::getIp();//  $_SERVER['REMOTE_ADDR'];
-// $ip = '218.92.1.234'; // test hackeur chinois
+// $ip = '218.92.1.270'; // test hackeur chinois
 
 $tmp = '<html lang="fr-fr" dir="ltr"><head><meta charset="utf-8" />
       <title>Erreur: CG Secure HtAccess Blocked</title></head>';
@@ -145,8 +146,7 @@ if (isset($_SERVER['REDIRECT_STATUS'])) {
 } else {
     $err = "Direct access to plugin not allowed.";
 }
-$tmp .= $err.$block.'</h3></body></html>';
-echo $tmp;
+$tmp .= $err.$block.'</h3>';
 $err = $prefixe.$errtype.'-'.$err;
 if (($cgsecure_params->logging_ht == 1) || (($cgsecure_params->logging_ht == 2) && ($errtype == "e"))) {
     Log::addLogger(array('text_file' => 'cghtaccess.trace.php'), Log::DEBUG, array('CGHTAccess'));
@@ -157,4 +157,20 @@ $report = $cgsecure_params->report;
 if ($report) {
     Cgipcheck::report_hacker($myname, $err.$block, $errtype, $ip);
 }
-die();
+
+if (isset($cgsecure_params->iphtaccess) && $cgsecure_params->iphtaccess != 'task') {
+    echo $tmp.'</body></html>';
+    die(403);
+}
+if (CGSecureHelper::check_scheduler()) { // due task ?
+    $uri = Uri::getInstance();
+    $base = ''.URI::base(true);
+    $host = explode('/', $base);
+    $script = "<script type='text/javascript'> const cgbase = '/".$host[1]."';</script>";
+    $script .=  "<script type='text/javascript' src='media/com_cgsecure/js/run-schedule.js'></script>";
+    echo $tmp.$script.'</body></html>';
+    die(403);
+} else {
+    echo $tmp.'</body></html>';
+    die(403);
+}

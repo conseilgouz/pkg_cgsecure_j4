@@ -16,8 +16,9 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\Utilities\IpHelper;
-// Copie de CGSecureHelper.php pour être sûr que cela soit chargé par l'installation
+
 class CGSecureHelper403
 {
     protected static Bool $blockipv6;
@@ -448,7 +449,7 @@ class CGSecureHelper403
             if ($json) {
                 return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
             } else {
-                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in API error');
+                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in api error');
             }
         }
         $dest = JPATH_ROOT.'/cli/.htaccess';
@@ -516,6 +517,68 @@ class CGSecureHelper403
     public static function getServerConfigFilePath(String $file): String
     {
         return JPATH_ROOT . DIRECTORY_SEPARATOR . $file;
+    }
+    public static function check_scheduler()
+    {
+        $time = time();
+        $folder = JPATH_SITE.'/cgsecure';
+        $chkfile = 'scheduler_checkfile';
+        $create = false;
+        $fnames = Folder::files($folder, $chkfile.'.*');
+        $fname = array_pop($fnames);
+        if (!$fname) { // no file : create it
+            self::create_checkfile($folder, $chkfile);
+            return true;
+        } else { // file found : check
+            $nexttime = substr($fname, -10, 10);
+            if (($time > $nexttime)) { // mise a jour
+                unlink($folder.'/'.$fname);
+                self::create_checkfile($folder, $chkfile);
+                return true;
+            }
+        }
+        return false; // nothing to do
+    }
+    private static function create_checkfile($folder, $chkfile)
+    {
+        $time = time();
+        $nexttime = self::check_next_scheduler();
+        $fname = $folder .'/'. $chkfile.'.'.$nexttime;
+        if (!touch($fname)) {
+            return;
+        }
+        $f = fopen($fname, 'w');
+        fputs($f, 'w'.$time);
+        fclose($f);
+    }
+    public static function check_next_scheduler()
+    {
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
+        $time = Factory::getDate('now', 'UTC');
+
+        $now = $time->toSql();
+        $timeout   = 300;
+        $threshold = (clone $time)->modify("-$timeout seconds")->toSql();
+        $type = 'cgsecure';
+        $query = $db->createQuery()
+            // Count due tasks
+            ->select($db->quoteName('a.next_execution'))
+            ->from($db->quoteName('#__scheduler_tasks', 'a'))
+            ->where($db->quoteName('a.state') . ' = 1')
+            ->where($db->quoteName('a.type') . ' = :type')
+            ->bind(':type', $type);
+
+        $db->setQuery($query);
+
+        $taskDetails = $db->loadObject();
+        if (!$taskDetails) {
+            return $time;
+        }
+        // False if we don't have due tasks, or we have locked tasks
+        $date = new \DateTime($taskDetails->next_execution);
+        return $date->getTimestamp();
+
+        $taskDetails->next_execution;
     }
     // check task status and returns it to administrator messages page
     public static function getTaskStatus()
