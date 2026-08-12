@@ -164,10 +164,9 @@ if (isset($cgsecure_params->iphtaccess) && $cgsecure_params->iphtaccess != 'task
 }
 if (CGSecureHelper::check_scheduler()) { // due task ?
     $uri = Uri::getInstance();
-    $base = ''.URI::base(true);
-    $host = explode('/', $base);
-    $script = "<script type='text/javascript'> const cgbase = '/".$host[1]."';</script>";
-    $script .=  "<script type='text/javascript' src='media/com_cgsecure/js/run-schedule.js'></script>";
+    $base = Uri::root(false, rtrim(\dirname(Uri::base(true), 3), '/\\'));
+    $script = "<script type='text/javascript'> const cgbase = '".$base."';</script>";
+    $script .=  "<script type='text/javascript' src='".$base."media/com_cgsecure/js/run-schedule.js'></script>";
     echo $tmp.$script.'</body></html>';
     die(403);
 } else {

@@ -6,7 +6,7 @@
 **/
 const initCGScheduler = () => {
   const interval = 300 * 1000;
-  const uri = cgbase+`/index.php?option=com_ajax&format=raw&plugin=RunSchedulerLazy&group=system`;
+  const uri = cgbase+`index.php?option=com_ajax&format=raw&plugin=RunSchedulerLazy&group=system`;
   setInterval(() => fetch(uri, {
     method: 'GET'
   }), interval);
