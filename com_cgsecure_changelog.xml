@@ -11,6 +11,7 @@
             <item>Don't auto add IP V6 in white list</item>
             <item>htaccess in cli folder : only accept joomla.php </item>
             <item>htaccess.php : start scheduler if necessary</item>
+            <item>htaccess.php : check faster already rejected ip's</item>
         </change>
         <fix>
             <item>delete IP : delete it from .htaccess file</item>

@@ -25,7 +25,19 @@ if (!defined('_JDEFINES')) {
     define('JPATH_BASE', dirname(__DIR__));
     require_once JPATH_BASE . '/includes/defines.php';
 }
-// Get the framework.
+// no need to load anything to check if already in latest ips file
+$ipHelper = JPATH_SITE . '/libraries/vendor/joomla/utilities/src/IpHelper.php';
+if (is_file($ipHelper)) {
+    include_once $ipHelper;
+}
+$ip = IpHelper::getIp();//  $_SERVER['REMOTE_ADDR'];
+//$ip = '218.92.1.270'; // test hackeur chinois
+
+if (getLatest_ips($ip)) {
+    die('403 - Restricted access');
+} // already blocked : die
+
+// need to do more work : load the framework
 require_once JPATH_BASE . '/includes/framework.php';
 
 $container = \Joomla\CMS\Factory::getContainer();
@@ -71,8 +83,6 @@ if (is_file($checkipFile)) {
     include_once $checkipFile;
 }
 $cgsecure_params = CGSecureHelper::getParams();
-$ip = IpHelper::getIp();//  $_SERVER['REMOTE_ADDR'];
-// $ip = '218.92.1.270'; // test hackeur chinois
 
 $tmp = '<html lang="fr-fr" dir="ltr"><head><meta charset="utf-8" />
       <title>Erreur: CG Secure HtAccess Blocked</title></head>';
@@ -96,9 +106,11 @@ if (CGSecureHelper::whiteList($ip)) { // white list : display error message
     echo $tmp;
     return;
 }
+
 if (Cgipcheck::getLatest_ips($ip)) {
+// check and store new ip 
     die('Restricted access');
-} // already blocked : die
+} 
 
 $security = $cgsecure_params->security;
 $user 	  = $app->getIdentity();
@@ -176,4 +188,18 @@ if (CGSecureHelper::check_scheduler()) { // due task ?
 } else {
     echo $tmp.'</body></html>';
     die(403);
+}
+function getLatest_ips(String $ip): Bool
+{
+    $latest_ips = [];
+    // read latest_ips file
+    $file = JPATH_ROOT . '/media/com_cgsecure/backup/latest_ips.txt';
+    $readBuffer = file($file, FILE_IGNORE_NEW_LINES);
+    foreach ($readBuffer as $id => $line) {
+        $latest_ips[] = $line;
+    }
+    if (in_array($ip, $latest_ips)) {
+        return true;
+    }
+    return false;
 }
