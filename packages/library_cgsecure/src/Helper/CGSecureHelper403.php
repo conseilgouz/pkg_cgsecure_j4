@@ -573,13 +573,13 @@ class CGSecureHelper403
 
         $taskDetails = $db->loadObject();
         if (!$taskDetails) {
-            return $time;
+            $date = new \DateTime($time);
+            $date->modify('+1 day');  // check this tomorrow
+            return $date->getTimestamp();
         }
         // False if we don't have due tasks, or we have locked tasks
         $date = new \DateTime($taskDetails->next_execution);
         return $date->getTimestamp();
-
-        $taskDetails->next_execution;
     }
     // check task status and returns it to administrator messages page
     public static function getTaskStatus()
