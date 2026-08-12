@@ -37,7 +37,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $newlib_version	         = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "4.0.0";
+    private $cgsecure_force_update_version = "4.0.3";
     private $security;
     private $config;
     private $db;
