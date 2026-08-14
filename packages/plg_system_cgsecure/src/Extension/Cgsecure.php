@@ -200,7 +200,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                 if ($count == $this->cgsecure_params->page404_count + 1) { // block hacker
                     $prefixe = $_SERVER['SERVER_NAME'];
                     $prefixe = substr(str_replace('www.', '', $prefixe), 0, 2);
-                    $message = $prefixe.$this->errtype.'- Too many 404 errors';
+                    $message = $prefixe.$this->errtype.'- 404 : Too many 404 errors';
                     Cgipcheck::report_hacker($this->myname, $message, 'e', $ip);
                 }
             } else {
