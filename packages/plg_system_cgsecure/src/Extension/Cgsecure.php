@@ -160,6 +160,9 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         if ($app->isClient('administrator') || ((int) $event->getError()->getCode() !== 404)) {
             return;
         }
+        if (!isset($this->cgsecure_params->check404) || ($this->cgsecure_params->check404 == 0)) {
+            return;
+        }
         $ip = IpHelper::getIp();
         if ($this->getLatest_404($ip)) { // too many 404 : kill
             die(404);
@@ -187,14 +190,14 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                 $count++;
                 $start = $split[2];
                 $last = $split[3];
-                if (($time - $last) > 30) {
+                if (($time - $last) > $this->cgsecure_params->page404_delay) {
                     // plus de 30 secondes depuis la derniere erreur 404
                     // on réintialise les compteurs, ce n'est pas un robot
                     $count = 1;
                     $start = $time;
                 }
                 $latest_404[$split[0]] = $split[0].','.$count.','.$start.','.$time;
-                if ($count == 4) { // block hacker
+                if ($count == $this->cgsecure_params->page404_count + 1) { // block hacker
                     $prefixe = $_SERVER['SERVER_NAME'];
                     $prefixe = substr(str_replace('www.', '', $prefixe), 0, 2);
                     $message = $prefixe.$this->errtype.'- Too many 404 errors';
@@ -216,7 +219,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         }
         // Write the htaccess using the Frameworks File Class
         File::write($file, $out);
-        if ($count > 3) {
+        if ($count > $this->cgsecure_params->page404_count) {
             return true;
         }
         return false;
