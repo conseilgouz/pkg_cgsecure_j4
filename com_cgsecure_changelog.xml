@@ -13,7 +13,7 @@
             <item>improve params access speed</item>
             <item>uninstall : delete .htaccess files from all folders</item>
             <item>add htaccess file in media/com_cgsecure/backup to hide everything</item>
-            <item>libray conseilgouz 1.1.2</item>
+            <item>libray conseilgouz 1.1.4</item>
         </fix>
 	</changelog>
 	<changelog>
