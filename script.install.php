@@ -137,7 +137,7 @@ class PlgSystemCgsecureInstallerInstallerScript
 
             return false;
         }
-        if (!$this->checkLibrary('conseilgouz')) { // need library installation
+        if (!$this->checkLibrary('lib_conseilgouz')) { // need library installation
             $ret = $this->installPackageCG('lib_conseilgouz');
             if ($ret) {
                 Factory::getApplication()->enqueueMessage('ConseilGouz Library ' . $this->newlib_version . ' installed', 'notice');
