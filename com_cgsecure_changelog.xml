@@ -2,9 +2,23 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>4.0.4</version>
+        <note>
+            <item>Update : 15/08/2026</item>
+        </note>
+        <addition>
+            <item>404 errors chekc and block</item>
+        </addition>
+        <fix>
+            <item>improve params access speed</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>4.0.3</version>
         <note>
-            <item>Update : 10/08/2026</item>
+            <item>Update : 11/08/2026</item>
         </note>
         <change>
             <item>Store IP's once a day using CG Secure scheduled task (default = task)</item>

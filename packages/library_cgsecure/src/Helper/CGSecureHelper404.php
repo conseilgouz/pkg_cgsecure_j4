@@ -20,7 +20,7 @@ use Joomla\Filesystem\Folder;
 use Joomla\Utilities\IpHelper;
 
 // Copie de CGSecureHelper.php pour être sûr que cela soit chargé par l'installation
-class CGSecureHelper403
+class CGSecureHelper404
 {
     protected static Bool $blockipv6;
     public const CGPATH = '/media/com_cgsecure';
@@ -30,23 +30,25 @@ class CGSecureHelper403
     // get CG Secure params
     public static function getParams()
     {
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-
-        $query = $db->getQuery(true);
-        $query->select('*')
-        ->from($db->quoteName('#__cgsecure_config'));
-        $db->setQuery($query);
-        try {
-            $params = $db->loadObject();
-        } catch (\RuntimeException $e) {
-            return array();
+        static $_cgparams;
+        if (!isset($_cgparams)) {
+            $db      = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true);
+            $query->select('*')
+                ->from($db->quoteName('#__cgsecure_config'));
+            $db->setQuery($query);
+            try {
+                $_cgparams = $db->loadObject();
+            } catch (\RuntimeException $e) {
+                return array();
+            }
+            if ($_cgparams && isset($_cgparams->params)) {
+                $_cgparams = json_decode($_cgparams->params);
+            } else {
+                $_cgparams = [];
+            }
         }
-        if ($params && isset($params->params)) {
-            $params = json_decode($params->params);
-        } else {
-            $params = [];
-        }
-        return $params;
+        return $_cgparams;
     }
 
     // check brute force
@@ -572,7 +574,7 @@ class CGSecureHelper403
         $db->setQuery($query);
 
         $taskDetails = $db->loadObject();
-        if (!$taskDetails) {
+        if (!$taskDetails) { // no info
             $date = new \DateTime($time);
             $date->modify('+1 day');  // check this tomorrow
             return $date->getTimestamp();

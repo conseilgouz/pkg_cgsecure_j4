@@ -11,12 +11,15 @@ namespace Conseilgouz\Plugin\System\CGSecure\Extension;
 
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Event\ErrorEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\UserFactoryAwareTrait;
 use Joomla\Event\SubscriberInterface;
+use Joomla\Filesystem\File;
+use Joomla\Utilities\IpHelper;
 use ConseilGouz\CGSecure\Cgipcheck;
 
 final class Cgsecure extends CMSPlugin implements SubscriberInterface
@@ -42,10 +45,23 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
      */
     public static function getSubscribedEvents(): array
     {
-        return ['onAfterDispatch' => 'onAfterDispatch',
-                'onBeforeRender' => 'onBeforeRender' ];
+        return ['onAfterInitialise' => 'onAfterInitialise',
+                'onAfterDispatch' => 'onAfterDispatch',
+                'onBeforeRender' => 'onBeforeRender',
+                'onError' => 'onError'];
     }
-
+    // check if ip is in latest hackers list
+    public function onAfterInitialise($event)
+    {
+        if (isset($this->cgsecure_params->iphtaccess) && $this->cgsecure_params->iphtaccess != 'task') {
+            return;
+        }
+        // in task mode : new hackers IP's are not in htacces
+        $ip = IpHelper::getIp();
+        if ($this->getLatest_ips($ip)) {
+            die(403);
+        }
+    }
     public function onAfterDispatch($event)
     {
         $mainframe 	= $this->getApplication();
@@ -62,7 +78,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
             return;
         }
         if (isset($_COOKIE['cg_secure']) && ($_COOKIE['cg_secure'] == $this->cgsecure_params->security)) {
-        // cookie has beeen created : don't check 
+            // cookie has beeen created : don't check
             return;
         }
         $prefixe = $_SERVER['SERVER_NAME'];
@@ -136,4 +152,85 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                     })";
         $wa->addInlineScript($script);
     }
+    public function onError(ErrorEvent $event)
+    {
+        /** @var \Joomla\CMS\Application\CMSApplication $app */
+        $app = $event->getApplication();
+
+        if ($app->isClient('administrator') || ((int) $event->getError()->getCode() !== 404)) {
+            return;
+        }
+        $ip = IpHelper::getIp();
+        if ($this->getLatest_404($ip)) { // too many 404 : kill
+            die(404);
+        }
+    }
+    private function getLatest_404(String $ip): Bool
+    {
+        if ($this->getLatest_ips($ip)) {
+            // already rejected : die
+            die(403);
+        }
+        $latest_404 = [];
+        // read latest_404 file
+        $file = JPATH_ROOT . '/media/com_cgsecure/backup/latest_404.txt';
+        $readBuffer = file($file, FILE_IGNORE_NEW_LINES);
+        $found = false; // suppose not found
+        $count = 0;
+        $time = time();
+        $start = time();
+        foreach ($readBuffer as $id => $line) {
+            $split = explode(',', $line);
+            if ($split[0] == $ip) {
+                $found = true;
+                $count = (int)$split[1];
+                $count++;
+                $start = $split[2];
+                $last = $split[3];
+                if (($time - $last) > 30) {
+                    // plus de 30 secondes depuis la derniere erreur 404
+                    // on réintialise les compteurs, ce n'est pas un robot
+                    $count = 1;
+                    $start = $time;
+                }
+                $latest_404[$split[0]] = $split[0].','.$count.','.$start.','.$time;
+                if ($count == 4) { // block hacker
+                    Cgipcheck::block_hacker('is404', '404', 'e', $ip);
+                }
+            } else {
+                $latest_404[$split[0]] = $line;
+            }
+        }
+        if (!$found) {
+            $latest_404[$ip] = $ip.',1,'.$start.','.$start;
+        }
+        if (count($latest_404) > 20) {
+            array_shift($latest_404);
+        }
+        $out = '';
+        foreach ($latest_404 as $val) {
+            $out .= $val.PHP_EOL;
+        }
+        // Write the htaccess using the Frameworks File Class
+        File::write($file, $out);
+        if ($count > 3) {
+            return true;
+        }
+        return false;
+    }
+    private function getLatest_ips(String $ip): Bool
+    {
+        $latest_ips = [];
+        // read latest_ips file
+        $file = JPATH_ROOT . '/media/com_cgsecure/backup/latest_ips.txt';
+        $readBuffer = file($file, FILE_IGNORE_NEW_LINES);
+        foreach ($readBuffer as $id => $line) {
+            $latest_ips[] = $line;
+        }
+        if (in_array($ip, $latest_ips)) {
+            return true;
+        }
+        return false;
+    }
+
 }
