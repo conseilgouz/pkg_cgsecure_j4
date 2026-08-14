@@ -3,7 +3,7 @@
  * CG Variable field for Joomla 4.x/5.x/6.x
  *
  * @author     ConseilgGouz
- * @copyright (C) 2026 www.conseilgouz.com. All Rights Reserved.
+ * @copyright (C) 2025 www.conseilgouz.com. All Rights Reserved.
  * @license    GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
@@ -35,7 +35,7 @@ class CgvariableField extends TextField
     protected function getLayoutPaths()
     {
         $paths = parent::getLayoutPaths();
-        $paths[] = JPATH_SITE.'/libraries/conseilgouz/layouts';
+        $paths[] = JPATH_SITE.'/libraries/lib_conseilgouz/layouts';
         return $paths;
 
     }
