@@ -376,29 +376,27 @@ class Cgipcheck
         if (!self::$params) {
             self::$params = CGSecureHelper::getParams();
         }
-        if (self::$params->report == 0) {// not stored yet in DB
-            if (self::whiteList($ip)) {
+        if (self::whiteList($ip)) {
+            return;
+        }
+        self::$latest_hacker = self::get_rejected();
+        if (in_array($ip, self::$latest_hacker)) { // already in database
+            if (self::check_hacker($errtype, $ip)) {
                 return;
+            } // no errtype change : ok
+        }
+        try {
+            self::reject_hacker($myname, $err, $errtype, $ip); // store it
+        } catch (\RuntimeException $e) {
+            $err = $myname.' : Exception Reject_Hacker : '.$e->getMessage();
+            if (self::$logging) {
+                Log::add($err, 'debug', $myname);
             }
-            self::$latest_hacker = self::get_rejected();
-            if (in_array($ip, self::$latest_hacker)) { // already in database
-                if (self::check_hacker($errtype, $ip)) {
-                    return;
-                } // no errtype change : ok
-            }
-            try {
-                self::reject_hacker($myname, $err, $errtype, $ip); // store it
-            } catch (\RuntimeException $e) {
-                $err = $myname.' : Exception Reject_Hacker : '.$e->getMessage();
-                if (self::$logging) {
-                    Log::add($err, 'debug', $myname);
-                }
 
-            }
         }
         if ((isset(self::$params->iphtaccess) && self::$params->iphtaccess != 'direct')
             || !isset(self::$params->iphtaccess)) { // iphataccess not found : assume task
-                return ;
+            return ;
         }
         $hackers = self::get_reject_onerror_list(); // hackers with blocking errors
         self::store_htaccess($hackers);
@@ -548,7 +546,7 @@ class Cgipcheck
         self::$blockip  = self::$params->blockip == 1;
         if ((isset(self::$params->iphtaccess) && (self::$params->iphtaccess != 'direct'))
             || !isset(self::$params->iphtaccess)) { // iphataccess not found : assume task
-                return true;
+            return true;
         }
         if ((self::$blockip == 1) && ($errtype == "e")) { // new hacker
             $hackers = self::get_reject_onerror_list(); //get hackers list
