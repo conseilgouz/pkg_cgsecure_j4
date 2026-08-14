@@ -497,7 +497,11 @@ class Cgipcheck
     {
 
         if (self::$params->api_key != "") { // il faut une cle API
-            $json = self::abuseIPDBrequest('report', 'POST', ['ip' => $ip,'categories' => 15,'comment' => self::$message]);
+            $cats = 15; // hacking
+            if (strpos(self::$message, ' 404 ')) {// brute force
+                $cats = 18; // brute force
+            }
+            $json = self::abuseIPDBrequest('report', 'POST', ['ip' => $ip,'categories' => $cats,'comment' => self::$message]);
             $msg = "other error";
             if ($json) {
                 if (isset($json->data)) {
