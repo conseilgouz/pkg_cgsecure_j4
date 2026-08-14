@@ -11,6 +11,8 @@
         </addition>
         <fix>
             <item>improve params access speed</item>
+            <item>uninstall : delete .htaccess files from all folders</item>
+            <item>add htaccess file in media/com_cgsecure/backup to hide everything</item>
         </fix>
 	</changelog>
 	<changelog>

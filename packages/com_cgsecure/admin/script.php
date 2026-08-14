@@ -1,7 +1,6 @@
 <?php
 /**
 * CG Secure Component For Joomla 4/5/6
-* Version			: 3.9.0
 * Package			: CG Secure Component
 * copyright 		: Copyright (C) 2026 ConseilGouz. All rights reserved.
 * license    		: https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
@@ -33,30 +32,14 @@ class com_cgsecureInstallerScript
 
     public function uninstall($parent)
     {
-        // remove CG Secure infos from .htaccess
+        // remove CG Secure infos from .htaccess in all directories
         $dest = CGSecureHelper::getServerConfigFilePath(CGSecureHelper::SERVER_CONFIG_FILE_HTACCESS);
         $current = CGSecureHelper::empty_current($dest);
         CGSecureHelper::merge_file($dest, $current, '', '');
-        $dest = JPATH_ROOT.'/images/.htaccess';
-        if (is_file($dest)) {
-            $current = CGSecureHelper::empty_other($dest);
-            if (!$current) {// empty : remove it
-                File::delete($dest);
-            } else {
-                CGSecureHelper::merge_file($dest, $current, '', '');
-            }
-        }
-        $dest = JPATH_ROOT.'/media/.htaccess';
-        if (is_file($dest)) {
-            $current = CGSecureHelper::empty_other($dest);
-            if (!$current) {// empty : remove it
-                File::delete($dest);
-            } else {
-                CGSecureHelper::merge_file($dest, $current, '', '');
-            }
-        }
-        if (is_dir(JPATH_ROOT.'/files')) {// Joomla 5.3.0 : new directory
-            $dest = JPATH_ROOT.'/files/.htaccess';
+
+        $listNoPHP = ['administrator','api','cli','components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
+        foreach ($listNoPHP as $one) {
+            $dest = JPATH_ROOT.'/'.$one.'/.htaccess';        
             if (is_file($dest)) {
                 $current = CGSecureHelper::empty_other($dest);
                 if (!$current) {// empty : remove it
@@ -64,15 +47,6 @@ class com_cgsecureInstallerScript
                 } else {
                     CGSecureHelper::merge_file($dest, $current, '', '');
                 }
-            }
-        }
-        $dest = JPATH_ROOT.'/administrator/.htaccess';
-        if (is_file($dest)) {
-            $current = CGSecureHelper::empty_other($dest);
-            if (!$current) {// empty : remove it
-                File::delete($dest);
-            } else { // not empty : save it without CG SSecure infos
-                CGSecureHelper::merge_file($dest, $current, '', '');
             }
         }
         // uninstall all plugins

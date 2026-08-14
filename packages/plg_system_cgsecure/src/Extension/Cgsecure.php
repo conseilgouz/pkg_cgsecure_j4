@@ -195,7 +195,10 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                 }
                 $latest_404[$split[0]] = $split[0].','.$count.','.$start.','.$time;
                 if ($count == 4) { // block hacker
-                    Cgipcheck::report_hacker('is404', '404', 'e', $ip);
+                    $prefixe = $_SERVER['SERVER_NAME'];
+                    $prefixe = substr(str_replace('www.', '', $prefixe), 0, 2);
+                    $message = $prefixe.$this->errtype.'- Too many 404 errors';
+                    Cgipcheck::report_hacker($this->myname, $message, 'e', $ip);
                 }
             } else {
                 $latest_404[$split[0]] = $line;
