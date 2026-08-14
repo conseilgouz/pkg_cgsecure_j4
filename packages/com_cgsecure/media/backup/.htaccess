@@ -7,4 +7,9 @@ ErrorDocument 403 "CG Secure : Access media cgsecure folder error"
 Order deny,allow
 Deny from all
 
+# Be sure that pages under this folder won't be indexed
+<IfModule mod_headers.c>
+ Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+
 #------------------------CG SECURE HTACCESS END--------------------
