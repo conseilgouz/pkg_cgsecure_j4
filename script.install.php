@@ -183,6 +183,17 @@ class PlgSystemCgsecureInstallerInstallerScript
         } catch (RuntimeException $e) {
             Log::add('unable to enable Plugin site_form_override', Log::ERROR, 'jerror');
         }
+        // drop lib_conseilgouz version 1.1.0
+        $query = $db->getQuery(true)
+            ->delete('#__extensions')
+            ->where($db->quoteName('type') . ' like "library"')
+            ->where($db->quoteName('name'). 'like "lib_conseilgouz"')
+            ->where($db->quoteName('element'). 'like "conseilgouz"');
+        $db->setQuery($query);
+        $db->execute();
+        $this->delete([
+            JPATH_ROOT . '/libraries/conseilgouz',
+        ]);
         // fix old cg secure system plugin in schemas table
         $query = $db->getQuery(true)
             ->delete($db->quoteName('#__schemas'))
