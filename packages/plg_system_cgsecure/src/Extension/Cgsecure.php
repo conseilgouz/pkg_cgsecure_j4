@@ -59,6 +59,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         // in task mode : new hackers IP's are not in htacces
         $ip = IpHelper::getIp();
         if ($this->getLatest_ips($ip)) {
+            http_response_code(403);
             die(403);
         }
     }
@@ -97,7 +98,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
             if (!$logged) {
                 header('WWW-Authenticate: Basic realm="'.$mainframe->getCfg('sitename').'"');
                 header('HTTP/1.0 401 Unauthorized');
-                die();
+                die(401);
             }
         } else { // Compatibility : looking for ?<password>
             $logged = isset($_GET[$this->cgsecure_params->password]);
@@ -165,13 +166,15 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
         }
         $ip = IpHelper::getIp();
         if ($this->getLatest_404($ip)) { // too many 404 : kill
-            die(404);
+            http_response_code(403);
+            die(403);
         }
     }
     private function getLatest_404(String $ip): Bool
     {
         if ($this->getLatest_ips($ip)) {
             // already rejected : die
+            http_response_code(403);
             die(403);
         }
         $latest_404 = [];

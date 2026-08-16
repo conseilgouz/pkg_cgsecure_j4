@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>4.0.5</version>
+        <note>
+            <item>Update : 16/08/2026</item>
+        </note>
+        <change>
+            <item>Change http_response_code before die to improve blocked commands visibility in logs</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>4.0.4</version>
         <note>
             <item>Update : 15/08/2026</item>

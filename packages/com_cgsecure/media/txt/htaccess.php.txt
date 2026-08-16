@@ -34,6 +34,7 @@ $ip = IpHelper::getIp();//  $_SERVER['REMOTE_ADDR'];
 //$ip = '218.92.1.270'; // test hackeur chinois
 
 if (getLatest_ips($ip)) {
+    http_response_code(403);
     die('403 - Restricted access');
 } // already blocked : die
 
@@ -109,6 +110,7 @@ if (CGSecureHelper::whiteList($ip)) { // white list : display error message
 
 if (Cgipcheck::getLatest_ips($ip)) {
 // check and store new ip 
+    http_response_code(403);
     die('Restricted access');
 } 
 
@@ -172,6 +174,7 @@ if ($report) {
 
 if (isset($cgsecure_params->iphtaccess) && $cgsecure_params->iphtaccess != 'task') {
     echo $tmp.'</body></html>';
+    http_response_code(403);
     die(403);
 }
 if (CGSecureHelper::check_scheduler()) { // due task ?
@@ -184,9 +187,11 @@ if (CGSecureHelper::check_scheduler()) { // due task ?
     $script = "<script type='text/javascript'> const cgbase = '".$base."';</script>";
     $script .=  "<script type='text/javascript' src='".$base."media/com_cgsecure/js/run-schedule.js'></script>";
     echo $tmp.$script.'</body></html>';
+    http_response_code(403);
     die(403);
 } else {
     echo $tmp.'</body></html>';
+    http_response_code(403);
     die(403);
 }
 function getLatest_ips(String $ip): Bool
