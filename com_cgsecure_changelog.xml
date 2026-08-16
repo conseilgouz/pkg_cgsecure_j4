@@ -8,6 +8,7 @@
         </note>
         <change>
             <item>Change http_response_code before die to improve blocked commands visibility in logs</item>
+            <item>Add some values to rogues php list</item>
         </change>
 	</changelog>
 	<changelog>
