@@ -18,6 +18,7 @@ User-agent: *
 Disallow: /administrator/
 Disallow: /bin/
 Disallow: /cache/
+Disallow: /cgsecure/
 Disallow: /cli/
 Disallow: /components/
 Disallow: /files/
