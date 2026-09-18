@@ -208,7 +208,7 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                     Cgipcheck::report_hacker($this->myname, $message, 'e', $ip);
                     if ($this->cgsecure_params->logging) {
                         Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::DEBUG, array($this->myname));
-                        Log::add(' : '." Too many 404 errors", Log::DEBUG, $this->myname);
+                        Log::add(' : '." Too many 404 errors : ".$ip, Log::DEBUG, $this->myname);
                     }
                 }
             } else {
