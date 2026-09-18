@@ -14,6 +14,7 @@ defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Event\ErrorEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\UserFactoryAwareTrait;
@@ -203,8 +204,12 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
                 if ($count == $this->cgsecure_params->page404_count + 1) { // block hacker
                     $prefixe = $_SERVER['SERVER_NAME'];
                     $prefixe = substr(str_replace('www.', '', $prefixe), 0, 2);
-                    $message = $prefixe.$this->errtype.'- 404 : Too many 404 errors';
+                    $message = $prefixe.$this->errtype.'-404 : Too many 404 errors';
                     Cgipcheck::report_hacker($this->myname, $message, 'e', $ip);
+                    if ($this->cgsecure_params->logging) {
+                        Log::addLogger(array('text_file' => 'cgipcheck.trace.log.php'), Log::DEBUG, array($this->myname));
+                        Log::add(' : '." Too many 404 errors", Log::DEBUG, $this->myname);
+                    }
                 }
             } else {
                 $latest_404[$split[0]] = $line;

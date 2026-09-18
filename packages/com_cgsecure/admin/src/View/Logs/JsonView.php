@@ -39,7 +39,11 @@ class JsonView extends AbstractView
     public function display($tpl = null)
     {
         Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
-        // Check for errors.
+        $user = Factory::getApplication()->getIdentity();
+        if ($user->authorise('core.manage')) {
+            http_response_code(403);
+            die(Text::_('JINVALID_USER'));
+        }
         $this->app = Factory::getApplication();
         $input = Factory::getApplication()->getInput();
         $type = $input->get('type');

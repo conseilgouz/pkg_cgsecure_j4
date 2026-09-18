@@ -8,10 +8,11 @@ var timeout;
 
 document.addEventListener('DOMContentLoaded', function(){
     logs = document.querySelector('#adLogs');
-    logs.addEventListener('change', function (ev) {
-		var csrf = Joomla.getOptions("csrf.token", "");
-		var url = "?"+csrf+"=1&option=com_cgsecure&tmpl=component&view=logs&adLogs="+ev.srcElement.selectedOptions[0].text+"&type=logs&format=json";
-		Joomla.request({
+    if (logs) {
+        logs.addEventListener('change', function (ev) {
+            var csrf = Joomla.getOptions("csrf.token", "");
+            var url = "?"+csrf+"=1&option=com_cgsecure&tmpl=component&view=logs&adLogs="+ev.srcElement.selectedOptions[0].text+"&type=logs&format=json";
+            Joomla.request({
 			method : 'POST',
 			url : url,
 			onSuccess: function(data, xhr) {
@@ -25,8 +26,23 @@ document.addEventListener('DOMContentLoaded', function(){
                 modal.show();
 			},
 			onError: function(message) {console.log(message.responseText)}
-		}) 
-        
-	})
+            }) 
+        })
+    }
+    hideIA = document.querySelector('#hideAI');
+    if (hideIA) {
+        hideAI.addEventListener('change', function (ev) {
+            ia = document.querySelectorAll('.ai');
+            if (event.currentTarget.checked) {
+                val = "none";
+            } else {
+                val = "block";
+            }
+            ia.forEach(function (one) {
+                one.style.display = val;
+            });
+        })
+    }
+    
 });
 

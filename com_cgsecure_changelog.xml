@@ -2,6 +2,22 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>4.0.6</version>
+        <note>
+            <item>Update : 18/09/2026</item>
+        </note>
+        <change>
+            <item>Hide or not AI errors when displaying htaccess log</item>
+        </change>
+        <fix>
+            <item>Display logs : check user is authorized</item>
+            <item>404 error : add in cgipcheck.trace.log file</item>
+            <item>check_site : use curl CURLOPT_SSL_VERIFYHOST/CURLOPT_SSL_VERIFYPEER default values</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>4.0.5</version>
         <note>
             <item>Update : 16/08/2026</item>

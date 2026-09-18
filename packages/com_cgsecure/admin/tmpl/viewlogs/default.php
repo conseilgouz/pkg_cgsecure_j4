@@ -17,6 +17,7 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->useScript('list-view');
+$wa->registerAndUseScript('securelogs', 'media/com_cgsecure/js/adminlog.js');
 
 $input = Factory::getApplication()->getInput();
 $type = $input->get('type', 'ip');
@@ -49,7 +50,11 @@ if (file_exists($filename)) {
                 $str .= '&#9;'.$tab[4];
             }
             $str = str_replace("DEBUG ", "", $str);
-            $log[] = "<pre class='cls_log_line' style='tab-size:4'>".$str."</pre>";
+            $cls = "";
+            if (strpos($str,'-88 ') !== false) { // IA
+                $cls = " ai";
+            }
+            $log[] = "<pre class='cls_log_line".$cls."' style='tab-size:4'>".$str."</pre>";
         }
     }
     fclose($file);
@@ -59,6 +64,9 @@ if (file_exists($filename)) {
 <form action="<?php echo Route::_('index.php?option=com_cgsecure&view=viewlogs'); ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 	<div id="j-log-container">
        <h2><?php echo Text::sprintf('COM_CGSECURE_LOGFILE', $filename);?></h2>
+       <?php if ($type == 'ht') { ?>
+        <input type="checkbox" id="hideAI" style="margin-right:1em" title="<?php echo Text::_('CGSECURE_HIDE_AI_DESC');?>"><?php echo Text::_('CGSECURE_HIDE_AI');?></input>
+       <?php } ?>
 	   <div class="cls_log">	
 			<?php
                 if (count($log) > 0) {
