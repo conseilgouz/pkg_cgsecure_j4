@@ -40,7 +40,7 @@ class JsonView extends AbstractView
     {
         Session::checkToken('get') or die(Text::_('JINVALID_TOKEN'));
         $user = Factory::getApplication()->getIdentity();
-        if ($user->authorise('core.manage')) {
+        if (!$user->authorise('core.manage', 'com_cgsecure')) {
             http_response_code(403);
             die(Text::_('JINVALID_USER'));
         }

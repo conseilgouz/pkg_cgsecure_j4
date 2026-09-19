@@ -2,6 +2,19 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>4.0.8</version>
+        <note>
+            <item>Update : 19/09/2026</item>
+        </note>
+        <fix>
+            <item>Display IP infos : check user is authorized</item>
+            <item>Logs : inverse core.manage test</item>
+            <item>Logs : display hide AI checkbox if AI records found in log file</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>4.0.7</version>
         <note>
             <item>Update : 18/09/2026</item>
