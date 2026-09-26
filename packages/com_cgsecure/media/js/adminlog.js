@@ -43,6 +43,20 @@ document.addEventListener('DOMContentLoaded', function(){
             });
         })
     }
+    hideWP = document.querySelector('#hideWP');
+    if (hideWP) {
+        hideWP.addEventListener('change', function (ev) {
+            wp = document.querySelectorAll('.wp');
+            if (event.currentTarget.checked) {
+                val = "none";
+            } else {
+                val = "block";
+            }
+            wp.forEach(function (one) {
+                one.style.display = val;
+            });
+        })
+    }
     
 });
 

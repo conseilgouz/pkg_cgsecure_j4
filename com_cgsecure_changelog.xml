@@ -2,6 +2,17 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>4.0.9</version>
+        <note>
+            <item>Update : 26/09/2026</item>
+        </note>
+        <fix>
+            <item>Hide or not WP errors when displaying htaccess log</item>
+        </fix>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>4.0.8</version>
         <note>
             <item>Update : 19/09/2026</item>

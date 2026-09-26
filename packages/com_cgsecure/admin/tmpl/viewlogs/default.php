@@ -22,6 +22,7 @@ $wa->registerAndUseScript('securelogs', 'media/com_cgsecure/js/adminlog.js');
 $input = Factory::getApplication()->getInput();
 $type = $input->get('type', 'ip');
 $found_ai = false;
+$found_wp = false;
 if ($type == 'ht') {
     $filename = Factory::getApplication()->getConfig()->get('log_path').'/cghtaccess.trace.php';
 } elseif ($type == 'ip') {
@@ -53,7 +54,11 @@ if (file_exists($filename)) {
             $cls = "";
             if (strpos($str, '-88 ') !== false) { // IA
                 $found_ai = true;
-                $cls = " ai";
+                $cls .= " ai";
+            }
+            if ((strpos($str, '/wp') !== false) || (strpos($str, '/wordpress') !== false)) { // wordpress errors
+                $found_wp = true;
+                $cls .= " wp";
             }
             $log[] = "<pre class='cls_log_line".$cls."' style='tab-size:4'>".$str."</pre>";
         }
@@ -67,6 +72,9 @@ if (file_exists($filename)) {
        <h2><?php echo Text::sprintf('COM_CGSECURE_LOGFILE', $filename);?></h2>
        <?php if ($type == 'ht' && $found_ai) { ?>
         <input type="checkbox" id="hideAI" style="margin-right:1em" title="<?php echo Text::_('CGSECURE_HIDE_AI_DESC');?>"><?php echo Text::_('CGSECURE_HIDE_AI');?></input>
+       <?php } ?>
+       <?php if ($type == 'ht' && $found_wp) { ?>
+        <input type="checkbox" id="hideWP" style="margin-left:1em;margin-right:1em" title="<?php echo Text::_('CGSECURE_HIDE_WP_DESC');?>"><?php echo Text::_('CGSECURE_HIDE_WP');?></input>
        <?php } ?>
 	   <div class="cls_log">	
 			<?php
