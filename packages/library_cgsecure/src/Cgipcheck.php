@@ -483,12 +483,15 @@ class Cgipcheck
         } else {
             $url .= '?' . http_build_query($data);
         }
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Accept: application/json;',
             'Key: ' .$key ,
         ]);
+        
         $result = curl_exec($ch);
         return json_decode($result);
     }
@@ -567,6 +570,8 @@ class Cgipcheck
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
             $response = curl_exec($curl);
             return $response;
         } catch (\RuntimeException $e) {
@@ -711,6 +716,8 @@ class Cgipcheck
             curl_setopt($curl, CURLOPT_NOBODY, 0);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
             curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
             curl_exec($curl);
             $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($responseCode == 500) {

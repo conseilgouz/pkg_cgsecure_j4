@@ -37,7 +37,7 @@ class com_cgsecureInstallerScript
         $current = CGSecureHelper::empty_current($dest);
         CGSecureHelper::merge_file($dest, $current, '', '');
 
-        $listNoPHP = ['administrator','api','cli','components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
+        $listNoPHP = ['administrator','api','cli','components','files','includes','images','language','layouts','libraries','media','modules','plugins','templates'];
         foreach ($listNoPHP as $one) {
             $dest = JPATH_ROOT.'/'.$one.'/.htaccess';        
             if (is_file($dest)) {

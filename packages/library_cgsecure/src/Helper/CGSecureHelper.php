@@ -480,8 +480,47 @@ class CGSecureHelper
                 Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in administrator error');
             }
         }
+        self::allowExtensions($json);
     }
-
+    // Add specific htaccess to extensions to allow "non standard" files access
+    //
+    public static function allowExtensions($json)
+    {
+        $sourceDir = JPATH_ROOT.self::CGPATH .'/extensions';
+        $dirs = scandir($sourceDir);
+        foreach ($dirs as $dir) {
+            if (($dir == '.') || ($dir == '..') || !is_dir(JPATH_ROOT.'/'.$dir)) {
+                continue;
+            }
+            $type = $dir;
+            $exts = scandir($sourceDir.'/'.$type);
+            foreach ($exts as $ext) {
+                if (($ext == '.') || ($ext == '..') || !is_dir(JPATH_ROOT.'/'.$type.'/'.$ext)) {
+                    continue;
+                }
+                // extension is installed : copy htaccess.txt to defined folder as .htaccess
+                self::recurse_copy($sourceDir.'/'.$type.'/'.$ext, JPATH_ROOT.'/'.$type.'/'.$ext);
+            }
+        }
+    }
+    // copy htaccess.txt to defined folder as .htaccess
+    private static function recurse_copy($src, $dst)
+    {
+        $dir = opendir($src);
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
+                if (is_dir($src . '/' . $file)) {
+                    self::recurse_copy($src . '/' . $file, $dst . '/' . $file);
+                } elseif (is_dir($dst)) {// destination folder exists ?
+                    if ($file == 'htaccess.txt') { // copy htaccess.txt as .htaccess
+                        copy($src . '/' . $file, $dst . '/.htaccess');
+                    }
+                }
+            }
+        }
+        closedir($dir);
+    }
+    // check that website is still working
     public static function check_site(): Bool
     {
         $url = URI::root();
@@ -493,6 +532,8 @@ class CGSecureHelper
             curl_setopt($curl, CURLOPT_NOBODY, 0);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
             curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
             curl_exec($curl);
             $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($responseCode == 500) {
@@ -502,7 +543,6 @@ class CGSecureHelper
         } catch (\RuntimeException $e) {
             return false;
         }
-        return false;
     }
 
     public static function getServerConfigFile(String $file): String

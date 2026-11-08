@@ -1,0 +1,10 @@
+#------------------------CG SECURE HTACCESS BEGIN-4.0.10---------------
+# an idea from AESecure. CG Secure blocks and reports hacking attempts
+#
+# Allow image.php from Event Gallery
+
+<FilesMatch "image.php">
+allow from all
+</FilesMatch>
+
+#------------------------CG SECURE HTACCESS END--------------------

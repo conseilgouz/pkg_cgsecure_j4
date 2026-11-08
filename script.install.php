@@ -235,6 +235,7 @@ class PlgSystemCgsecureInstallerInstallerScript
         $this->delete([
             JPATH_ROOT.self::CGPATH . '/cg_no_robot/index.php',
             JPATH_ROOT . '/libraries/cgsecure/Helper/Cgipcheck.php',
+            JPATH_ROOT . '/libraries/cgsecure/src/Helper/CGSecureHelper404.php',
             JPATH_ROOT . '/plugins/system/cgsecure/htaccess.php',
         ]);
 
@@ -268,11 +269,12 @@ class PlgSystemCgsecureInstallerInstallerScript
                 $cgsecure. '/.htaccess'
             );
         }
-        if (!class_exists('CGSecureHelper404')) {
-            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper404.php');
+        // make sure we use the latest version
+        if (!class_exists('CGSecureHelper410')) {
+            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper410.php');
         }
         // Check if HTACCESS file has to be updated
-        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper404();
+        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper410();
         $serverConfigFile = $helper->getServerConfigFile('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
             return;

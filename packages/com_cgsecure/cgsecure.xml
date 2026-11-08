@@ -57,6 +57,7 @@
 			<folder>css</folder>
             <folder>js</folder>
 			<folder>txt</folder>
+			<folder>extensions</folder>
 			<folder>backup</folder>
 			<folder>cg_no_robot</folder>
 			<filename>index.html</filename>

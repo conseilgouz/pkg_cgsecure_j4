@@ -1,0 +1,11 @@
+#------------------------CG SECURE HTACCESS BEGIN-4.0.10---------------
+# an idea from AESecure. CG Secure blocks and reports hacking attempts
+#
+#
+# Allow maximenuck.php from maximenuck
+
+<Files "maximenuck*.php">
+    Allow from all
+    Satisfy Any
+</Files>
+#------------------------CG SECURE HTACCESS END--------------------
