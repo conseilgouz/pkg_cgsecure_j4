@@ -4,13 +4,14 @@
 		<type>package</type>
 		<version>4.0.10</version>
         <note>
-            <item>Update : 08/11/2026</item>
+            <item>Update : 09/11/2026</item>
         </note>
         <addition>
             <item>Add htaccess file to non standard extension</item>
         </addition>
         <fix>
             <item>Add CURLOPT_SSL_VERIFYHOST,CURLOPT_SSL_VERIFYPEER options to all curl calls</item>
+            <item>YOOTHeme image : call to component/ajax?p=cache may contain %25 character</item>
         </fix>
 	</changelog>
 	<changelog>
