@@ -435,7 +435,7 @@ class CGSecureHelper
         $config  = self::getParams();
         if (!isset($config->folders)) {
             $config->folders = self::$default_folders;
-            self::updateParams(json_encode($config));
+            self::updateParams($config);
         }
         $listNoPHP = ['components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';

@@ -154,7 +154,7 @@
             <option value="layouts" checked="1">layouts</option>
             <option value="libraries" checked="1">libraries</option>
             <option value="media" checked="1">media</option>
-            <option value="modules" checked="1">modules</option>
+            <option value="modules" checked="0">modules</option>
             <option value="plugins" checked="1">plugins</option>
             <option value="templates" checked="1">templates</option>
         </field>
