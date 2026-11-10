@@ -25,7 +25,7 @@ class CGSecureHelper
     public const CGPATH = '/media/com_cgsecure';
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
     public const SERVER_CONFIG_FILE_NONE = '';
-
+    public static $default_folders = ["api","cli","components","files","images","includes","language","layouts","libraries","media","modules","plugins","templates"];
     // get CG Secure params
     public static function getParams()
     {
@@ -49,7 +49,12 @@ class CGSecureHelper
         }
         return $_cgparams;
     }
-
+    // update config record
+    private static function updateParams($params)
+    {
+        $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
+        $table->updateSecureParams(json_encode($params));
+    }
     // check brute force
     public static function getLatest_ips(String $ip): Bool
     {
@@ -427,9 +432,17 @@ class CGSecureHelper
     // copy CG Secure information in .htaccess from all directories (except modules)
     public static function protectotherdirs($json = false)
     {
+        $config  = self::getParams();
+        if (!isset($config->folders)) {
+            $config->folders = self::$default_folders;
+            self::updateParams(json_encode($config));
+        }
         $listNoPHP = ['components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         foreach ($listNoPHP as $one) {
+            if (array_search($one, $config->folders) === false) { // in folders list ?
+                continue; // no : ignore it
+            }
             $dest = JPATH_ROOT.'/'.$one.'/.htaccess';
             if (is_file($dest)) {
                 File::delete($dest);
@@ -442,28 +455,32 @@ class CGSecureHelper
                 }
             }
         }
-        $dest = JPATH_ROOT.'/api/.htaccess';
-        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_api.txt';
-        if (is_file($dest)) {
-            File::delete($dest);
-        }
-        if (!copy($source, $dest)) {
-            if ($json) {
-                return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
-            } else {
-                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in api error');
+        if (array_search('api', $config->folders) !== false) { // in folders list ?
+            $dest = JPATH_ROOT.'/api/.htaccess';
+            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_api.txt';
+            if (is_file($dest)) {
+                File::delete($dest);
+            }
+            if (!copy($source, $dest)) {
+                if ($json) {
+                    return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
+                } else {
+                    Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in api error');
+                }
             }
         }
-        $dest = JPATH_ROOT.'/cli/.htaccess';
-        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cli.txt';
-        if (is_file($dest)) {
-            File::delete($dest);
-        }
-        if (!copy($source, $dest)) {
-            if ($json) {
-                return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
-            } else {
-                Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in CLI error');
+        if (array_search('cli', $config->folders) !== false) { // in folders list ?
+            $dest = JPATH_ROOT.'/cli/.htaccess';
+            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cli.txt';
+            if (is_file($dest)) {
+                File::delete($dest);
+            }
+            if (!copy($source, $dest)) {
+                if ($json) {
+                    return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
+                } else {
+                    Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in CLI error');
+                }
             }
         }
         $dest = JPATH_ROOT.'/administrator/.htaccess';

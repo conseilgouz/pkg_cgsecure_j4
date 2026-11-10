@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function(){
     blockhotlink1 = document.querySelector('input[id="jform_blockhotlink1"]');
     matomo0 = document.querySelector('input[id="jform_matomo0"]');
     matomo1 = document.querySelector('input[id="jform_matomo1"]');
+    folders = document.querySelector('#jform_folders');
+
     ['click', 'mouseup', 'touchstart'].forEach(type => {    
         htaccess0.addEventListener(type, function(){
             security = document.querySelector('input[id="jform_security"]').value;
@@ -86,6 +88,31 @@ document.addEventListener('DOMContentLoaded', function(){
         matomo1.addEventListener(type,function(){ // add  matomo bad referers list
             security = document.querySelector('input[id="jform_security"]');
             htaccess(11,security.value);
+        })
+        folders.addEventListener('change',function(e){ // api checkboxes
+            security = document.querySelector('input[id="jform_security"]');
+            let target = e.target;
+            let value = target.value;
+            switch(value) {
+                case 'api' :        box = 20; break;
+                case 'cli' :        box = 22; break;
+                case 'components' : box = 24; break;
+                case 'files' :      box = 26; break;
+                case 'images' :     box = 28; break;
+                case 'includes' :   box = 30; break;
+                case 'language' :   box = 32; break;
+                case 'layouts' :    box = 34; break;
+                case 'libraries' :  box = 36; break;
+                case 'media' :      box = 38; break;
+                case 'modules' :    box = 40; break;
+                case 'plugins' :    box = 42; break;
+                case 'templates' :  box = 44; break;
+            }
+             if (target.checked) {
+                htaccess(box + 1,security.value);
+            } else {
+                htaccess(box,security.value);
+            }
         })
 	})
     multi = document.querySelector('input[id="jform_multisite"]')

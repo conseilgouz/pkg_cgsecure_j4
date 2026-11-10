@@ -94,8 +94,6 @@
 			<option value="2">ERROR</option>
 			
 		</field>
-		<field showon="htaccess:1" name="specific" type="textarea" label="CGSECURE_SPECIFIC" description="CGSECURE_SPECIFIC_DESC" cols="400" rows="6" filter="raw" 
-				default=""	/>	
 		<field name="security" type="hidden" default="0"></field>
 		  
 	</fieldset>
@@ -139,5 +137,26 @@
 		<field showon="check404:1" name="page404_delay" type="cgrange" 
             min="1" max="60"	step="1" default="10" unit='sec' 
             label="CGSECURE_404_DELAY" description="CGSECURE_404_DELAY_DESC" />
+	</fieldset>
+    <fieldset name="page_specific" label="CGSECURE_PAGE_SPECIFIC" description="CGSECURE_PAGE_SPECIFIC_DESC" addfieldprefix="ConseilGouz\Component\CGSecure\Administrator\Field">
+		<field name="notespecific" type="note" label="CGSECURE_SPECIFIC_NOTE" description="CGSECURE_SPECIFIC_NOTE_DESC" />
+		<field showon="htaccess:1" name="specific" type="textarea" label="CGSECURE_SPECIFIC" description="CGSECURE_SPECIFIC_DESC" cols="400" rows="6" filter="raw" 
+				default=""	/>	
+        <field showon="htaccess:1" name="folders" type="checkboxes"
+            label="CGSECURE_JOOMLA_FOLDERS" description="CGSECURE_JOOMLA_FOLDERS_DESC">
+            <option value="api" checked="1">api</option>
+            <option value="cli" checked="1">cli</option>
+            <option value="components" checked="1">components</option>
+            <option value="files" checked="1">files</option>
+            <option value="images" checked="1">images</option>
+            <option value="includes" checked="1">includes</option>
+            <option value="language" checked="1">language</option>
+            <option value="layouts" checked="1">layouts</option>
+            <option value="libraries" checked="1">libraries</option>
+            <option value="media" checked="1">media</option>
+            <option value="modules" checked="1">modules</option>
+            <option value="plugins" checked="1">plugins</option>
+            <option value="templates" checked="1">templates</option>
+        </field>
 	</fieldset>
 </form>

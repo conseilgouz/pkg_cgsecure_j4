@@ -148,6 +148,35 @@ class JsonView extends AbstractView
             } elseif ($access == 11) { // add matomo bad referers list
                 $msg = $this->addMatomoHTAccess();
                 $this->config->matomo = 1;
+            } elseif ($access >= 20) { // add/delete htaccess in folders
+                $folderslist = [20 => 'api', 21 => "api",22 => 'cli',23 => 'cli',24 => 'components',25 => 'components',
+                                26 => 'files',27 => 'files',28 => 'images',29 => 'images',30 => 'include',31 => 'includes',
+                                32 => 'language',33 => 'language',34 => 'layouts',35 => 'layouts',36 => 'libraries',37 => 'libraries',
+                                38 => 'media',39 => 'media',40 => 'modules',41 => 'modules',42 => 'plugins',43 => 'plugins',
+                                44 => 'templates',45 => 'templates'];
+                if (!isset($this->config->folders)) {
+                    $this->config->folders = CGSecureHelper::$default_folders;
+                }
+                $folder = $folderslist[$access];
+                $folders = $this->config->folders;
+                if ($access % 2 == 0) {
+                    $msg = $this->removeHTAccessFromFolder($folder);
+                    $new = [];
+                    foreach ($folders as $one) {
+                        if ($one == $folder) {
+                            continue;
+                        }
+                        $new[] = $one;
+                    }
+                    $folders = $new;
+                } else {
+                    $msg = $this->addHTAccessInFolder($folder);
+                    $key = array_search($folder, $folders);
+                    if ($key === false) {
+                        $folders[] = $folder;
+                    }
+                }
+                $this->config->folders = $folders;
             }
             $table->updateSecureParams(json_encode($this->config));
         }
@@ -681,6 +710,32 @@ class JsonView extends AbstractView
             $buffer .= $oneline .') [NC,OR]'. PHP_EOL;
         }
         return $buffer;
+    }
+    private function addHTAccessInFolder($folder)
+    {
+        $dest = JPATH_ROOT.'/'.$folder.'/.htaccess';
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
+        if ($folder == "api") {
+            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_api.txt';
+        }
+        if ($folder == "cli") {
+            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cli.txt';
+        }
+        if (is_file($dest)) {
+            File::delete($dest);
+        }
+        if (!copy($source, $dest)) {
+            return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
+        }
+        return 'ok';
+    }
+    private function removeHTAccessFromFolder($folder)
+    {
+        $dest = JPATH_ROOT.'/'.$folder.'/.htaccess';
+        if (is_file($dest)) {
+            File::delete($dest);
+        }
+        return 'ok';
     }
 
 }
