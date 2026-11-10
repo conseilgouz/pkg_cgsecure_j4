@@ -437,7 +437,7 @@ class CGSecureHelper410
             $config->folders = self::$default_folders;
             self::updateParams($config);
         }
-        $listNoPHP = ['components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
+        $listNoPHP = ['components','files','includes','images','language','layouts','libraries','media','modules','plugins','templates'];
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         foreach ($listNoPHP as $one) {
             if (array_search($one, $config->folders) === false) { // in folders list ?

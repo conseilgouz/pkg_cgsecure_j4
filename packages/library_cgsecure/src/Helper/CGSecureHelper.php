@@ -25,7 +25,7 @@ class CGSecureHelper
     public const CGPATH = '/media/com_cgsecure';
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
     public const SERVER_CONFIG_FILE_NONE = '';
-    public static $default_folders = ["api","cli","components","files","images","includes","language","layouts","libraries","media","modules","plugins","templates"];
+    public static $default_folders = ["api","cli","components","files","images","includes","language","layouts","libraries","media","plugins","templates"];
     // get CG Secure params
     public static function getParams()
     {
@@ -437,7 +437,7 @@ class CGSecureHelper
             $config->folders = self::$default_folders;
             self::updateParams($config);
         }
-        $listNoPHP = ['components','files','includes','images','language','layouts','libraries','media','plugins','templates'];
+        $listNoPHP = ['components','files','includes','images','language','layouts','libraries','media','modules','plugins','templates'];
         $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         foreach ($listNoPHP as $one) {
             if (array_search($one, $config->folders) === false) { // in folders list ?
