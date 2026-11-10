@@ -25,7 +25,7 @@ class CGSecureHelper410
     public const CGPATH = '/media/com_cgsecure';
     public const SERVER_CONFIG_FILE_HTACCESS = '.htaccess';
     public const SERVER_CONFIG_FILE_NONE = '';
-    public static $default_folders = ["api","cli","components","files","images","includes","language","layouts","libraries","media","modules","plugins","templates"];
+    public static $default_folders = ["api","cli","components","files","images","includes","language","layouts","libraries","media","plugins","templates"];
     // get CG Secure params
     public static function getParams()
     {
