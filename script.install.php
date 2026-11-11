@@ -37,7 +37,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $newlib_version	         = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "4.1.0";
+    private $cgsecure_force_update_version = "4.1.1";
     private $security;
     private $config;
     private $db;
@@ -270,11 +270,11 @@ class PlgSystemCgsecureInstallerInstallerScript
             );
         }
         // make sure we use the latest version
-        if (!class_exists('CGSecureHelper410')) {
-            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper410.php');
+        if (!class_exists('CGSecureHelper411')) {
+            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper411.php');
         }
         // Check if HTACCESS file has to be updated
-        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper410();
+        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper411();
         $serverConfigFile = $helper->getServerConfigFile('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
             return;
@@ -295,6 +295,17 @@ class PlgSystemCgsecureInstallerInstallerScript
         if (!$found) {
             return;
         } // No CG Secure line in htacces file => exit
+        
+        $config  = $helper->getParams();
+        if (!isset($config->folders)) { // version 4.1.1 : nouyveau paramètre
+            $config->folders = $helper->$default_folders;
+            $helper->updateParams($config);
+        }
+        if (!isset($config->exception404)) { // version 4.1.1 : nouveau paramètre
+            $config->exception404 = 'media/kunena/attachments';
+            $helper->updateParams($config);
+        }
+        
         if (!$version || ($version && ($version < $this->cgsecure_force_update_version))) {
             $helper->forceHTAccess(); // update htaccess
             $helper->protectotherdirs(); // create htaccess file in media,images/administrator dir
