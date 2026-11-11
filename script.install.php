@@ -295,17 +295,17 @@ class PlgSystemCgsecureInstallerInstallerScript
         if (!$found) {
             return;
         } // No CG Secure line in htacces file => exit
-        
+
         $config  = $helper->getParams();
-        if (!isset($config->folders)) { // version 4.1.1 : nouyveau paramètre
-            $config->folders = $helper->$default_folders;
-            $helper->updateParams($config);
-        }
         if (!isset($config->exception404)) { // version 4.1.1 : nouveau paramètre
             $config->exception404 = 'media/kunena/attachments';
             $helper->updateParams($config);
         }
-        
+        if (!isset($config->folders)) { // version 4.1.1 : nouveau paramètre
+            $config->folders = $helper::$default_folders;
+            $helper->updateParams($config);
+        }
+
         if (!$version || ($version && ($version < $this->cgsecure_force_update_version))) {
             $helper->forceHTAccess(); // update htaccess
             $helper->protectotherdirs(); // create htaccess file in media,images/administrator dir

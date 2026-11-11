@@ -50,7 +50,7 @@ class CGSecureHelper
         return $_cgparams;
     }
     // update config record
-    private static function updateParams($params)
+    public static function updateParams($params)
     {
         $table = Factory::getApplication()->bootComponent('com_cgsecure')->getMVCFactory()->createTable('Config');
         $table->updateSecureParams(json_encode($params));
