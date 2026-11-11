@@ -137,6 +137,8 @@
 		<field showon="check404:1" name="page404_delay" type="cgrange" 
             min="1" max="60"	step="1" default="10" unit='sec' 
             label="CGSECURE_404_DELAY" description="CGSECURE_404_DELAY_DESC" />
+        <field showon="check404:1" name="exception404" type="textarea" label="CGSECURE_404_EXCEPTIONS" description="CGSECURE_404_EXCEPTIONS_DESC"
+            cols="400" rows="6" filter="raw" default="media/kunena/attachments"	/>
 	</fieldset>
     <fieldset name="page_specific" label="CGSECURE_PAGE_SPECIFIC" description="CGSECURE_PAGE_SPECIFIC_DESC" addfieldprefix="ConseilGouz\Component\CGSecure\Administrator\Field">
 		<field name="notespecific" type="note" label="CGSECURE_SPECIFIC_NOTE" description="CGSECURE_SPECIFIC_NOTE_DESC" />

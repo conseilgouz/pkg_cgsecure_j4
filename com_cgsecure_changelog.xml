@@ -2,13 +2,14 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
-		<version>4.1.0</version>
+		<version>4.1.1</version>
         <note>
-            <item>Update : 09/11/2026</item>
+            <item>Update : 11/11/2026</item>
         </note>
         <addition>
             <item>Add htaccess file to non standard extension</item>
             <item>Select in which folder htaccess file are to be installed</item>
+            <item>Add exceptions to 404 check</item>
         </addition>
         <fix>
             <item>Add CURLOPT_SSL_VERIFYHOST,CURLOPT_SSL_VERIFYPEER options to all curl calls</item>

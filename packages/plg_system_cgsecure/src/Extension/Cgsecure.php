@@ -158,12 +158,21 @@ final class Cgsecure extends CMSPlugin implements SubscriberInterface
     {
         /** @var \Joomla\CMS\Application\CMSApplication $app */
         $app = $event->getApplication();
-
         if ($app->isClient('administrator') || ((int) $event->getError()->getCode() !== 404)) {
             return;
         }
         if (!isset($this->cgsecure_params->check404) || ($this->cgsecure_params->check404 == 0)) {
             return;
+        }
+        if (isset($this->cgsecure_params->exception404) && $this->cgsecure_params->exception404) {
+            $req = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES); // sanitize command
+            $arr = explode(',', $this->cgsecure_params->exception404);
+            foreach ($arr as $one) {
+                $one = trim($one);
+                if (strpos($req, $one) !== false) {
+                    return;
+                }
+            }
         }
         $ip = IpHelper::getIp();
         if ($this->getLatest_404($ip)) { // too many 404 : kill
