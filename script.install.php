@@ -37,7 +37,7 @@ class PlgSystemCgsecureInstallerInstallerScript
     private $newlib_version	         = '';
     private $dir           = null;
     private $installerName = 'cgsecureinstaller';
-    private $cgsecure_force_update_version = "4.1.2";
+    private $cgsecure_force_update_version = "4.1.3";
     private $security;
     private $config;
     private $db;
@@ -270,11 +270,11 @@ class PlgSystemCgsecureInstallerInstallerScript
             );
         }
         // make sure we use the latest version
-        if (!class_exists('CGSecureHelper412')) {
-            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper412.php');
+        if (!class_exists('CGSecureHelper413')) {
+            include_once(JPATH_SITE . '/libraries/cgsecure/src/Helper/CGSecureHelper413.php');
         }
         // Check if HTACCESS file has to be updated
-        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper412();
+        $helper = new \ConseilGouz\CGSecure\Helper\CGSecureHelper413();
         $serverConfigFile = $helper->getServerConfigFile('.htaccess');
         if (!$serverConfigFile) { // no .htaccess file
             return;

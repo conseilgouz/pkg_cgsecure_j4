@@ -714,12 +714,9 @@ class JsonView extends AbstractView
     private function addHTAccessInFolder($folder)
     {
         $dest = JPATH_ROOT.'/'.$folder.'/.htaccess';
-        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
-        if ($folder == "api") {
-            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_api.txt';
-        }
-        if ($folder == "cli") {
-            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cli.txt';
+        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_'.$folder.'.txt';
+        if (!is_file($source)) {
+            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
         }
         if (is_file($dest)) {
             File::delete($dest);
