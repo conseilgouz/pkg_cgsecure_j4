@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-4.0.3---------------
+#------------------------CG SECURE HTACCESS BEGIN-4.1.2---------------
 # an idea from AESecure. CG Secure blocks and reports hacking attempts
 #
 # only accept index.php 
