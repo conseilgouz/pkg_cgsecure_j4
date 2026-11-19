@@ -18,8 +18,9 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Utilities\IpHelper;
-// Copy of CGSecureHelper to be sure installer uses the latest version
-class CGSecureHelper411
+
+// Copy of CGSecureHelper to make sure is will be used by installation process
+class CGSecureHelper412
 {
     protected static Bool $blockipv6;
     public const CGPATH = '/media/com_cgsecure';
@@ -429,7 +430,7 @@ class CGSecureHelper411
             return;
         }
     }
-    // copy CG Secure information in .htaccess from all directories (except modules)
+    // copy CG Secure information in .htaccess from all directories
     public static function protectotherdirs($json = false)
     {
         $config  = self::getParams();
@@ -437,11 +438,14 @@ class CGSecureHelper411
             $config->folders = self::$default_folders;
             self::updateParams($config);
         }
-        $listNoPHP = ['components','files','includes','images','language','layouts','libraries','media','modules','plugins','templates'];
-        $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
+        $listNoPHP = ['api','cli','components','files','includes','images','language','layouts','libraries','media','modules','plugins','templates'];
         foreach ($listNoPHP as $one) {
             if (array_search($one, $config->folders) === false) { // in folders list ?
                 continue; // no : ignore it
+            }
+            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_'.$one.'.txt';
+            if (!is_file($source)) {
+                $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_nophp.txt';
             }
             $dest = JPATH_ROOT.'/'.$one.'/.htaccess';
             if (is_file($dest)) {
@@ -452,34 +456,6 @@ class CGSecureHelper411
                     return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
                 } else {
                     Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in '.$one.' error');
-                }
-            }
-        }
-        if (array_search('api', $config->folders) !== false) { // in folders list ?
-            $dest = JPATH_ROOT.'/api/.htaccess';
-            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_api.txt';
-            if (is_file($dest)) {
-                File::delete($dest);
-            }
-            if (!copy($source, $dest)) {
-                if ($json) {
-                    return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
-                } else {
-                    Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in api error');
-                }
-            }
-        }
-        if (array_search('cli', $config->folders) !== false) { // in folders list ?
-            $dest = JPATH_ROOT.'/cli/.htaccess';
-            $source = JPATH_ROOT.self::CGPATH .'/txt/cgaccess_cli.txt';
-            if (is_file($dest)) {
-                File::delete($dest);
-            }
-            if (!copy($source, $dest)) {
-                if ($json) {
-                    return 'err : ' . Text::_('CGSECURE_PROTECTDIRS_ERROR');
-                } else {
-                    Factory::getApplication()->enqueueMessage('CGSECURE : add HTACCESS in CLI error');
                 }
             }
         }

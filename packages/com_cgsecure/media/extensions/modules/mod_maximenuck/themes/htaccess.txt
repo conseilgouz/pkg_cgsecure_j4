@@ -1,11 +1,17 @@
-#------------------------CG SECURE HTACCESS BEGIN-4.0.10---------------
+#------------------------CG SECURE HTACCESS BEGIN-4.1.2---------------
 # an idea from AESecure. CG Secure blocks and reports hacking attempts
 #
 #
 # Allow maximenuck.php from maximenuck
-
-<Files "maximenuck*.php">
-    Allow from all
-    Satisfy Any
-</Files>
+ErrorDocument 403 "CG Secure : Access modules maximenuck folder error"
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# autoriser maximenuck.php 
+RewriteCond %{REQUEST_URI} modules\/mod_maximenuck\/themes\/.*\/maximenuck.*\.php$ [NC]
+RewriteRule  .* - [L]
+# bloquer toutes les autres extensions
+RewriteCond %{REQUEST_FILENAME} .*\.(cgi|py|sh|phtm?l?|shtm?l?|phpt|ash?x|aspx?|cfml?|pl|jsp|sql|php)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} .*\.(bak|config|dll|exe|sql|ini|log|sh|inc|dist)$ [NC]
+RewriteRule .* - [F]
+</IfModule>
 #------------------------CG SECURE HTACCESS END--------------------

@@ -3,6 +3,7 @@
 #
 # Block standard Joomla files that are always installed by default
 #Deny access to all CGI, Perl, PHP and Python
+ErrorDocument 403 "CG Secure : Access error"
 <FilesMatch "\.(cgi|php|pl|py|jsp|sh)$">
 Deny from all
 </FilesMatch>

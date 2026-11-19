@@ -1,0 +1,13 @@
+#------------------------CG SECURE HTACCESS BEGIN-4.0.5---------------
+# an idea from AESecure. CG Secure blocks and reports hacking attempts
+#
+# Block standard Joomla files that are always installed by default
+ErrorDocument 403 "CG Secure : Access modules folder error"
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# bloquer l'accès direct à toutes les extensions
+RewriteCond %{REQUEST_FILENAME} .*\.(cgi|py|sh|phtm?l?|shtm?l?|phpt|ash?x|aspx?|cfml?|pl|jsp|sql|php)$ [NC,OR]
+RewriteCond %{REQUEST_FILENAME} .*\.(bak|config|dll|exe|sql|ini|log|sh|inc|dist)$ [NC]
+RewriteRule .* - [F]
+</IfModule>
+#------------------------CG SECURE HTACCESS END--------------------

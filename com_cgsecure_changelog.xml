@@ -2,6 +2,20 @@
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>
+		<version>4.1.2</version>
+        <note>
+            <item>Update : 19/11/2026</item>
+        </note>
+        <addition>
+            <item>Add htaccess file to non standard extension : LMPrism</item>
+        </addition>
+        <change>
+            <item>new .htaccess files for modules/plugins folder</item>
+        </change>
+	</changelog>
+	<changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
 		<version>4.1.1</version>
         <note>
             <item>Update : 11/11/2026</item>
