@@ -1,4 +1,15 @@
 <changelogs>
+    <changelog>
+		<element>com_cgsecure</element>
+		<type>package</type>
+		<version>4.1.4</version>
+        <note>
+            <item>Update : 27/11/2026</item>
+        </note>
+        <fix>
+            <item>htaccess : search : accept quote in search value</item>
+        </fix>
+	</changelog>
 	<changelog>
 		<element>com_cgsecure</element>
 		<type>package</type>

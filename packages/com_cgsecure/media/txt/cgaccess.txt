@@ -1,4 +1,4 @@
-#------------------------CG SECURE HTACCESS BEGIN-4.1.3--------------------
+#------------------------CG SECURE HTACCESS BEGIN-4.1.4--------------------
 # CG Secure blocks and reports hacking attempts
 # from https://docs.joomla.org/Htaccess_examples_(security) , https://perishablepress.com/7g-firewall/, https://perishablepress.com/8g-firewall and AESecure.
 #
@@ -11,6 +11,7 @@
 # ??site?? = website name (no http(s), no www)
 # ??dir?? = subdirectory ou current directory 
 # ??uri?? = host url
+# ??search?? = search menu
 #
 ServerSignature Off
 ##
@@ -221,6 +222,14 @@ RewriteRule .* cgsecure/htaccess.php?e=11&t=e&m=%1___%2&sec=??security?? [L]
 RewriteCond %{REQUEST_URI} component\/ajax
 RewriteCond %{QUERY_STRING} p=cache\/.*%25.*
 RewriteRule  .* - [L]
+# search exception : accept quote
+RewriteCond %{REQUEST_URI} ^component\/finder$ 
+RewriteCond %{QUERY_STRING} ^task=suggestions.suggest.*q=.*%27.*
+RewriteRule  .* - [L]
+RewriteCond %{REQUEST_URI} ??search??$
+RewriteCond %{QUERY_STRING} ^q=.*%27.*
+RewriteRule  .* - [L]
+
 # No carriage return, line feed, escape (%27), ... in the query string
 RewriteCond %{QUERY_STRING} ^.*(<|>|'|%0A|%0D|%25|%27|%3C|%3E|%00).* [NC,OR]
 RewriteCond %{QUERY_STRING} ^.*((\/\*)?\*\/).* [NC,OR]

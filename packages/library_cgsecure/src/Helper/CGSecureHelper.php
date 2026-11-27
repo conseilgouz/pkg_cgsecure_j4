@@ -222,6 +222,10 @@ class CGSecureHelper
             if (strpos($line, '??uri??') !== false) {
                 $line = str_replace('??uri??', Uri::root(), $line);
             }
+            if (strpos($line, '??search??') !== false) {
+                $menu = self::get_search_menu();
+                $line = str_replace('??search??', $menu, $line);
+            }
             $outBuffer .= $line . PHP_EOL;
         }
         return $outBuffer;
@@ -512,6 +516,33 @@ class CGSecureHelper
         }
         closedir($dir);
     }
+    // add search menu exception : accept quote in search value
+    private static function get_search_menu()
+    {
+        $ret = 'component\/finder\/search'; // default search 
+        // look for search menus
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select('alias')
+                ->from($db->quoteName('#__menu'))
+                ->where('published= 1  AND component_id = 23 and client_id=0');
+        $db->setQuery($query);
+        try {
+            $result = $db->loadObjectList();
+            if (count($result)) { // search menus
+                $ret = '';
+                foreach ($result as $one) {
+                    if ($ret != '') {
+                        $ret .= '|';
+                    }
+                    $ret .= $one->alias;
+                }
+            }
+        } catch (\RuntimeException $e) {
+        }
+        return $ret;
+    }
+
     // check that website is still working
     public static function check_site(): Bool
     {
