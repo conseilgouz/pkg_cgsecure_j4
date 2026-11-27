@@ -218,16 +218,21 @@ RewriteCond %{QUERY_STRING} .*(\_vti\_|crossdomain|wwwroot|public_html).* [NC,OR
 RewriteCond %{QUERY_STRING} .*(\\r|\\n|%0A|%0D).* [NC]
 RewriteRule .* cgsecure/htaccess.php?e=11&t=e&m=%1___%2&sec=??security?? [L]
 
-# Yootheme image cache exception : component/ajax?p=cache contains one %25
+# ----> Yootheme image cache exception : component/ajax?p=cache contains one %25
 RewriteCond %{REQUEST_URI} component\/ajax
 RewriteCond %{QUERY_STRING} p=cache\/.*%25.*
 RewriteRule  .* - [L]
-# search exception : accept quote
+# ----> search exception : accept quote
 RewriteCond %{REQUEST_URI} ^component\/finder$ 
 RewriteCond %{QUERY_STRING} ^task=suggestions.suggest.*q=.*%27.*
 RewriteRule  .* - [L]
+# --> note :  SEF mode with rewrite on causes a 404 error, better than 403
 RewriteCond %{REQUEST_URI} ??search??$
 RewriteCond %{QUERY_STRING} ^q=.*%27.*
+RewriteRule  .* - [L]
+# --> search exception : accept quote, mode SEF = No 
+RewriteCond %{QUERY_STRING} ^option=com_finder&view=search.*q=.*27.* [OR,NC]
+RewriteCond %{QUERY_STRING} ^q=.*%27.*&option=com_finder&view=search
 RewriteRule  .* - [L]
 
 # No carriage return, line feed, escape (%27), ... in the query string
