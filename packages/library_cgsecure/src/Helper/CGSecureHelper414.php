@@ -20,7 +20,7 @@ use Joomla\Filesystem\Folder;
 use Joomla\Utilities\IpHelper;
 
 // Copy of CGSecureHelper to make sure is will be used by installation process
-class CGSecureHelper414
+class CGSecureHelper14
 {
     protected static Bool $blockipv6;
     public const CGPATH = '/media/com_cgsecure';
@@ -520,13 +520,14 @@ class CGSecureHelper414
     // add search menu exception : accept quote in search value
     private static function get_search_menu()
     {
-        $ret = 'component\/finder\/search'; // default search 
+        $ret = 'component\/finder\/search'; // default search
         // look for search menus
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('alias')
-                ->from($db->quoteName('#__menu'))
-                ->where('published= 1  AND component_id = 23 and client_id=0');
+                ->from($db->quoteName('#__menu').' AS m')
+                ->join('LEFT', $db->quoteName('#__extensions').' AS x ON x.extension_id = m.component_id')
+                ->where('m.published= 1  AND x.element = '.$db->q("com_finder").' and m.client_id=0');
         $db->setQuery($query);
         try {
             $result = $db->loadObjectList();

@@ -233,7 +233,7 @@ RewriteCond %{QUERY_STRING} ^q=.*%27.*&option=com_finder&view=search
 RewriteRule  .* - [L]
 
 # --> note :  SEF mode : accept quote (skip @27)
-RewriteCond %{THE_REQUEST} .*\/??search??\?q=.*%27.* [NC]
+RewriteCond %{THE_REQUEST} .*\/??search??\?.*(&)q=.*%27.* [NC]
 RewriteRule  .* - [S=1]
 
 # No carriage return, line feed, escape (%27), ... in the query string
