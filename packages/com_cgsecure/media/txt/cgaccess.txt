@@ -226,17 +226,19 @@ RewriteRule  .* - [L]
 RewriteCond %{REQUEST_URI} ^component\/finder$ 
 RewriteCond %{QUERY_STRING} ^task=suggestions.suggest.*q=.*%27.*
 RewriteRule  .* - [L]
-# --> note :  SEF mode with rewrite on causes a 404 error, better than 403
-RewriteCond %{REQUEST_URI} ??search??$
-RewriteCond %{QUERY_STRING} ^q=.*%27.*
-RewriteRule  .* - [L]
+
 # --> search exception : accept quote, mode SEF = No 
 RewriteCond %{QUERY_STRING} ^option=com_finder&view=search.*q=.*27.* [OR,NC]
 RewriteCond %{QUERY_STRING} ^q=.*%27.*&option=com_finder&view=search
 RewriteRule  .* - [L]
 
+# --> note :  SEF mode : accept quote (skip @27)
+RewriteCond %{THE_REQUEST} .*\/??search??\?q=.*%27.*
+RewriteRule  .* - [S=1]
+
 # No carriage return, line feed, escape (%27), ... in the query string
-RewriteCond %{QUERY_STRING} ^.*(<|>|'|%0A|%0D|%25|%27|%3C|%3E|%00).* [NC,OR]
+RewriteCond %{QUERY_STRING} ^.*(%27).* [NC,OR]
+RewriteCond %{QUERY_STRING} ^.*('|<|>|%0A|%0D|%25|%3C|%3E|%00).* [NC,OR]
 RewriteCond %{QUERY_STRING} ^.*((\/\*)?\*\/).* [NC,OR]
 RewriteCond %{QUERY_STRING} ^.*\|\|.* [NC]
 RewriteCond %{QUERY_STRING} !option=com_akeeba(.*)$ [NC]   # exception for Akeeba backup
