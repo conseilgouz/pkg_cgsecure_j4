@@ -20,7 +20,7 @@ use Joomla\Filesystem\Folder;
 use Joomla\Utilities\IpHelper;
 
 // Copy of CGSecureHelper to make sure is will be used by installation process
-class CGSecureHelper14
+class CGSecureHelper414
 {
     protected static Bool $blockipv6;
     public const CGPATH = '/media/com_cgsecure';
